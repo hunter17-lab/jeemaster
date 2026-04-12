@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Brain, FileText, Target, Library, GraduationCap, Menu, X, Search, Moon, Sun } from "lucide-react";
+import { BookOpen, Brain, FileText, Target, Library, GraduationCap, Menu, X, Search, Moon, Sun, Download } from "lucide-react";
 
 const navItems = [
   { path: "/", label: "Home", icon: BookOpen },
@@ -56,6 +56,9 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            <Link to="/install" className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" title="Install App">
+              <Download size={18} />
+            </Link>
             <Link to="/search" className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
               <Search size={18} />
             </Link>
