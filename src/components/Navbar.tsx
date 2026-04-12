@@ -56,6 +56,9 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            <Link to="/install" className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" title="Install App">
+              <Download size={18} />
+            </Link>
             <Link to="/search" className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
               <Search size={18} />
             </Link>
