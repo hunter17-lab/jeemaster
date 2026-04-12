@@ -11,6 +11,7 @@ import PYQPage from "./pages/PYQPage";
 import BooksPage from "./pages/BooksPage";
 import CoachingPage from "./pages/CoachingPage";
 import SearchPage from "./pages/SearchPage";
+import InstallPage from "./pages/InstallPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/books" element={<BooksPage />} />
           <Route path="/coaching" element={<CoachingPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/install" element={<InstallPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
