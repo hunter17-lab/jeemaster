@@ -118,7 +118,7 @@
     @apply glass-card p-6 hover:shadow-xl transition-all duration-300 hover:border-primary/30;
   }
   .chapter-item {
-    @apply flex items-center justify-between p-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-all duration-200 cursor-pointer group;
+    @apply flex items-center justify-between p-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-all duration-200 cursor-pointer;
   }
   .subject-badge {
     @apply px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
