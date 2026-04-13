@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Brain, FileText, Target, Library, GraduationCap, Menu, X, Search, Moon, Sun, Download } from "lucide-react";
+import { BookOpen, Brain, FileText, Target, Library, GraduationCap, Menu, X, Search, Moon, Sun, Download, Info } from "lucide-react";
 
 const navItems = [
   { path: "/", label: "Home", icon: BookOpen },
@@ -11,6 +11,7 @@ const navItems = [
   { path: "/pyq", label: "PYQ", icon: Target },
   { path: "/books", label: "Books", icon: Library },
   { path: "/coaching", label: "Coaching", icon: GraduationCap },
+  { path: "/about", label: "About Us", icon: Info },
 ];
 
 const Navbar = () => {

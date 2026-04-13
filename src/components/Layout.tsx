@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import TopBanner from "./TopBanner";
 import Navbar from "./Navbar";
+import AITutor from "./AITutor";
 
 const BackButton = () => {
   const { pathname } = useLocation();
@@ -27,6 +28,7 @@ const Layout = ({ children }: { children: ReactNode }) => (
     <Navbar />
     <main className="flex-1">{children}</main>
     <BackButton />
+    <AITutor />
     <footer className="border-t border-border/50 py-6 text-center text-sm text-muted-foreground">
       <p>© 2026 JEE MASTER · Made with ❤️ by Team Phoenix</p>
     </footer>

@@ -12,6 +12,7 @@ import BooksPage from "./pages/BooksPage";
 import CoachingPage from "./pages/CoachingPage";
 import SearchPage from "./pages/SearchPage";
 import InstallPage from "./pages/InstallPage";
+import AboutPage from "./pages/AboutPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,6 +38,7 @@ const App = () => (
           <Route path="/coaching" element={<CoachingPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/install" element={<InstallPage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
