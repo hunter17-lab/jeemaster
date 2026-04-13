@@ -14,7 +14,7 @@ const sections = [
 ];
 
 const stats = [
-  { value: "500+", label: "Chapters Covered" },
+  { value: "200+", label: "Chapters Covered" },
   { value: "25+", label: "Years of PYQs" },
   { value: "1000+", label: "Practice Problems" },
   { value: "100%", label: "Free Forever" },
@@ -39,26 +39,11 @@ const Index = () => (
             Everything you need to crack IIT JEE — Notes, Mind Maps, DPP, PYQs, Books & Coaching Material. All free, all in one place.
           </p>
         </motion.div>
-
-        {/* Stats */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mb-16"
-        >
-          {stats.map((s, i) => (
-            <div key={i} className="glass-card p-4">
-              <div className="text-2xl font-display font-bold text-primary">{s.value}</div>
-              <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
-            </div>
-          ))}
-        </motion.div>
       </div>
     </section>
 
-    {/* Sections Grid */}
-    <section className="page-container pb-16">
+    {/* Sections Grid — ABOVE stats */}
+    <section className="page-container pb-10">
       <h2 className="text-2xl font-display font-bold mb-8 text-center">Explore Resources</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {sections.map((sec, i) => (
@@ -80,6 +65,23 @@ const Index = () => (
           </motion.div>
         ))}
       </div>
+    </section>
+
+    {/* Stats — BELOW resources */}
+    <section className="page-container pb-16">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto"
+      >
+        {stats.map((s, i) => (
+          <div key={i} className="glass-card p-4 text-center">
+            <div className="text-2xl font-display font-bold text-primary">{s.value}</div>
+            <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
+          </div>
+        ))}
+      </motion.div>
     </section>
   </Layout>
 );
