@@ -42,12 +42,12 @@ const InstallPage = () => {
             <>
               <div className="text-6xl mb-4">✅</div>
               <h1 className="text-2xl font-display font-bold mb-2">App Installed!</h1>
-              <p className="text-muted-foreground">You can now use JEE Master Hub from your home screen.</p>
+              <p className="text-muted-foreground">You can now use JEE MASTER from your home screen.</p>
             </>
           ) : (
             <>
               <div className="text-6xl mb-6 animate-float">📱</div>
-              <h1 className="text-2xl font-display font-bold mb-3">Install JEE Master Hub</h1>
+              <h1 className="text-2xl font-display font-bold mb-3">Install JEE MASTER</h1>
               <p className="text-muted-foreground mb-8">
                 Install this app on your phone for the best experience — fast loading, offline access, and no browser tabs.
               </p>
