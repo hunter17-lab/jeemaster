@@ -33,10 +33,8 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
-              <BookOpen size={18} className="text-primary-foreground" />
-            </div>
-            <span className="font-display font-bold text-lg">JEE Master Hub</span>
+            <img src="/icons/icon-192.png" alt="JEE MASTER" className="w-8 h-8 rounded-lg" />
+            <span className="font-display font-bold text-lg">JEE MASTER</span>
           </Link>
 
           {/* Desktop nav */}

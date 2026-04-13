@@ -43,6 +43,7 @@ const StartPopup = () => {
               Made with <Heart className="inline text-destructive fill-destructive" size={18} /> by Team Phoenix
             </h2>
 
+
             <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
               📚 Free resources for all IIT JEE students
             </p>

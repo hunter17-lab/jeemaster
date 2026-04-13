@@ -33,7 +33,7 @@ const Index = () => (
             <BookOpen size={16} /> Your Complete JEE Preparation Hub
           </div>
           <h1 className="text-4xl md:text-6xl font-display font-bold mb-4 tracking-tight">
-            JEE Master <span className="text-gradient">Hub</span>
+            JEE <span className="text-gradient">MASTER</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
             Everything you need to crack IIT JEE — Notes, Mind Maps, DPP, PYQs, Books & Coaching Material. All free, all in one place.
