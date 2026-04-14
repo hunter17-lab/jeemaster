@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Brain, FileText, Target, Library, GraduationCap, Menu, X, Search, Moon, Sun, Download, Info } from "lucide-react";
+import { BookOpen, Brain, FileText, Target, Library, GraduationCap, Menu, X, Search, Moon, Sun, Download, Info, LogIn, LogOut, UserCircle } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   { path: "/", label: "Home", icon: BookOpen },
@@ -16,6 +17,8 @@ const navItems = [
 
 const Navbar = () => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dark, setDark] = useState(() => {
     if (typeof window !== "undefined") {
@@ -64,6 +67,15 @@ const Navbar = () => {
             <button onClick={toggleDark} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
               {dark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
+            {user ? (
+              <button onClick={async () => { await signOut(); navigate("/"); }} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors" title="Sign Out">
+                <LogOut size={18} />
+              </button>
+            ) : (
+              <Link to="/auth" className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" title="Sign In">
+                <LogIn size={18} />
+              </Link>
+            )}
             <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground">
               {mobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
