@@ -68,9 +68,14 @@ const Navbar = () => {
               {dark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
             {user ? (
-              <button onClick={async () => { await signOut(); navigate("/"); }} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors" title="Sign Out">
-                <LogOut size={18} />
-              </button>
+              <>
+                <Link to="/profile" className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors" title="Profile">
+                  <UserCircle size={18} />
+                </Link>
+                <button onClick={async () => { await signOut(); navigate("/"); }} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors" title="Sign Out">
+                  <LogOut size={18} />
+                </button>
+              </>
             ) : (
               <Link to="/auth" className="p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" title="Sign In">
                 <LogIn size={18} />

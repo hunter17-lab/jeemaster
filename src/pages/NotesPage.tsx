@@ -6,6 +6,8 @@ import { allSubjects } from "@/data/chapters";
 
 const noteTypes = ["Long Notes", "Short Notes", "Topper Notes"] as const;
 
+const subjectEmojis = ["⚡ Physics", "🧪 Chemistry", "📐 Mathematics"];
+
 const NotesPage = () => {
   const [activeType, setActiveType] = useState<string>(noteTypes[0]);
   const [activeSubject, setActiveSubject] = useState(0);
@@ -28,7 +30,7 @@ const NotesPage = () => {
                 activeType === t ? "gradient-primary text-primary-foreground" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
               }`}
             >
-              {t}
+              {t === "Long Notes" ? "📄 " : t === "Short Notes" ? "📋 " : "🏆 "}{t}
             </button>
           ))}
         </div>
@@ -43,7 +45,7 @@ const NotesPage = () => {
                 activeSubject === i ? "bg-primary/10 text-primary border border-primary/30" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
               }`}
             >
-              {s.subject}
+              {subjectEmojis[i]}
             </button>
           ))}
         </div>

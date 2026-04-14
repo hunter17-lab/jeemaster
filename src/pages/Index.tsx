@@ -1,23 +1,23 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { FileText, Brain, Target, Library, GraduationCap, Zap, BookOpen } from "lucide-react";
+import { FileText, Brain, Target, Library, GraduationCap, Zap, BookOpen, ArrowRight, Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
 import StartPopup from "@/components/StartPopup";
 
 const sections = [
-  { path: "/notes", label: "Notes", desc: "Long, Short & Topper Notes", icon: FileText, gradient: "gradient-primary" },
-  { path: "/mindmaps", label: "Mind Maps", desc: "Visual chapter summaries", icon: Brain, gradient: "gradient-physics" },
-  { path: "/dpp", label: "DPP", desc: "Daily Practice Problems", icon: Zap, gradient: "gradient-chemistry" },
-  { path: "/pyq", label: "PYQ", desc: "Previous Year Questions", icon: Target, gradient: "gradient-maths" },
-  { path: "/books", label: "Books", desc: "Recommended study material", icon: Library, gradient: "gradient-primary" },
-  { path: "/coaching", label: "Coaching Material", desc: "Allen, PW & more", icon: GraduationCap, gradient: "gradient-physics" },
+  { path: "/notes", label: "📝 Notes", desc: "Long, Short & Topper Notes", icon: FileText, gradient: "gradient-primary", emoji: "📝" },
+  { path: "/mindmaps", label: "🧠 Mind Maps", desc: "Visual chapter summaries", icon: Brain, gradient: "gradient-physics", emoji: "🧠" },
+  { path: "/dpp", label: "⚡ DPP", desc: "Daily Practice Problems", icon: Zap, gradient: "gradient-chemistry", emoji: "⚡" },
+  { path: "/pyq", label: "🎯 PYQ", desc: "Previous Year Questions", icon: Target, gradient: "gradient-maths", emoji: "🎯" },
+  { path: "/books", label: "📚 Books", desc: "Recommended study material", icon: Library, gradient: "gradient-primary", emoji: "📚" },
+  { path: "/coaching", label: "🏫 Coaching Material", desc: "Allen, PW & more", icon: GraduationCap, gradient: "gradient-physics", emoji: "🏫" },
 ];
 
 const stats = [
-  { value: "200+", label: "Chapters Covered" },
-  { value: "25+", label: "Years of PYQs" },
-  { value: "1000+", label: "Practice Problems" },
-  { value: "100%", label: "Free Forever" },
+  { value: "200+", label: "Chapters Covered", emoji: "📖" },
+  { value: "25+", label: "Years of PYQs", emoji: "📅" },
+  { value: "1000+", label: "Practice Problems", emoji: "✏️" },
+  { value: "100%", label: "Free Forever", emoji: "💯" },
 ];
 
 const Index = () => (
@@ -26,60 +26,99 @@ const Index = () => (
 
     {/* Hero */}
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0 gradient-primary opacity-5" />
-      <div className="page-container relative py-16 md:py-24 text-center">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-medium mb-6">
-            <BookOpen size={16} /> Your Complete JEE Preparation Hub
-          </div>
-          <h1 className="text-4xl md:text-6xl font-display font-bold mb-4 tracking-tight">
-            JEE <span className="text-gradient">MASTER</span>
+      <div className="absolute inset-0 gradient-primary opacity-[0.07]" />
+      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+      <div className="page-container relative py-20 md:py-28 text-center">
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+          <motion.div
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="inline-flex items-center gap-2 bg-primary/10 text-primary px-5 py-2 rounded-full text-sm font-semibold mb-8 border border-primary/20"
+          >
+            <Sparkles size={16} className="animate-pulse" /> Your Complete JEE Preparation Hub
+          </motion.div>
+          <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 tracking-tight leading-tight">
+            Crack IIT JEE with{" "}
+            <span className="text-gradient">JEE MASTER</span> 🚀
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
-            Everything you need to crack IIT JEE — Notes, Mind Maps, DPP, PYQs, Books & Coaching Material. All free, all in one place.
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
+            Everything you need — Notes, Mind Maps, DPP, PYQs, Books & Coaching Material. 
+            <span className="text-foreground font-medium"> All free, all in one place.</span>
           </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link
+              to="/notes"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl gradient-primary text-primary-foreground font-semibold text-base hover:opacity-90 transition-opacity shadow-lg shadow-primary/25"
+            >
+              Start Learning <ArrowRight size={18} />
+            </Link>
+            <Link
+              to="/pyq"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-secondary text-foreground font-semibold text-base hover:bg-secondary/80 transition-colors border border-border"
+            >
+              🎯 Solve PYQs
+            </Link>
+          </div>
         </motion.div>
       </div>
     </section>
 
-    {/* Sections Grid — ABOVE stats */}
-    <section className="page-container pb-10">
-      <h2 className="text-2xl font-display font-bold mb-8 text-center">Explore Resources</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {/* Sections Grid */}
+    <section className="page-container pb-6">
+      <motion.h2
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="text-2xl md:text-3xl font-display font-bold mb-2 text-center"
+      >
+        📂 Explore Resources
+      </motion.h2>
+      <p className="text-muted-foreground text-center mb-10">Pick a section and start your preparation</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {sections.map((sec, i) => (
           <motion.div
             key={sec.path}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
+            transition={{ delay: i * 0.08 }}
           >
-            <Link to={sec.path} className="section-card flex flex-col items-start gap-4 h-full">
-              <div className={`w-12 h-12 rounded-xl ${sec.gradient} flex items-center justify-center`}>
-                <sec.icon size={24} className="text-primary-foreground" />
+            <Link
+              to={sec.path}
+              className="group section-card flex items-center gap-4 h-full hover:scale-[1.02] transition-transform"
+            >
+              <div className={`w-14 h-14 rounded-2xl ${sec.gradient} flex items-center justify-center shrink-0 shadow-md`}>
+                <sec.icon size={26} className="text-primary-foreground" />
               </div>
-              <div>
-                <h3 className="font-display font-semibold text-lg mb-1">{sec.label}</h3>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-display font-semibold text-lg mb-0.5">{sec.label}</h3>
                 <p className="text-sm text-muted-foreground">{sec.desc}</p>
               </div>
+              <ArrowRight size={18} className="text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
             </Link>
           </motion.div>
         ))}
       </div>
     </section>
 
-    {/* Stats — BELOW resources */}
-    <section className="page-container pb-16">
+    {/* Stats */}
+    <section className="page-container pb-20">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
+        transition={{ delay: 0.4 }}
         className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto"
       >
         {stats.map((s, i) => (
-          <div key={i} className="glass-card p-4 text-center">
-            <div className="text-2xl font-display font-bold text-primary">{s.value}</div>
+          <motion.div
+            key={i}
+            whileHover={{ scale: 1.05 }}
+            className="glass-card p-5 text-center group cursor-default"
+          >
+            <div className="text-2xl mb-1">{s.emoji}</div>
+            <div className="text-2xl md:text-3xl font-display font-bold text-primary">{s.value}</div>
             <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
-          </div>
+          </motion.div>
         ))}
       </motion.div>
     </section>
