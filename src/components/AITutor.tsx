@@ -136,36 +136,47 @@ const AITutor = () => {
               <span className="font-display font-bold text-sm">JEE AI Tutor</span>
             </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-3 space-y-3 min-h-[200px] max-h-[50vh]">
-              {messages.map((m, i) => (
-                <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div
-                    className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
-                      m.role === "user"
-                        ? "bg-primary text-primary-foreground rounded-br-sm"
-                        : "bg-secondary text-foreground rounded-bl-sm"
-                    }`}
-                  >
-                    {m.role === "assistant" ? (
-                      <div className="prose prose-sm dark:prose-invert max-w-none">
-                        <ReactMarkdown>{m.content}</ReactMarkdown>
-                      </div>
-                    ) : (
-                      m.content
-                    )}
+            {/* Messages / Login prompt */}
+            {!user ? (
+              <div className="flex-1 flex flex-col items-center justify-center p-6 text-center min-h-[200px]">
+                <LogIn size={32} className="text-muted-foreground mb-3" />
+                <p className="text-sm text-foreground font-medium mb-1">Sign in to chat</p>
+                <p className="text-xs text-muted-foreground mb-4">Create a free account to use the AI Tutor</p>
+                <button onClick={() => { navigate("/auth"); setOpen(false); }} className="px-4 py-2 rounded-xl gradient-primary text-primary-foreground text-sm font-medium">
+                  Sign In
+                </button>
+              </div>
+            ) : (
+              <div className="flex-1 overflow-y-auto p-3 space-y-3 min-h-[200px] max-h-[50vh]">
+                {messages.map((m, i) => (
+                  <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                    <div
+                      className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
+                        m.role === "user"
+                          ? "bg-primary text-primary-foreground rounded-br-sm"
+                          : "bg-secondary text-foreground rounded-bl-sm"
+                      }`}
+                    >
+                      {m.role === "assistant" ? (
+                        <div className="prose prose-sm dark:prose-invert max-w-none">
+                          <ReactMarkdown>{m.content}</ReactMarkdown>
+                        </div>
+                      ) : (
+                        m.content
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
-              {loading && messages[messages.length - 1]?.role === "user" && (
-                <div className="flex justify-start">
-                  <div className="bg-secondary rounded-xl px-3 py-2">
-                    <Loader2 size={16} className="animate-spin text-muted-foreground" />
+                ))}
+                {loading && messages[messages.length - 1]?.role === "user" && (
+                  <div className="flex justify-start">
+                    <div className="bg-secondary rounded-xl px-3 py-2">
+                      <Loader2 size={16} className="animate-spin text-muted-foreground" />
+                    </div>
                   </div>
-                </div>
-              )}
-              <div ref={bottomRef} />
-            </div>
+                )}
+                <div ref={bottomRef} />
+              </div>
+            )}
 
             {/* Input */}
             <div className="border-t border-border/50 p-2 flex gap-2">
