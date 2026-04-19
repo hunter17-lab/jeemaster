@@ -82,7 +82,7 @@ const StartPopup = () => {
                 href="https://t.me/class11cbsescience"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full rounded-xl bg-[hsl(210_90%_56%)] hover:bg-[hsl(210_90%_50%)] text-white px-5 py-3 font-semibold text-sm transition-colors shadow-lg shadow-blue-500/20"
+                className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary/90 hover:bg-primary text-primary-foreground px-5 py-3 font-semibold text-sm transition-colors shadow-lg shadow-primary/20"
               >
                 <span>👉</span>
                 Join Telegram for support &amp; materials
