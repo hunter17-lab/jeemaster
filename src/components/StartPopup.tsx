@@ -70,7 +70,7 @@ const StartPopup = () => {
 
             {/* Disclaimer card */}
             <div className="flex items-start gap-2.5 rounded-xl border border-border/60 bg-muted/40 p-3 mb-5">
-              <AlertTriangle size={16} className="text-amber-500 shrink-0 mt-0.5" />
+              <AlertTriangle size={16} className="text-warning shrink-0 mt-0.5" />
               <p className="text-xs text-muted-foreground leading-relaxed">
                 We do not own any content, all rights belong to respective owners
               </p>
