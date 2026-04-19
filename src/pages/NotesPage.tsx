@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import SubjectChapterList from "@/components/SubjectChapterList";
 import { allSubjects } from "@/data/chapters";
+import { chemistryShortNotes } from "@/data/shortNotes";
 
 const noteTypes = ["Long Notes", "Short Notes", "Topper Notes"] as const;
 
@@ -51,7 +52,14 @@ const NotesPage = () => {
         </div>
 
         <div className="glass-card p-6">
-          <SubjectChapterList data={allSubjects[activeSubject]} sectionLabel={activeType} />
+          <SubjectChapterList
+            data={
+              activeType === "Short Notes" && allSubjects[activeSubject].subject === "Chemistry"
+                ? chemistryShortNotes
+                : allSubjects[activeSubject]
+            }
+            sectionLabel={activeType}
+          />
         </div>
       </div>
     </Layout>
