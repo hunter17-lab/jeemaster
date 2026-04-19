@@ -67,7 +67,7 @@ const SubjectChapterList = ({ data, sectionLabel }: Props) => {
                   transition={{ delay: ci * 0.03 }}
                   className="chapter-item group"
                 >
-                  <a href={ch.link} className="flex-1 flex items-center gap-2 min-w-0">
+                  <a href={ch.link} target="_blank" rel="noopener noreferrer" className="flex-1 flex items-center gap-2 min-w-0">
                     <button
                       onClick={(e) => { e.preventDefault(); toggleComplete(id); }}
                       className={`shrink-0 transition-colors ${isCompleted(id) ? "text-green-500" : "text-muted-foreground hover:text-green-400"}`}
