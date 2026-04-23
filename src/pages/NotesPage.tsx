@@ -107,6 +107,8 @@ const NotesPage = () => {
                     ? chemistryShortNotes
                     : allSubjects[activeSubject].subject === "Physics"
                     ? physicsShortNotes
+                    : allSubjects[activeSubject].subject === "Mathematics"
+                    ? mathsShortNotes
                     : allSubjects[activeSubject]
                 }
                 sectionLabel={activeType}
