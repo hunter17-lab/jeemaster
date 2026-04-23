@@ -7,11 +7,22 @@ export const physicsShortNotes: SubjectData = {
     {
       title: "Class 11",
       chapters: [
+        { name: "Vector and Scalar", link: "https://drive.google.com/file/d/1PMkCp5Bv9R5Z7EcI1gHdagGG5FLnTq4O/view?usp=drive_link" },
+        { name: "Kinematics", link: "https://drive.google.com/file/d/1Qs5wZVV6tABu_fDTRAUFzI_hABV9rB-t/view?usp=drive_link" },
+        { name: "Projectile Motion", link: "https://drive.google.com/file/d/1sFw2SimseidBoBEkO5sVxRm7qPd-PlHQ/view?usp=drive_link" },
+        { name: "Laws of Motion", link: "https://drive.google.com/file/d/1cEcE5DDznRprSi99i1a1dgP1vigR2oCK/view?usp=drive_link" },
         { name: "Friction", link: "https://drive.google.com/file/d/1cLGTRNUm3delCyk-VDdr-AnudK9N8e0a/view?usp=drive_link" },
+        { name: "Work, Energy & Power", link: "https://drive.google.com/file/d/14srkGotCxcmUaVwhYJIot-NeT1ZsYuFM/view?usp=drive_link" },
         { name: "Circular Motion", link: "https://drive.google.com/file/d/15CoeCK8jE8HqMBdQk6XqRhFA53ZTtK3h/view?usp=drive_link" },
+        { name: "Rotational Motion", link: "https://drive.google.com/file/d/1Zk6bVKkYm7P7CaMJ6v7IeZ_8_f8Tb-NB/view?usp=drive_link" },
+        { name: "Gravitation", link: "https://drive.google.com/file/d/1t2glU5M9Or7iPGcF9CPsQatGgtkowDco/view?usp=drive_link" },
         { name: "Fluid", link: "https://drive.google.com/file/d/1A6MePl7y15_LPQWxpi0aBUbdBUf2prHI/view?usp=drive_link" },
         { name: "Elasticity", link: "https://drive.google.com/file/d/11Zw2oqYjc7ZTIS7mTkxRq81Gq1I9iLBO/view?usp=drive_link" },
         { name: "Calorimetry", link: "https://drive.google.com/file/d/1Wgj4YXhq13bIaN-Lj95Jm8fyj1hSlZNx/view?usp=drive_link" },
+        { name: "Heat Transfer", link: "https://drive.google.com/file/d/1A2I0OqFgtdqoxmkBpRMEF8vMz_z71dTu/view?usp=drive_link" },
+        { name: "Thermodynamics", link: "https://drive.google.com/file/d/18GKagztycdZF6I_fZO5dxbqRX_G9GnCO/view?usp=drive_link" },
+        { name: "Oscillations", link: "https://drive.google.com/file/d/1QM3K48PjOOoCW6_ifmhcLt0DP5bDTZBl/view?usp=drive_link" },
+        { name: "Waves and Sound", link: "https://drive.google.com/file/d/17KQiQkKCubr_tfGVpXjQkOz2BRRsULrV/view?usp=drive_link" },
       ],
     },
     {
