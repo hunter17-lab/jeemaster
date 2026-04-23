@@ -4,7 +4,7 @@ import { Sparkles, Trophy } from "lucide-react";
 import Layout from "@/components/Layout";
 import SubjectChapterList from "@/components/SubjectChapterList";
 import { allSubjects } from "@/data/chapters";
-import { chemistryShortNotes, physicsShortNotes } from "@/data/shortNotes";
+import { chemistryShortNotes, physicsShortNotes, mathsShortNotes } from "@/data/shortNotes";
 
 const noteTypes = ["Short Notes", "Topper Notes"] as const;
 
@@ -107,6 +107,8 @@ const NotesPage = () => {
                     ? chemistryShortNotes
                     : allSubjects[activeSubject].subject === "Physics"
                     ? physicsShortNotes
+                    : allSubjects[activeSubject].subject === "Mathematics"
+                    ? mathsShortNotes
                     : allSubjects[activeSubject]
                 }
                 sectionLabel={activeType}
