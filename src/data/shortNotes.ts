@@ -47,6 +47,47 @@ export const physicsShortNotes: SubjectData = {
   ],
 };
 
+export const mathsShortNotes: SubjectData = {
+  subject: "Mathematics",
+  color: "maths",
+  sections: [
+    {
+      title: "Class 11",
+      chapters: [
+        { name: "Binomial Theorem", link: "https://drive.google.com/file/d/134MtaDr2lFUJ0zSHtMJVCYWtG-6x0OqZ/view?usp=drive_link" },
+        { name: "Inverse of Trigonometry Ratio", link: "https://drive.google.com/file/d/1_XrLKKY6Up6BWaR0MATzziyBvXmOcEMq/view?usp=drive_link" },
+        { name: "Straight Lines", link: "https://drive.google.com/file/d/1xNGqsMbJ0BvtUiUnB1Vv2dmhVr6NpPJ-/view?usp=drive_link" },
+        { name: "Circles", link: "https://drive.google.com/file/d/1HiHq8XFCyBLrqS8XU0HNHrQ49dwc5tPZ/view?usp=drive_link" },
+        { name: "Solution of Triangle", link: "https://drive.google.com/file/d/1cpSaCrZMfZIBVX2m1s2bOCsExcxKL5Ft/view?usp=drive_link" },
+        { name: "Parabola", link: "https://drive.google.com/file/d/1AbtVuoDtMs60ctOkip9QZYdALmmxuqB9/view?usp=drive_link" },
+        { name: "Ellipse", link: "https://drive.google.com/file/d/1SKf_Cnhnd_n45tyqZ75sdYyVzAq5sXFo/view?usp=drive_link" },
+        { name: "Hyperbola", link: "https://drive.google.com/file/d/1MlyeFoa4pKfhj-ump7bCN6wZGisW7w9z/view?usp=drive_link" },
+        { name: "Permutation and Combination", link: "https://drive.google.com/file/d/11sZ2wM9uu4e7i4B7aJuEThboPzEWviP_/view?usp=drive_link" },
+      ],
+    },
+    {
+      title: "Class 12",
+      chapters: [
+        { name: "Functions", link: "https://drive.google.com/file/d/1OMvU0SUrBmULISbHdinZ1x4y5fmkuqbA/view?usp=drive_link" },
+        { name: "Limits", link: "https://drive.google.com/file/d/1QWS2rNi5xCynzNON49cyjq7hPg7JikxV/view?usp=drive_link" },
+        { name: "Continuity of Functions", link: "https://drive.google.com/file/d/1A66ibubRl0rc1YlZmiP-C_8HhsoVcD-I/view?usp=drive_link" },
+        { name: "Differentiability", link: "https://drive.google.com/file/d/1lD-K1clqlhrejjcEAoHGp5TgB5C9YUG8/view?usp=drive_link" },
+        { name: "Complex Number", link: "https://drive.google.com/file/d/1yAm_IWyo3TgIvvqwVmFqkM6STCLC45Mg/view?usp=drive_link" },
+        { name: "Matrices & Determinants", link: "https://drive.google.com/file/d/1xnWmFDSOd8-MlIygokXdo31pMQQt0uuG/view?usp=drive_link" },
+        { name: "Vectors", link: "https://drive.google.com/file/d/12t_IaaYSuwZPTtCossdOiXTqSDcSY8Zl/view?usp=drive_link" },
+        { name: "3D Geometry", link: "https://drive.google.com/file/d/1l7tA4AbJChH-TBCMw7RxkZykwdMQERWd/view?usp=drive_link" },
+        { name: "Inequality and Graphs", link: "https://drive.google.com/file/d/1K2LWbEMBryuhXo7P-O1ESZlMFkj4xqz-/view?usp=drive_link" },
+        { name: "Tangent and Normal", link: "https://drive.google.com/file/d/1RISVZvvqMpuIfkQGP4dJVJXiwg0RLmOl/view?usp=drive_link" },
+        { name: "Monotonicity", link: "https://drive.google.com/file/d/16_2TIVxNTdTMXPLoaLOBnMBFPi8muXbx/view?usp=drive_link" },
+        { name: "Rolle's Theorem", link: "https://drive.google.com/file/d/16wxpsLvR8yy4ExzhHsbDRs_JYKRgQctx/view?usp=drive_link" },
+        { name: "Indefinite Integration", link: "https://drive.google.com/file/d/1tqnGGejIf-zQR77JLEFYxwQh6pMqO8n_/view?usp=drive_link" },
+        { name: "Definite Integration", link: "https://drive.google.com/file/d/1kx2XVON1sLeLechI7fOpjI65qt9PE7aO/view?usp=drive_link" },
+        { name: "Area Under Graph", link: "https://drive.google.com/file/d/1wUdwP5k5HCORftGZJ6YDjXGB9cIHLSeu/view?usp=drive_link" },
+      ],
+    },
+  ],
+};
+
 export const chemistryShortNotes: SubjectData = {
   subject: "Chemistry",
   color: "chemistry",
