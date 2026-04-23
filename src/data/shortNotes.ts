@@ -1,5 +1,41 @@
 import type { SubjectData } from "./chapters";
 
+export const physicsShortNotes: SubjectData = {
+  subject: "Physics",
+  color: "physics",
+  sections: [
+    {
+      title: "Class 11",
+      chapters: [
+        { name: "Friction", link: "https://drive.google.com/file/d/1cLGTRNUm3delCyk-VDdr-AnudK9N8e0a/view?usp=drive_link" },
+        { name: "Circular Motion", link: "https://drive.google.com/file/d/15CoeCK8jE8HqMBdQk6XqRhFA53ZTtK3h/view?usp=drive_link" },
+        { name: "Fluid", link: "https://drive.google.com/file/d/1A6MePl7y15_LPQWxpi0aBUbdBUf2prHI/view?usp=drive_link" },
+        { name: "Elasticity", link: "https://drive.google.com/file/d/11Zw2oqYjc7ZTIS7mTkxRq81Gq1I9iLBO/view?usp=drive_link" },
+        { name: "Calorimetry", link: "https://drive.google.com/file/d/1Wgj4YXhq13bIaN-Lj95Jm8fyj1hSlZNx/view?usp=drive_link" },
+      ],
+    },
+    {
+      title: "Class 12",
+      chapters: [
+        { name: "Electrostatics", link: "https://drive.google.com/file/d/10yJ2FxeZDZn15V1F8np4zV3BPI8fOQ-w/view?usp=drive_link" },
+        { name: "Current Electricity", link: "https://drive.google.com/file/d/1OZeMLmcVAZeITq1uEADVSAWnm9AVdQY4/view?usp=drive_link" },
+        { name: "Properties of Conductor", link: "https://drive.google.com/file/d/1qFsE2wdOpln16tF7Si2iT9XMpWv1zSVD/view?usp=drive_link" },
+        { name: "Capacitor", link: "https://drive.google.com/file/d/1kmpk-zvmlQ6iX6b60Ao9WjndgNhi8weQ/view?usp=drive_link" },
+        { name: "Dielectric", link: "https://drive.google.com/file/d/17BPji7kDPh7WUvKHXQqSI2h85JKryyXe/view?usp=drive_link" },
+        { name: "Magnetism", link: "https://drive.google.com/file/d/1yS8geQTDY-dHCinItMdt_OmrEP5jM2lp/view?usp=drive_link" },
+        { name: "EMI", link: "https://drive.google.com/file/d/1ZkjCwSCy1bJzF5d8JOexU2Xq0xNe8Gwb/view?usp=drive_link" },
+        { name: "Wave Optics", link: "https://drive.google.com/file/d/1KO-r_mbxVHMfVK9iub5zmoaV1LUI3ZN_/view?usp=drive_link" },
+        { name: "Geometrical Optics", link: "https://drive.google.com/file/d/1NAeufYMGRe90lD9fWp3J_ItViYmeqB9r/view?usp=drive_link" },
+        { name: "Human Eye", link: "https://drive.google.com/file/d/1EdML8onFK2BXo1gPjxjowGFsthedbg5L/view?usp=drive_link" },
+        { name: "Solids and Semiconductor", link: "https://drive.google.com/file/d/147gmztP_LZbFGjfBzJ-x6KXBouC6NS11/view?usp=drive_link" },
+        { name: "Semiconductor Electronics", link: "https://drive.google.com/file/d/1KB_CkXjgoZGhD6Qx27Q-wHCNXHcVXVt4/view?usp=drive_link" },
+        { name: "Error", link: "https://drive.google.com/file/d/1Pw8P7xc4DrtZn-zoldhUm6_xHJrapCBq/view?usp=drive_link" },
+        { name: "Modern Physics", link: "https://drive.google.com/file/d/148PyPmdACqiXEdlO3EnCt3QYuugOL7tN/view?usp=drive_link" },
+      ],
+    },
+  ],
+};
+
 export const chemistryShortNotes: SubjectData = {
   subject: "Chemistry",
   color: "chemistry",
