@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import SubjectChapterList from "@/components/SubjectChapterList";
 import { allSubjects } from "@/data/chapters";
-import { chemistryShortNotes } from "@/data/shortNotes";
+import { chemistryShortNotes, physicsShortNotes } from "@/data/shortNotes";
 
 const noteTypes = ["Long Notes", "Short Notes", "Topper Notes"] as const;
 
@@ -56,6 +56,8 @@ const NotesPage = () => {
             data={
               activeType === "Short Notes" && allSubjects[activeSubject].subject === "Chemistry"
                 ? chemistryShortNotes
+                : activeType === "Short Notes" && allSubjects[activeSubject].subject === "Physics"
+                ? physicsShortNotes
                 : allSubjects[activeSubject]
             }
             sectionLabel={activeType}
