@@ -91,11 +91,11 @@ const Index = () => {
           >
             <Link
               to={sec.path}
-              className="group section-card flex items-center gap-4 h-full hover:scale-[1.02] transition-transform"
+              className="group section-card flex items-center gap-4 h-full hover-lift"
             >
-              <div className={`w-14 h-14 rounded-2xl ${sec.gradient} flex items-center justify-center shrink-0 shadow-md`}>
+              <motion.div whileHover={{ rotate: [0, -8, 8, 0] }} transition={{ duration: 0.5 }} className={`w-14 h-14 rounded-2xl ${sec.gradient} flex items-center justify-center shrink-0 shadow-md`}>
                 <sec.icon size={26} className="text-primary-foreground" />
-              </div>
+              </motion.div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-display font-semibold text-lg mb-0.5">{sec.label}</h3>
                 <p className="text-sm text-muted-foreground">{sec.desc}</p>
