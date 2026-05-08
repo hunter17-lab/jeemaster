@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import Layout from "@/components/Layout";
+import AdminItemsList from "@/components/AdminItemsList";
 import { coachingMaterials } from "@/data/chapters";
 
 const CoachingPage = () => (
@@ -11,6 +12,7 @@ const CoachingPage = () => (
         <p className="text-muted-foreground mb-8">Modules, DPPs & Tests from top coaching institutes</p>
       </motion.div>
 
+      <AdminItemsList type="coaching" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {coachingMaterials.map((coaching, i) => (
           <motion.div

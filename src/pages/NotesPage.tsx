@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Sparkles, Trophy } from "lucide-react";
 import Layout from "@/components/Layout";
 import SubjectChapterList from "@/components/SubjectChapterList";
+import AdminItemsList from "@/components/AdminItemsList";
 import { allSubjects } from "@/data/chapters";
 import { chemistryShortNotes, physicsShortNotes, mathsShortNotes } from "@/data/shortNotes";
 
@@ -99,6 +100,8 @@ const NotesPage = () => {
                 </button>
               ))}
             </div>
+
+            <AdminItemsList type="notes" subject={allSubjects[activeSubject].subject} />
 
             <div className="glass-card p-6">
               <SubjectChapterList

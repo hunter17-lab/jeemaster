@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ChevronRight, Calendar, BookOpen } from "lucide-react";
 import Layout from "@/components/Layout";
 import SubjectChapterList from "@/components/SubjectChapterList";
+import AdminItemsList from "@/components/AdminItemsList";
 import { allSubjects, pyqYears } from "@/data/chapters";
 
 const subjectEmojis = ["⚡ Physics", "🧪 Chemistry", "📐 Mathematics"];
@@ -89,6 +90,7 @@ const PYQPage = () => {
                 </button>
               ))}
             </div>
+            <AdminItemsList type="pyq" subject={allSubjects[activeSubject].subject} />
             <div className="glass-card p-6">
               <SubjectChapterList data={allSubjects[activeSubject]} sectionLabel="PYQ" />
             </div>
