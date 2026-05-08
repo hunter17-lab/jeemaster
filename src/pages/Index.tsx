@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FileText, Brain, Target, Library, GraduationCap, Zap, BookOpen, ArrowRight, Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
 import StartPopup from "@/components/StartPopup";
+import useSEO from "@/hooks/useSEO";
 
 const sections = [
   { path: "/notes", label: "📝 Notes", desc: "Long, Short & Topper Notes", icon: FileText, gradient: "gradient-primary", emoji: "📝" },
@@ -20,15 +21,20 @@ const stats = [
   { value: "100%", label: "Free Forever", emoji: "💯" },
 ];
 
-const Index = () => (
+const Index = () => {
+  useSEO({
+    title: "JEE MASTER — Free IIT JEE Notes, Mind Maps, DPP, PYQs & Books",
+    description: "Free IIT JEE preparation hub: chapter-wise short notes, mind maps, DPPs, 25+ years PYQs, books and Allen/PW coaching material for Class 11, 12 & droppers.",
+  });
+  return (
   <Layout>
     <StartPopup />
 
     {/* Hero */}
-    <section className="relative overflow-hidden">
-      <div className="absolute inset-0 gradient-primary opacity-[0.07]" />
-      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+    <section className="relative overflow-hidden gradient-mesh">
+      <div className="absolute inset-0 gradient-primary opacity-[0.05]" />
+      <motion.div animate={{ x: [0, 30, 0], y: [0, -20, 0] }} transition={{ duration: 12, repeat: Infinity }} className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl" />
+      <motion.div animate={{ x: [0, -25, 0], y: [0, 25, 0] }} transition={{ duration: 14, repeat: Infinity }} className="absolute bottom-10 right-10 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
       <div className="page-container relative py-20 md:py-28 text-center">
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
           <motion.div
@@ -85,11 +91,11 @@ const Index = () => (
           >
             <Link
               to={sec.path}
-              className="group section-card flex items-center gap-4 h-full hover:scale-[1.02] transition-transform"
+              className="group section-card flex items-center gap-4 h-full hover-lift"
             >
-              <div className={`w-14 h-14 rounded-2xl ${sec.gradient} flex items-center justify-center shrink-0 shadow-md`}>
+              <motion.div whileHover={{ rotate: [0, -8, 8, 0] }} transition={{ duration: 0.5 }} className={`w-14 h-14 rounded-2xl ${sec.gradient} flex items-center justify-center shrink-0 shadow-md`}>
                 <sec.icon size={26} className="text-primary-foreground" />
-              </div>
+              </motion.div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-display font-semibold text-lg mb-0.5">{sec.label}</h3>
                 <p className="text-sm text-muted-foreground">{sec.desc}</p>
@@ -123,6 +129,7 @@ const Index = () => (
       </motion.div>
     </section>
   </Layout>
-);
+  );
+};
 
 export default Index;

@@ -1,0 +1,240 @@
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { Shield, Plus, Trash2, Ban, ShieldOff, RefreshCw, Users, FileText, Mail } from "lucide-react";
+import Layout from "@/components/Layout";
+import { useAuth } from "@/contexts/AuthContext";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { supabase } from "@/integrations/supabase/client";
+
+const CONTENT_TYPES = [
+  { value: "notes", label: "📝 Notes" },
+  { value: "mindmaps", label: "🧠 Mind Maps" },
+  { value: "dpp", label: "⚡ DPP" },
+  { value: "pyq", label: "🎯 PYQ" },
+  { value: "books", label: "📚 Books" },
+  { value: "coaching", label: "🏫 Coaching" },
+] as const;
+
+const SUBJECTS = ["Physics", "Chemistry", "Mathematics", "General"];
+
+const AdminPage = () => {
+  const { user, loading: authLoading } = useAuth();
+  const { isAdmin, loading: roleLoading } = useIsAdmin();
+  const navigate = useNavigate();
+
+  const [tab, setTab] = useState<"content" | "users" | "bans">("content");
+  const [form, setForm] = useState({ type: "notes", subject: "Physics", section: "", title: "", link: "", description: "" });
+  const [items, setItems] = useState<any[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
+  const [profiles, setProfiles] = useState<Record<string, any>>({});
+  const [bans, setBans] = useState<any[]>([]);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (!authLoading && !user) navigate("/auth");
+  }, [authLoading, user, navigate]);
+
+  const loadAll = async () => {
+    const [{ data: c }, { data: b }, { data: p }] = await Promise.all([
+      supabase.from("content_items").select("*").order("created_at", { ascending: false }),
+      supabase.from("banned_emails").select("*").order("banned_at", { ascending: false }),
+      supabase.from("profiles").select("*"),
+    ]);
+    setItems(c || []);
+    setBans(b || []);
+    const map: Record<string, any> = {};
+    (p || []).forEach((pr: any) => { map[pr.user_id] = pr; });
+    setProfiles(map);
+
+    const { data: ud, error } = await supabase.functions.invoke("admin-actions", { body: { action: "list_users" } });
+    if (!error) setUsers(ud?.users || []);
+  };
+
+  useEffect(() => {
+    if (isAdmin) loadAll();
+  }, [isAdmin]);
+
+  if (authLoading || roleLoading) {
+    return <Layout><div className="page-container">Loading…</div></Layout>;
+  }
+  if (!isAdmin) {
+    return (
+      <Layout>
+        <div className="page-container max-w-xl text-center">
+          <Shield className="mx-auto mb-3 text-destructive" size={48} />
+          <h1 className="text-2xl font-display font-bold mb-2">Access denied</h1>
+          <p className="text-muted-foreground">You need admin rights to view this page.</p>
+        </div>
+      </Layout>
+    );
+  }
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    const { error } = await supabase.from("content_items").insert({
+      type: form.type as any,
+      subject: form.subject,
+      section: form.section || null,
+      title: form.title,
+      link: form.link,
+      description: form.description || null,
+      created_by: user!.id,
+    });
+    setBusy(false);
+    if (error) { toast.error(error.message); return; }
+    toast.success("Uploaded ✨");
+    setForm({ ...form, title: "", link: "", description: "" });
+    loadAll();
+  };
+
+  const removeItem = async (id: string) => {
+    if (!confirm("Delete this item?")) return;
+    await supabase.from("content_items").delete().eq("id", id);
+    loadAll();
+  };
+
+  const banUser = async (u: any) => {
+    if (!confirm(`Ban ${u.email}? Their account will be deleted and they cannot sign up again.`)) return;
+    const { error } = await supabase.functions.invoke("admin-actions", {
+      body: { action: "ban_user", target_user_id: u.id, target_email: u.email },
+    });
+    if (error) toast.error(error.message); else { toast.success("User banned"); loadAll(); }
+  };
+  const deleteUser = async (u: any) => {
+    if (!confirm(`Permanently delete ${u.email}?`)) return;
+    const { error } = await supabase.functions.invoke("admin-actions", {
+      body: { action: "delete_user", target_user_id: u.id },
+    });
+    if (error) toast.error(error.message); else { toast.success("User deleted"); loadAll(); }
+  };
+  const unban = async (email: string) => {
+    const { error } = await supabase.functions.invoke("admin-actions", {
+      body: { action: "unban_email", target_email: email },
+    });
+    if (error) toast.error(error.message); else { toast.success("Unbanned"); loadAll(); }
+  };
+
+  return (
+    <Layout>
+      <div className="page-container">
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold uppercase tracking-widest mb-3">
+            <Shield size={14} /> Admin Panel
+          </div>
+          <h1 className="text-3xl font-display font-bold">Manage everything</h1>
+        </motion.div>
+
+        <div className="flex gap-2 mb-6 flex-wrap">
+          {[
+            { k: "content", label: "📦 Content", icon: FileText },
+            { k: "users", label: "👥 Users", icon: Users },
+            { k: "bans", label: "🚫 Bans", icon: Ban },
+          ].map(({ k, label }) => (
+            <button
+              key={k}
+              onClick={() => setTab(k as any)}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+                tab === k ? "gradient-primary text-primary-foreground" : "bg-secondary"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+          <button onClick={loadAll} className="ml-auto px-3 py-2 rounded-lg bg-secondary text-sm flex items-center gap-1">
+            <RefreshCw size={14} /> Refresh
+          </button>
+        </div>
+
+        {tab === "content" && (
+          <div className="grid lg:grid-cols-2 gap-6">
+            <form onSubmit={submit} className="glass-card p-6 space-y-3">
+              <h3 className="font-display font-semibold mb-2 flex items-center gap-2"><Plus size={18}/> Upload Item</h3>
+              <div className="grid grid-cols-2 gap-3">
+                <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className="px-3 py-2 rounded-lg bg-secondary border border-border">
+                  {CONTENT_TYPES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
+                </select>
+                <select value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} className="px-3 py-2 rounded-lg bg-secondary border border-border">
+                  {SUBJECTS.map(s => <option key={s}>{s}</option>)}
+                </select>
+              </div>
+              <input value={form.section} onChange={(e) => setForm({ ...form, section: e.target.value })} placeholder="Section (e.g. Class 11) — optional" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              <input required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Title (chapter / topic name)" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              <input required type="url" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} placeholder="https://drive.google.com/..." className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description (optional)" rows={2} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              <button disabled={busy} className="w-full py-2.5 rounded-lg gradient-primary text-primary-foreground font-semibold disabled:opacity-50">
+                {busy ? "Uploading…" : "Upload"}
+              </button>
+            </form>
+
+            <div className="glass-card p-6">
+              <h3 className="font-display font-semibold mb-3">All Uploaded ({items.length})</h3>
+              <div className="space-y-2 max-h-[600px] overflow-auto">
+                {items.map((it) => (
+                  <div key={it.id} className="flex items-center gap-2 p-3 rounded-lg bg-secondary/50">
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium truncate">{it.title}</div>
+                      <div className="text-xs text-muted-foreground truncate">{it.type} · {it.subject}{it.section ? ` · ${it.section}` : ""}</div>
+                    </div>
+                    <a href={it.link} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline">open</a>
+                    <button onClick={() => removeItem(it.id)} className="p-1.5 rounded text-destructive hover:bg-destructive/10">
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                ))}
+                {items.length === 0 && <p className="text-sm text-muted-foreground">No items yet.</p>}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {tab === "users" && (
+          <div className="glass-card p-6">
+            <h3 className="font-display font-semibold mb-3">All Users ({users.length})</h3>
+            <div className="space-y-2 max-h-[700px] overflow-auto">
+              {users.map((u) => (
+                <div key={u.id} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50">
+                  <div className="w-9 h-9 rounded-full gradient-primary flex items-center justify-center text-primary-foreground font-bold uppercase text-sm">
+                    {(profiles[u.id]?.display_name || u.email || "U")[0]}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium truncate">{profiles[u.id]?.display_name || "—"}</div>
+                    <div className="text-xs text-muted-foreground truncate flex items-center gap-1"><Mail size={10}/> {u.email}</div>
+                  </div>
+                  <button onClick={() => banUser(u)} className="px-2 py-1 rounded bg-destructive/10 text-destructive text-xs flex items-center gap-1"><Ban size={12}/> Ban</button>
+                  <button onClick={() => deleteUser(u)} className="px-2 py-1 rounded bg-destructive/15 text-destructive text-xs flex items-center gap-1"><Trash2 size={12}/> Delete</button>
+                </div>
+              ))}
+              {users.length === 0 && <p className="text-sm text-muted-foreground">No users.</p>}
+            </div>
+          </div>
+        )}
+
+        {tab === "bans" && (
+          <div className="glass-card p-6">
+            <h3 className="font-display font-semibold mb-3">Banned Emails ({bans.length})</h3>
+            <div className="space-y-2">
+              {bans.map((b) => (
+                <div key={b.id} className="flex items-center gap-2 p-3 rounded-lg bg-secondary/50">
+                  <Ban size={16} className="text-destructive" />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium">{b.email}</div>
+                    {b.reason && <div className="text-xs text-muted-foreground">{b.reason}</div>}
+                  </div>
+                  <button onClick={() => unban(b.email)} className="px-2 py-1 rounded bg-primary/10 text-primary text-xs flex items-center gap-1">
+                    <ShieldOff size={12}/> Unban
+                  </button>
+                </div>
+              ))}
+              {bans.length === 0 && <p className="text-sm text-muted-foreground">No bans.</p>}
+            </div>
+          </div>
+        )}
+      </div>
+    </Layout>
+  );
+};
+
+export default AdminPage;

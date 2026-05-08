@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Camera, Save, User } from "lucide-react";
+import { Camera, Save, User, Trash2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -166,6 +166,29 @@ const ProfilePage = () => {
               <Save size={18} />
               {saving ? "Saving..." : "Save Profile"}
             </button>
+
+            <div className="pt-6 mt-2 border-t border-border/50">
+              <h3 className="text-sm font-semibold text-destructive mb-2">⚠️ Danger zone</h3>
+              <p className="text-xs text-muted-foreground mb-3">
+                Permanently delete your account. You can sign up again later with the same email, but your old data will be gone.
+              </p>
+              <button
+                onClick={async () => {
+                  if (!confirm("Are you sure? This permanently deletes your account.")) return;
+                  const { error } = await supabase.functions.invoke("delete-self", {});
+                  if (error) {
+                    toast({ title: "Error", description: error.message, variant: "destructive" });
+                  } else {
+                    await supabase.auth.signOut();
+                    toast({ title: "Account deleted" });
+                    navigate("/");
+                  }
+                }}
+                className="w-full py-2.5 rounded-xl bg-destructive/10 text-destructive font-semibold flex items-center justify-center gap-2 hover:bg-destructive/20"
+              >
+                <Trash2 size={16} /> Delete Account Permanently
+              </button>
+            </div>
           </div>
         </motion.div>
       </div>

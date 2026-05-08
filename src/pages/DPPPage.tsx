@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Layout from "@/components/Layout";
 import SubjectChapterList from "@/components/SubjectChapterList";
+import AdminItemsList from "@/components/AdminItemsList";
 import { allSubjects } from "@/data/chapters";
 
 const DPPPage = () => {
@@ -29,6 +30,7 @@ const DPPPage = () => {
           ))}
         </div>
 
+        <AdminItemsList type="dpp" subject={allSubjects[activeSubject].subject} />
         <div className="glass-card p-6">
           <SubjectChapterList data={allSubjects[activeSubject]} sectionLabel="DPP" />
         </div>

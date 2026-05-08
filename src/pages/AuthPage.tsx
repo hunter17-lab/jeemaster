@@ -26,6 +26,14 @@ const AuthPage = () => {
     setLoading(true);
 
     try {
+      // Check ban list first
+      const { data: banCheck } = await supabase.functions.invoke("check-banned", { body: { email } });
+      if (banCheck?.banned) {
+        toast.error("🚫 This email has been banned by an admin.");
+        setLoading(false);
+        return;
+      }
+
       if (isLogin) {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
@@ -36,12 +44,20 @@ const AuthPage = () => {
           email,
           password,
           options: {
-            data: { display_name: name },
+            data: { display_name: name, full_name: name },
             emailRedirectTo: window.location.origin,
           },
         });
         if (error) throw error;
-        toast.success("Check your email to verify your account! 📧");
+        // Auto sign in (no email verification)
+        const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
+        if (signInErr) {
+          toast.success("Account created! Please sign in.");
+          setIsLogin(true);
+        } else {
+          toast.success("Welcome to JEE Master! 🎉");
+          navigate("/");
+        }
       }
     } catch (err: any) {
       toast.error(err.message || "Authentication failed");

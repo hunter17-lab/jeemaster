@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import Layout from "@/components/Layout";
+import AdminItemsList from "@/components/AdminItemsList";
 import { bookCategories } from "@/data/chapters";
 
 const BooksPage = () => (
@@ -11,6 +12,7 @@ const BooksPage = () => (
         <p className="text-muted-foreground mb-8">Recommended books for IIT JEE preparation</p>
       </motion.div>
 
+      <AdminItemsList type="books" />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {bookCategories.map((book, i) => (
           <motion.a
