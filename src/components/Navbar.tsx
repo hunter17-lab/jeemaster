@@ -107,63 +107,66 @@ const Navbar = () => {
       </div>
 
       {/* Mobile side drawer */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={closeMobile}
-              className="md:hidden fixed inset-0 z-50 bg-background/70 backdrop-blur-sm"
-            />
-            <motion.aside
-              initial={{ x: "-100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ type: "tween", duration: 0.25, ease: "easeOut" }}
-              className="md:hidden fixed top-0 left-0 bottom-0 z-50 w-72 max-w-[80vw] bg-card border-r border-border/60 shadow-2xl flex flex-col"
-            >
-              <div className="flex items-center justify-between h-16 px-4 border-b border-border/50">
-                <Link to="/" onClick={closeMobile} className="flex items-center gap-2">
-                  <img src="/icons/icon-192.png" alt="JEE MASTER" className="w-8 h-8 rounded-lg" />
-                  <span className="font-display font-bold text-lg">JEE MASTER</span>
-                </Link>
-                <button onClick={closeMobile} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary" aria-label="Close menu">
-                  <X size={20} />
-                </button>
-              </div>
-              <div className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-                {navItems.map(({ path, label, icon: Icon }) => (
-                  <Link
-                    key={path}
-                    to={path}
-                    onClick={closeMobile}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                      pathname === path ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-secondary"
-                    }`}
-                  >
-                    <Icon size={18} />
-                    {label}
+      {typeof document !== "undefined" && createPortal(
+        <AnimatePresence>
+          {mobileOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={closeMobile}
+                className="md:hidden fixed inset-0 z-[100] bg-background/70 backdrop-blur-sm"
+              />
+              <motion.aside
+                initial={{ x: "-100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "-100%" }}
+                transition={{ type: "tween", duration: 0.25, ease: "easeOut" }}
+                className="md:hidden fixed top-0 left-0 bottom-0 z-[101] w-72 max-w-[80vw] bg-card border-r border-border/60 shadow-2xl flex flex-col"
+              >
+                <div className="flex items-center justify-between h-16 px-4 border-b border-border/50">
+                  <Link to="/" onClick={closeMobile} className="flex items-center gap-2">
+                    <img src="/icons/icon-192.png" alt="JEE MASTER" className="w-8 h-8 rounded-lg" />
+                    <span className="font-display font-bold text-lg">JEE MASTER</span>
                   </Link>
-                ))}
-                <div className="h-px bg-border/60 my-3" />
-                <Link to="/install" onClick={closeMobile} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-primary hover:bg-primary/10">
-                  <Download size={18} /> Install App
-                </Link>
-                {user && (
-                  <button
-                    onClick={async () => { closeMobile(); await signOut(); navigate("/"); }}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-secondary"
-                  >
-                    <LogOut size={18} /> Sign Out
+                  <button onClick={closeMobile} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary" aria-label="Close menu">
+                    <X size={20} />
                   </button>
-                )}
-              </div>
-            </motion.aside>
-          </>
-        )}
-      </AnimatePresence>
+                </div>
+                <div className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+                  {navItems.map(({ path, label, icon: Icon }) => (
+                    <Link
+                      key={path}
+                      to={path}
+                      onClick={closeMobile}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                        pathname === path ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-secondary"
+                      }`}
+                    >
+                      <Icon size={18} />
+                      {label}
+                    </Link>
+                  ))}
+                  <div className="h-px bg-border/60 my-3" />
+                  <Link to="/install" onClick={closeMobile} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-primary hover:bg-primary/10">
+                    <Download size={18} /> Install App
+                  </Link>
+                  {user && (
+                    <button
+                      onClick={async () => { closeMobile(); await signOut(); navigate("/"); }}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:bg-secondary"
+                    >
+                      <LogOut size={18} /> Sign Out
+                    </button>
+                  )}
+                </div>
+              </motion.aside>
+            </>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </nav>
   );
 };
