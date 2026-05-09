@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, Brain, FileText, Target, Library, GraduationCap, Menu, X, Search, Moon, Sun, Download, Info, LogIn, LogOut, UserCircle, Shield } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
@@ -36,6 +35,17 @@ const Navbar = () => {
   };
 
   const closeMobile = () => setMobileOpen(false);
+
+  useEffect(() => {
+    closeMobile();
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
 
   return (
     <nav className="sticky top-0 z-40 bg-card/80 backdrop-blur-xl border-b border-border/50">
@@ -108,23 +118,17 @@ const Navbar = () => {
 
       {/* Mobile side drawer */}
       {typeof document !== "undefined" && createPortal(
-        <AnimatePresence>
-          {mobileOpen && (
-            <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={closeMobile}
-                className="md:hidden fixed inset-0 z-[100] bg-background/70 backdrop-blur-sm"
-              />
-              <motion.aside
-                initial={{ x: "-100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "-100%" }}
-                transition={{ type: "tween", duration: 0.25, ease: "easeOut" }}
-                className="md:hidden fixed top-0 left-0 bottom-0 z-[101] w-72 max-w-[80vw] bg-card border-r border-border/60 shadow-2xl flex flex-col"
-              >
+        <div className={`md:hidden fixed inset-0 z-[9999] ${mobileOpen ? "pointer-events-auto" : "pointer-events-none"}`}>
+          <button
+            type="button"
+            aria-label="Close menu backdrop"
+            onClick={closeMobile}
+            className={`absolute inset-0 bg-background/70 backdrop-blur-sm transition-opacity duration-300 ${mobileOpen ? "opacity-100" : "opacity-0"}`}
+          />
+          <aside
+            aria-hidden={!mobileOpen}
+            className={`absolute inset-y-0 left-0 w-72 max-w-[82vw] bg-card border-r border-border/60 shadow-2xl flex flex-col transition-transform duration-300 ease-out will-change-transform ${mobileOpen ? "translate-x-0" : "-translate-x-full"}`}
+          >
                 <div className="flex items-center justify-between h-16 px-4 border-b border-border/50">
                   <Link to="/" onClick={closeMobile} className="flex items-center gap-2">
                     <img src="/icons/icon-192.png" alt="JEE MASTER" className="w-8 h-8 rounded-lg" />
@@ -161,10 +165,8 @@ const Navbar = () => {
                     </button>
                   )}
                 </div>
-              </motion.aside>
-            </>
-          )}
-        </AnimatePresence>,
+          </aside>
+        </div>,
         document.body
       )}
     </nav>
