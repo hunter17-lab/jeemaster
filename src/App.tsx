@@ -11,6 +11,7 @@ import MindMapsPage from "./pages/MindMapsPage";
 import DPPPage from "./pages/DPPPage";
 import PYQPage from "./pages/PYQPage";
 import BooksPage from "./pages/BooksPage";
+import BookSubjectPage from "./pages/BookSubjectPage";
 import CoachingPage from "./pages/CoachingPage";
 import SearchPage from "./pages/SearchPage";
 import InstallPage from "./pages/InstallPage";
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/dpp" element={<DPPPage />} />
             <Route path="/pyq" element={<PYQPage />} />
             <Route path="/books" element={<BooksPage />} />
+            <Route path="/books/:subject" element={<BookSubjectPage />} />
             <Route path="/coaching" element={<CoachingPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/install" element={<InstallPage />} />
