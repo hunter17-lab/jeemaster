@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FileText, Brain, Target, Library, GraduationCap, Zap, BookOpen, ArrowRight, Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
 import StartPopup from "@/components/StartPopup";
+import PinnedResources from "@/components/PinnedResources";
 import useSEO from "@/hooks/useSEO";
 
 const sections = [
@@ -70,6 +71,8 @@ const Index = () => {
         </motion.div>
       </div>
     </section>
+
+    <PinnedResources />
 
     {/* Sections Grid */}
     <section className="page-container pb-6">

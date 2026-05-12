@@ -42,6 +42,8 @@ export type Database = {
           description: string | null
           id: string
           link: string
+          pinned: boolean
+          pinned_at: string | null
           section: string | null
           subject: string
           title: string
@@ -54,6 +56,8 @@ export type Database = {
           description?: string | null
           id?: string
           link: string
+          pinned?: boolean
+          pinned_at?: string | null
           section?: string | null
           subject: string
           title: string
@@ -66,6 +70,8 @@ export type Database = {
           description?: string | null
           id?: string
           link?: string
+          pinned?: boolean
+          pinned_at?: string | null
           section?: string | null
           subject?: string
           title?: string

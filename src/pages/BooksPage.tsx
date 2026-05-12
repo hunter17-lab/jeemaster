@@ -12,7 +12,9 @@ const BooksPage = () => (
         <p className="text-muted-foreground mb-8">Recommended books for IIT JEE preparation</p>
       </motion.div>
 
-      <AdminItemsList type="books" />
+      {["Physics", "Chemistry", "Mathematics", "General"].map((s) => (
+        <AdminItemsList key={s} type="books" subject={s} title={`📌 ${s} — Admin Picks`} />
+      ))}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {bookCategories.map((book, i) => (
           <motion.a

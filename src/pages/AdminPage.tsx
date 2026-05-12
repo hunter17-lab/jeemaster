@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Shield, Plus, Trash2, Ban, ShieldOff, RefreshCw, Users, FileText, Mail } from "lucide-react";
+import { Shield, Plus, Trash2, Ban, ShieldOff, RefreshCw, Users, FileText, Mail, Pin, PinOff } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
@@ -96,6 +96,22 @@ const AdminPage = () => {
     loadAll();
   };
 
+  const togglePin = async (it: any) => {
+    if (!it.pinned) {
+      const pinnedCount = items.filter((x) => x.pinned).length;
+      if (pinnedCount >= 10) {
+        toast.error("Pin limit reached (max 10). Unpin something first.");
+        return;
+      }
+    }
+    const { error } = await supabase
+      .from("content_items")
+      .update({ pinned: !it.pinned })
+      .eq("id", it.id);
+    if (error) toast.error(error.message);
+    else { toast.success(it.pinned ? "Unpinned" : "Pinned to landing"); loadAll(); }
+  };
+
   const banUser = async (u: any) => {
     if (!confirm(`Ban ${u.email}? Their account will be deleted and they cannot sign up again.`)) return;
     const { error } = await supabase.functions.invoke("admin-actions", {
@@ -170,15 +186,30 @@ const AdminPage = () => {
             </form>
 
             <div className="glass-card p-6">
-              <h3 className="font-display font-semibold mb-3">All Uploaded ({items.length})</h3>
+              <h3 className="font-display font-semibold mb-3 flex items-center gap-2">
+                All Uploaded ({items.length})
+                <span className="ml-auto text-xs font-normal text-muted-foreground inline-flex items-center gap-1">
+                  <Pin size={12} /> {items.filter((x) => x.pinned).length}/10 pinned
+                </span>
+              </h3>
               <div className="space-y-2 max-h-[600px] overflow-auto">
                 {items.map((it) => (
-                  <div key={it.id} className="flex items-center gap-2 p-3 rounded-lg bg-secondary/50">
+                  <div key={it.id} className={`flex items-center gap-2 p-3 rounded-lg ${it.pinned ? "bg-primary/10 border border-primary/30" : "bg-secondary/50"}`}>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium truncate">{it.title}</div>
+                      <div className="text-sm font-medium truncate flex items-center gap-1">
+                        {it.pinned && <Pin size={12} className="text-primary shrink-0" />}
+                        {it.title}
+                      </div>
                       <div className="text-xs text-muted-foreground truncate">{it.type} · {it.subject}{it.section ? ` · ${it.section}` : ""}</div>
                     </div>
                     <a href={it.link} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline">open</a>
+                    <button
+                      onClick={() => togglePin(it)}
+                      title={it.pinned ? "Unpin" : "Pin to landing"}
+                      className={`p-1.5 rounded ${it.pinned ? "text-primary hover:bg-primary/10" : "text-muted-foreground hover:bg-secondary"}`}
+                    >
+                      {it.pinned ? <PinOff size={14} /> : <Pin size={14} />}
+                    </button>
                     <button onClick={() => removeItem(it.id)} className="p-1.5 rounded text-destructive hover:bg-destructive/10">
                       <Trash2 size={14} />
                     </button>
