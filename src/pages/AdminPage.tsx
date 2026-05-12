@@ -17,7 +17,11 @@ const CONTENT_TYPES = [
   { value: "coaching", label: "🏫 Coaching" },
 ] as const;
 
-const SUBJECTS = ["Physics", "Chemistry", "Mathematics", "General"];
+const SUBJECTS_DEFAULT = ["Physics", "Chemistry", "Mathematics", "General"];
+const SUBJECTS_BY_TYPE: Record<string, string[]> = {
+  books: ["Physics", "Chemistry", "Mathematics", "PCM"],
+};
+const getSubjects = (type: string) => SUBJECTS_BY_TYPE[type] || SUBJECTS_DEFAULT;
 
 const AdminPage = () => {
   const { user, loading: authLoading } = useAuth();
