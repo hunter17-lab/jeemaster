@@ -1,5 +1,0 @@
-[functions.sitemap]
-verify_jwt = false
-
-[functions.check-banned]
-verify_jwt = false
