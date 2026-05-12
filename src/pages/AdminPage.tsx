@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Shield, Plus, Trash2, Ban, ShieldOff, RefreshCw, Users, FileText, Mail } from "lucide-react";
+import { Shield, Plus, Trash2, Ban, ShieldOff, RefreshCw, Users, FileText, Mail, Pin, PinOff } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
@@ -94,6 +94,22 @@ const AdminPage = () => {
     if (!confirm("Delete this item?")) return;
     await supabase.from("content_items").delete().eq("id", id);
     loadAll();
+  };
+
+  const togglePin = async (it: any) => {
+    if (!it.pinned) {
+      const pinnedCount = items.filter((x) => x.pinned).length;
+      if (pinnedCount >= 10) {
+        toast.error("Pin limit reached (max 10). Unpin something first.");
+        return;
+      }
+    }
+    const { error } = await supabase
+      .from("content_items")
+      .update({ pinned: !it.pinned })
+      .eq("id", it.id);
+    if (error) toast.error(error.message);
+    else { toast.success(it.pinned ? "Unpinned" : "Pinned to landing"); loadAll(); }
   };
 
   const banUser = async (u: any) => {
