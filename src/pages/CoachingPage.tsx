@@ -12,7 +12,9 @@ const CoachingPage = () => (
         <p className="text-muted-foreground mb-8">Modules, DPPs & Tests from top coaching institutes</p>
       </motion.div>
 
-      <AdminItemsList type="coaching" />
+      {["Physics", "Chemistry", "Mathematics", "General"].map((s) => (
+        <AdminItemsList key={s} type="coaching" subject={s} title={`📌 ${s} — Admin Picks`} />
+      ))}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {coachingMaterials.map((coaching, i) => (
           <motion.div
