@@ -173,11 +173,15 @@ const AdminPage = () => {
             <form onSubmit={submit} className="glass-card p-6 space-y-3">
               <h3 className="font-display font-semibold mb-2 flex items-center gap-2"><Plus size={18}/> Upload Item</h3>
               <div className="grid grid-cols-2 gap-3">
-                <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className="px-3 py-2 rounded-lg bg-secondary border border-border">
+                <select value={form.type} onChange={(e) => {
+                  const newType = e.target.value;
+                  const subs = getSubjects(newType);
+                  setForm({ ...form, type: newType, subject: subs.includes(form.subject) ? form.subject : subs[0] });
+                }} className="px-3 py-2 rounded-lg bg-secondary border border-border">
                   {CONTENT_TYPES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
                 </select>
                 <select value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} className="px-3 py-2 rounded-lg bg-secondary border border-border">
-                  {SUBJECTS.map(s => <option key={s}>{s}</option>)}
+                  {getSubjects(form.type).map(s => <option key={s}>{s}</option>)}
                 </select>
               </div>
               <input value={form.section} onChange={(e) => setForm({ ...form, section: e.target.value })} placeholder="Section (e.g. Class 11) — optional" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
