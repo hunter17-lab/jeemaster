@@ -101,6 +101,28 @@ const AuthPage = () => {
     }
   };
 
+  const getTitle = () => {
+    switch (mode) {
+      case "forgot":
+        return "Forgot Password";
+      case "signup":
+        return "Join JEE Master";
+      default:
+        return "Welcome Back";
+    }
+  };
+
+  const getSubtitle = () => {
+    switch (mode) {
+      case "forgot":
+        return "Enter your email and we'll send a reset link";
+      case "signup":
+        return "Create your free account";
+      default:
+        return "Sign in to continue learning";
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -110,33 +132,42 @@ const AuthPage = () => {
 
         <div className="bg-card rounded-2xl border border-border/50 p-6 shadow-lg">
           <div className="text-center mb-6">
+            {mode === "forgot" && (
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+                <KeyRound size={24} className="text-primary" />
+              </div>
+            )}
             <h1 className="font-display text-2xl font-bold text-foreground">
-              {isLogin ? "Welcome Back" : "Join JEE Master"}
+              {getTitle()}
             </h1>
             <p className="text-muted-foreground text-sm mt-1">
-              {isLogin ? "Sign in to continue learning" : "Create your free account"}
+              {getSubtitle()}
             </p>
           </div>
 
-          {/* Google */}
-          <button
-            onClick={handleGoogleSignIn}
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border bg-secondary hover:bg-secondary/80 text-foreground font-medium text-sm transition disabled:opacity-50"
-          >
-            <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
-            Continue with Google
-          </button>
+          {mode !== "forgot" && (
+            <>
+              {/* Google */}
+              <button
+                onClick={handleGoogleSignIn}
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-border bg-secondary hover:bg-secondary/80 text-foreground font-medium text-sm transition disabled:opacity-50"
+              >
+                <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
+                Continue with Google
+              </button>
 
-          <div className="flex items-center gap-3 my-5">
-            <div className="flex-1 h-px bg-border" />
-            <span className="text-xs text-muted-foreground">or</span>
-            <div className="flex-1 h-px bg-border" />
-          </div>
+              <div className="flex items-center gap-3 my-5">
+                <div className="flex-1 h-px bg-border" />
+                <span className="text-xs text-muted-foreground">or</span>
+                <div className="flex-1 h-px bg-border" />
+              </div>
+            </>
+          )}
 
           {/* Email form */}
-          <form onSubmit={handleEmailAuth} className="space-y-3">
-            {!isLogin && (
+          <form onSubmit={mode === "forgot" ? handleForgotPassword : handleEmailAuth} className="space-y-3">
+            {mode === "signup" && (
               <div className="relative">
                 <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                 <input
@@ -159,34 +190,56 @@ const AuthPage = () => {
                 className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-secondary border border-border text-sm outline-none focus:ring-2 focus:ring-primary/50"
               />
             </div>
-            <div className="relative">
-              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-                className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-secondary border border-border text-sm outline-none focus:ring-2 focus:ring-primary/50"
-              />
-            </div>
+            {mode !== "forgot" && (
+              <div className="relative">
+                <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-secondary border border-border text-sm outline-none focus:ring-2 focus:ring-primary/50"
+                />
+              </div>
+            )}
             <button
               type="submit"
               disabled={loading}
               className="w-full py-2.5 rounded-xl gradient-primary text-primary-foreground font-semibold text-sm disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {loading && <Loader2 size={16} className="animate-spin" />}
-              {isLogin ? "Sign In" : "Create Account"}
+              {mode === "forgot" ? "Send Reset Link" : mode === "login" ? "Sign In" : "Create Account"}
             </button>
           </form>
 
-          <p className="text-center text-sm text-muted-foreground mt-4">
-            {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-            <button onClick={() => setIsLogin(!isLogin)} className="text-primary font-medium hover:underline">
-              {isLogin ? "Sign Up" : "Sign In"}
-            </button>
-          </p>
+          {mode === "login" && (
+            <div className="mt-3 text-right">
+              <button
+                onClick={() => setMode("forgot")}
+                className="text-xs text-primary font-medium hover:underline"
+              >
+                Forgot Password?
+              </button>
+            </div>
+          )}
+
+          {mode === "forgot" ? (
+            <p className="text-center text-sm text-muted-foreground mt-4">
+              Remember your password?{" "}
+              <button onClick={() => setMode("login")} className="text-primary font-medium hover:underline">
+                Sign In
+              </button>
+            </p>
+          ) : (
+            <p className="text-center text-sm text-muted-foreground mt-4">
+              {mode === "login" ? "Don't have an account?" : "Already have an account?"}{" "}
+              <button onClick={() => setMode(mode === "login" ? "signup" : "login")} className="text-primary font-medium hover:underline">
+                {mode === "login" ? "Sign Up" : "Sign In"}
+              </button>
+            </p>
+          )}
         </div>
       </div>
     </div>
