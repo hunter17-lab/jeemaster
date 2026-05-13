@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
-import { Mail, Lock, User, ArrowLeft, Loader2 } from "lucide-react";
+import { Mail, Lock, User, ArrowLeft, Loader2, KeyRound } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
 
