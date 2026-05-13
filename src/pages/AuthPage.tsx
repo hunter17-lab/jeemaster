@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
 
 const AuthPage = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [mode, setMode] = useState<"login" | "signup" | "forgot">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -26,7 +26,6 @@ const AuthPage = () => {
     setLoading(true);
 
     try {
-      // Check ban list first
       const { data: banCheck } = await supabase.functions.invoke("check-banned", { body: { email } });
       if (banCheck?.banned) {
         toast.error("🚫 This email has been banned by an admin.");
@@ -34,7 +33,7 @@ const AuthPage = () => {
         return;
       }
 
-      if (isLogin) {
+      if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
         toast.success("Welcome back! 🎉");
@@ -49,11 +48,10 @@ const AuthPage = () => {
           },
         });
         if (error) throw error;
-        // Auto sign in (no email verification)
         const { error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
         if (signInErr) {
           toast.success("Account created! Please sign in.");
-          setIsLogin(true);
+          setMode("login");
         } else {
           toast.success("Welcome to JEE Master! 🎉");
           navigate("/");
@@ -61,6 +59,25 @@ const AuthPage = () => {
       }
     } catch (err: any) {
       toast.error(err.message || "Authentication failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast.success("Password reset link sent! Check your email.");
+      setMode("login");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to send reset link");
     } finally {
       setLoading(false);
     }
