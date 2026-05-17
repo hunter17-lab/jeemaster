@@ -11,6 +11,10 @@ const subjectEmojis = ["⚡ Physics", "🧪 Chemistry", "📐 Mathematics"];
 const PYQPage = () => {
   const [tab, setTab] = useState<"papers" | "chapters">("papers");
   const [activeSubject, setActiveSubject] = useState(0);
+  const [openShift, setOpenShift] = useState<string | null>(null);
+
+  const toggleShift = (key: string) =>
+    setOpenShift((prev) => (prev === key ? null : key));
 
   return (
     <Layout>
@@ -63,12 +67,44 @@ const PYQPage = () => {
                   >
                     <h4 className="font-semibold mb-3">📌 {y}</h4>
                     <div className="space-y-2">
-                      {["Shift 1", "Shift 2"].map((s) => (
-                        <a key={s} href={`#pyq-${y}-${s.replace(" ", "")}`} className="chapter-item">
-                          <span className="text-sm">{s === "Shift 1" ? "🅰️" : "🅱️"} {s}</span>
-                          <ChevronRight size={14} className="text-muted-foreground" />
-                        </a>
-                      ))}
+                      {["Shift 1", "Shift 2"].map((s) => {
+                        const key = `${y}-${s}`;
+                        const isOpen = openShift === key;
+                        return (
+                          <div key={s}>
+                            <button
+                              onClick={() => toggleShift(key)}
+                              className="chapter-item w-full"
+                            >
+                              <span className="text-sm">{s === "Shift 1" ? "🅰️" : "🅱️"} {s}</span>
+                              <ChevronRight
+                                size={14}
+                                className={`text-muted-foreground transition-transform ${isOpen ? "rotate-90" : ""}`}
+                              />
+                            </button>
+                            {isOpen && (
+                              <motion.div
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                className="mt-2 ml-4 space-y-2 border-l border-border/50 pl-3"
+                              >
+                                {["January Attempt", "April Attempt"].map((a) => (
+                                  <a
+                                    key={a}
+                                    href={`#pyq-${y}-${s.replace(" ", "")}-${a.split(" ")[0]}`}
+                                    className="chapter-item"
+                                  >
+                                    <span className="text-sm">
+                                      {a.startsWith("January") ? "❄️" : "🌸"} {a}
+                                    </span>
+                                    <ChevronRight size={14} className="text-muted-foreground" />
+                                  </a>
+                                ))}
+                              </motion.div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </motion.div>
                 ))}
