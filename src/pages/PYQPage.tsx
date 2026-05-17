@@ -11,6 +11,10 @@ const subjectEmojis = ["⚡ Physics", "🧪 Chemistry", "📐 Mathematics"];
 const PYQPage = () => {
   const [tab, setTab] = useState<"papers" | "chapters">("papers");
   const [activeSubject, setActiveSubject] = useState(0);
+  const [openShift, setOpenShift] = useState<string | null>(null);
+
+  const toggleShift = (key: string) =>
+    setOpenShift((prev) => (prev === key ? null : key));
 
   return (
     <Layout>
