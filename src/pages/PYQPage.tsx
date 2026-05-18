@@ -115,19 +115,38 @@ const PYQPage = () => {
                                 animate={{ opacity: 1, height: "auto" }}
                                 className="mt-2 ml-4 space-y-2 border-l border-border/50 pl-3"
                               >
-                                {["January Attempt", "April Attempt"].map((a) => {
-                                  const sec = `${s} - ${a.split(" ")[0]}`;
+                                {(
+                                  y === 2020
+                                    ? ["January Attempt", "September Attempt"]
+                                    : y === 2021
+                                    ? ["February Attempt", "March Attempt", "July Attempt", "August Attempt"]
+                                    : y === 2022
+                                    ? ["June Attempt", "July Attempt"]
+                                    : ["January Attempt", "April Attempt"]
+                                ).map((a) => {
+                                  const month = a.split(" ")[0];
+                                  const sec = `${s} - ${month}`;
                                   const link = paperLinks[`${y}::${sec}`];
+                                  const emojiMap: Record<string, string> = {
+                                    January: "❄️",
+                                    February: "💝",
+                                    March: "🌷",
+                                    April: "🌸",
+                                    June: "☀️",
+                                    July: "🌞",
+                                    August: "🏖️",
+                                    September: "🍂",
+                                  };
                                   return (
                                     <a
                                       key={a}
-                                      href={link || `#pyq-${y}-${s.replace(" ", "")}-${a.split(" ")[0]}`}
+                                      href={link || `#pyq-${y}-${s.replace(" ", "")}-${month}`}
                                       target={link ? "_blank" : undefined}
                                       rel={link ? "noreferrer" : undefined}
                                       className={`chapter-item ${!link ? "opacity-60" : ""}`}
                                     >
                                       <span className="text-sm">
-                                        {a.startsWith("January") ? "❄️" : "🌸"} {a}
+                                        {emojiMap[month] || "📅"} {a}
                                       </span>
                                       <ChevronRight size={14} className="text-muted-foreground" />
                                     </a>
