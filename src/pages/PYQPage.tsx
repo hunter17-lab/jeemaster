@@ -125,8 +125,7 @@ const PYQPage = () => {
                                     : ["January Attempt", "April Attempt"]
                                 ).map((a) => {
                                   const month = a.split(" ")[0];
-                                  const sec = `${s} - ${month}`;
-                                  const link = paperLinks[`${y}::${sec}`];
+                                  const shiftSlug = s === "Shift 1" ? "shift1" : "shift2";
                                   const emojiMap: Record<string, string> = {
                                     January: "❄️",
                                     February: "💝",
@@ -140,10 +139,8 @@ const PYQPage = () => {
                                   return (
                                     <a
                                       key={a}
-                                      href={link || `#pyq-${y}-${s.replace(" ", "")}-${month}`}
-                                      target={link ? "_blank" : undefined}
-                                      rel={link ? "noreferrer" : undefined}
-                                      className={`chapter-item ${!link ? "opacity-60" : ""}`}
+                                      href={`/pyq/${y}/${shiftSlug}/${month}`}
+                                      className="chapter-item"
                                     >
                                       <span className="text-sm">
                                         {emojiMap[month] || "📅"} {a}

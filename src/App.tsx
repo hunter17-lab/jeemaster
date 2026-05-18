@@ -10,6 +10,7 @@ import NotesPage from "./pages/NotesPage";
 import MindMapsPage from "./pages/MindMapsPage";
 import DPPPage from "./pages/DPPPage";
 import PYQPage from "./pages/PYQPage";
+import PYQPapersPage from "./pages/PYQPapersPage";
 import BooksPage from "./pages/BooksPage";
 import BookSubjectPage from "./pages/BookSubjectPage";
 import CoachingPage from "./pages/CoachingPage";
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="/mindmaps" element={<MindMapsPage />} />
             <Route path="/dpp" element={<DPPPage />} />
             <Route path="/pyq" element={<PYQPage />} />
+            <Route path="/pyq/:year/:shift/:month" element={<PYQPapersPage />} />
             <Route path="/books" element={<BooksPage />} />
             <Route path="/books/:subject" element={<BookSubjectPage />} />
             <Route path="/coaching" element={<CoachingPage />} />
