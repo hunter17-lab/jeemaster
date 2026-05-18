@@ -188,12 +188,27 @@ const AdminPage = () => {
                 }} className="px-3 py-2 rounded-lg bg-secondary border border-border">
                   {CONTENT_TYPES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
                 </select>
-                <select value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} className="px-3 py-2 rounded-lg bg-secondary border border-border">
+                <select value={form.subject} onChange={(e) => {
+                  const newSubject = e.target.value;
+                  const months = form.type === "pyq" ? getMonthsForYear(newSubject) : [];
+                  setForm({ ...form, subject: newSubject, pyqMonth: months.includes(form.pyqMonth) ? form.pyqMonth : (months[0] || form.pyqMonth) });
+                }} className="px-3 py-2 rounded-lg bg-secondary border border-border">
                   {getSubjects(form.type).map(s => <option key={s}>{s}</option>)}
                 </select>
               </div>
-              <input value={form.section} onChange={(e) => setForm({ ...form, section: e.target.value })} placeholder="Section (e.g. Class 11) — optional" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
-              <input required={form.type !== "pyq"} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder={form.type === "pyq" ? "Title (optional — auto from year)" : "Title (chapter / topic name)"} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              {form.type === "pyq" && Number(form.subject) >= PYQ_SHIFT_START_YEAR ? (
+                <div className="grid grid-cols-2 gap-3">
+                  <select value={form.pyqShift} onChange={(e) => setForm({ ...form, pyqShift: e.target.value })} className="px-3 py-2 rounded-lg bg-secondary border border-border">
+                    {PYQ_SHIFTS.map(s => <option key={s} value={s}>{s === "Shift 1" ? "🅰️" : "🅱️"} {s}</option>)}
+                  </select>
+                  <select value={form.pyqMonth} onChange={(e) => setForm({ ...form, pyqMonth: e.target.value })} className="px-3 py-2 rounded-lg bg-secondary border border-border">
+                    {getMonthsForYear(form.subject).map(m => <option key={m} value={m}>{m} Attempt</option>)}
+                  </select>
+                </div>
+              ) : form.type !== "pyq" ? (
+                <input value={form.section} onChange={(e) => setForm({ ...form, section: e.target.value })} placeholder="Section (e.g. Class 11) — optional" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              ) : null}
+              <input required={form.type !== "pyq"} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder={form.type === "pyq" ? "Paper title (e.g. 24 Jan Morning) — optional" : "Title (chapter / topic name)"} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               <input required type="url" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} placeholder="https://drive.google.com/..." className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description (optional)" rows={2} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               <button disabled={busy} className="w-full py-2.5 rounded-lg gradient-primary text-primary-foreground font-semibold disabled:opacity-50">
