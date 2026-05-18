@@ -66,11 +66,20 @@ const PYQPage = () => {
             <div className="glass-card p-6">
               <h3 className="font-display font-semibold mb-4">📝 JEE Main — Single Paper</h3>
               <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
-                {pyqYears.simple.map((y) => (
-                  <a key={y} href={`#pyq-${y}`} className="chapter-item justify-center hover:scale-105 transition-transform">
-                    <span className="text-sm font-medium">{y}</span>
-                  </a>
-                ))}
+                {pyqYears.simple.map((y) => {
+                  const link = paperLinks[String(y)];
+                  return (
+                    <a
+                      key={y}
+                      href={link || `#pyq-${y}`}
+                      target={link ? "_blank" : undefined}
+                      rel={link ? "noreferrer" : undefined}
+                      className={`chapter-item justify-center hover:scale-105 transition-transform ${!link ? "opacity-60" : ""}`}
+                    >
+                      <span className="text-sm font-medium">{y}{!link && " ·"}</span>
+                    </a>
+                  );
+                })}
               </div>
             </div>
 
