@@ -80,11 +80,12 @@ const AdminPage = () => {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
+    const titleValue = form.title.trim() || (form.type === "pyq" ? `JEE Main ${form.subject}${form.section ? ` — ${form.section}` : ""}` : form.title);
     const { error } = await supabase.from("content_items").insert({
       type: form.type as any,
       subject: form.subject,
       section: form.section || null,
-      title: form.title,
+      title: titleValue,
       link: form.link,
       description: form.description || null,
       created_by: user!.id,
@@ -187,7 +188,7 @@ const AdminPage = () => {
                 </select>
               </div>
               <input value={form.section} onChange={(e) => setForm({ ...form, section: e.target.value })} placeholder="Section (e.g. Class 11) — optional" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
-              <input required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="Title (chapter / topic name)" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              <input required={form.type !== "pyq"} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder={form.type === "pyq" ? "Title (optional — auto from year)" : "Title (chapter / topic name)"} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               <input required type="url" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} placeholder="https://drive.google.com/..." className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description (optional)" rows={2} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               <button disabled={busy} className="w-full py-2.5 rounded-lg gradient-primary text-primary-foreground font-semibold disabled:opacity-50">

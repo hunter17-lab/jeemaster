@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronRight, Calendar, BookOpen } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Layout from "@/components/Layout";
 import SubjectChapterList from "@/components/SubjectChapterList";
 import AdminItemsList from "@/components/AdminItemsList";
 import { allSubjects, pyqYears } from "@/data/chapters";
+import { supabase } from "@/integrations/supabase/client";
 
 const subjectEmojis = ["⚡ Physics", "🧪 Chemistry", "📐 Mathematics"];
 
@@ -12,6 +13,23 @@ const PYQPage = () => {
   const [tab, setTab] = useState<"papers" | "chapters">("papers");
   const [activeSubject, setActiveSubject] = useState(0);
   const [openShift, setOpenShift] = useState<string | null>(null);
+  const [paperLinks, setPaperLinks] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    supabase
+      .from("content_items")
+      .select("subject, section, link, created_at")
+      .eq("type", "pyq")
+      .order("created_at", { ascending: false })
+      .then(({ data }) => {
+        const map: Record<string, string> = {};
+        (data || []).forEach((it: any) => {
+          const key = it.section ? `${it.subject}::${it.section}` : it.subject;
+          if (!map[key]) map[key] = it.link;
+        });
+        setPaperLinks(map);
+      });
+  }, []);
 
   const toggleShift = (key: string) =>
     setOpenShift((prev) => (prev === key ? null : key));
@@ -48,11 +66,20 @@ const PYQPage = () => {
             <div className="glass-card p-6">
               <h3 className="font-display font-semibold mb-4">📝 JEE Main — Single Paper</h3>
               <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-2">
-                {pyqYears.simple.map((y) => (
-                  <a key={y} href={`#pyq-${y}`} className="chapter-item justify-center hover:scale-105 transition-transform">
-                    <span className="text-sm font-medium">{y}</span>
-                  </a>
-                ))}
+                {pyqYears.simple.map((y) => {
+                  const link = paperLinks[String(y)];
+                  return (
+                    <a
+                      key={y}
+                      href={link || `#pyq-${y}`}
+                      target={link ? "_blank" : undefined}
+                      rel={link ? "noreferrer" : undefined}
+                      className={`chapter-item justify-center hover:scale-105 transition-transform ${!link ? "opacity-60" : ""}`}
+                    >
+                      <span className="text-sm font-medium">{y}{!link && " ·"}</span>
+                    </a>
+                  );
+                })}
               </div>
             </div>
 
@@ -88,18 +115,24 @@ const PYQPage = () => {
                                 animate={{ opacity: 1, height: "auto" }}
                                 className="mt-2 ml-4 space-y-2 border-l border-border/50 pl-3"
                               >
-                                {["January Attempt", "April Attempt"].map((a) => (
-                                  <a
-                                    key={a}
-                                    href={`#pyq-${y}-${s.replace(" ", "")}-${a.split(" ")[0]}`}
-                                    className="chapter-item"
-                                  >
-                                    <span className="text-sm">
-                                      {a.startsWith("January") ? "❄️" : "🌸"} {a}
-                                    </span>
-                                    <ChevronRight size={14} className="text-muted-foreground" />
-                                  </a>
-                                ))}
+                                {["January Attempt", "April Attempt"].map((a) => {
+                                  const sec = `${s} - ${a.split(" ")[0]}`;
+                                  const link = paperLinks[`${y}::${sec}`];
+                                  return (
+                                    <a
+                                      key={a}
+                                      href={link || `#pyq-${y}-${s.replace(" ", "")}-${a.split(" ")[0]}`}
+                                      target={link ? "_blank" : undefined}
+                                      rel={link ? "noreferrer" : undefined}
+                                      className={`chapter-item ${!link ? "opacity-60" : ""}`}
+                                    >
+                                      <span className="text-sm">
+                                        {a.startsWith("January") ? "❄️" : "🌸"} {a}
+                                      </span>
+                                      <ChevronRight size={14} className="text-muted-foreground" />
+                                    </a>
+                                  );
+                                })}
                               </motion.div>
                             )}
                           </div>
