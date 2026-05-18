@@ -7,6 +7,7 @@ import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { supabase } from "@/integrations/supabase/client";
+import { PYQ_SHIFTS, PYQ_SHIFT_START_YEAR, getMonthsForYear } from "@/data/pyqAttempts";
 
 const CONTENT_TYPES = [
   { value: "notes", label: "📝 Notes" },
@@ -18,7 +19,7 @@ const CONTENT_TYPES = [
 ] as const;
 
 const SUBJECTS_DEFAULT = ["Physics", "Chemistry", "Mathematics", "General"];
-const PYQ_YEARS = Array.from({ length: new Date().getFullYear() - 2002 + 1 }, (_, i) => String(2002 + i));
+const PYQ_YEARS = Array.from({ length: new Date().getFullYear() - 2002 + 1 }, (_, i) => String(2002 + i)).reverse();
 const SUBJECTS_BY_TYPE: Record<string, string[]> = {
   books: ["Physics", "Chemistry", "Mathematics", "PCM"],
   pyq: PYQ_YEARS,
