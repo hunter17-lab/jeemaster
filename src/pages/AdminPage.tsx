@@ -18,8 +18,10 @@ const CONTENT_TYPES = [
 ] as const;
 
 const SUBJECTS_DEFAULT = ["Physics", "Chemistry", "Mathematics", "General"];
+const PYQ_YEARS = Array.from({ length: new Date().getFullYear() - 2002 + 1 }, (_, i) => String(2002 + i));
 const SUBJECTS_BY_TYPE: Record<string, string[]> = {
   books: ["Physics", "Chemistry", "Mathematics", "PCM"],
+  pyq: PYQ_YEARS,
 };
 const getSubjects = (type: string) => SUBJECTS_BY_TYPE[type] || SUBJECTS_DEFAULT;
 
