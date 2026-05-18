@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronRight, Calendar, BookOpen } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import Layout from "@/components/Layout";
 import SubjectChapterList from "@/components/SubjectChapterList";
 import AdminItemsList from "@/components/AdminItemsList";
 import { allSubjects, pyqYears } from "@/data/chapters";
+import { supabase } from "@/integrations/supabase/client";
 
 const subjectEmojis = ["⚡ Physics", "🧪 Chemistry", "📐 Mathematics"];
 
@@ -12,6 +13,23 @@ const PYQPage = () => {
   const [tab, setTab] = useState<"papers" | "chapters">("papers");
   const [activeSubject, setActiveSubject] = useState(0);
   const [openShift, setOpenShift] = useState<string | null>(null);
+  const [paperLinks, setPaperLinks] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    supabase
+      .from("content_items")
+      .select("subject, section, link, created_at")
+      .eq("type", "pyq")
+      .order("created_at", { ascending: false })
+      .then(({ data }) => {
+        const map: Record<string, string> = {};
+        (data || []).forEach((it: any) => {
+          const key = it.section ? `${it.subject}::${it.section}` : it.subject;
+          if (!map[key]) map[key] = it.link;
+        });
+        setPaperLinks(map);
+      });
+  }, []);
 
   const toggleShift = (key: string) =>
     setOpenShift((prev) => (prev === key ? null : key));
