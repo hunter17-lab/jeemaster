@@ -43,6 +43,7 @@ const App = () => (
             <Route path="/mindmaps" element={<MindMapsPage />} />
             <Route path="/dpp" element={<DPPPage />} />
             <Route path="/pyq" element={<PYQPage />} />
+            <Route path="/pyq/:year/:shift/:month" element={<PYQPapersPage />} />
             <Route path="/books" element={<BooksPage />} />
             <Route path="/books/:subject" element={<BookSubjectPage />} />
             <Route path="/coaching" element={<CoachingPage />} />
