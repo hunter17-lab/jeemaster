@@ -81,11 +81,15 @@ const AdminPage = () => {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
-    const titleValue = form.title.trim() || (form.type === "pyq" ? `JEE Main ${form.subject}${form.section ? ` — ${form.section}` : ""}` : form.title);
+    const isPyqShift = form.type === "pyq" && Number(form.subject) >= PYQ_SHIFT_START_YEAR;
+    const sectionValue = isPyqShift
+      ? `${form.pyqShift} - ${form.pyqMonth}`
+      : (form.section || null);
+    const titleValue = form.title.trim() || (form.type === "pyq" ? `JEE Main ${form.subject}${sectionValue ? ` — ${sectionValue}` : ""}` : form.title);
     const { error } = await supabase.from("content_items").insert({
       type: form.type as any,
       subject: form.subject,
-      section: form.section || null,
+      section: sectionValue,
       title: titleValue,
       link: form.link,
       description: form.description || null,
