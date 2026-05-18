@@ -115,18 +115,24 @@ const PYQPage = () => {
                                 animate={{ opacity: 1, height: "auto" }}
                                 className="mt-2 ml-4 space-y-2 border-l border-border/50 pl-3"
                               >
-                                {["January Attempt", "April Attempt"].map((a) => (
-                                  <a
-                                    key={a}
-                                    href={`#pyq-${y}-${s.replace(" ", "")}-${a.split(" ")[0]}`}
-                                    className="chapter-item"
-                                  >
-                                    <span className="text-sm">
-                                      {a.startsWith("January") ? "❄️" : "🌸"} {a}
-                                    </span>
-                                    <ChevronRight size={14} className="text-muted-foreground" />
-                                  </a>
-                                ))}
+                                {["January Attempt", "April Attempt"].map((a) => {
+                                  const sec = `${s} - ${a.split(" ")[0]}`;
+                                  const link = paperLinks[`${y}::${sec}`];
+                                  return (
+                                    <a
+                                      key={a}
+                                      href={link || `#pyq-${y}-${s.replace(" ", "")}-${a.split(" ")[0]}`}
+                                      target={link ? "_blank" : undefined}
+                                      rel={link ? "noreferrer" : undefined}
+                                      className={`chapter-item ${!link ? "opacity-60" : ""}`}
+                                    >
+                                      <span className="text-sm">
+                                        {a.startsWith("January") ? "❄️" : "🌸"} {a}
+                                      </span>
+                                      <ChevronRight size={14} className="text-muted-foreground" />
+                                    </a>
+                                  );
+                                })}
                               </motion.div>
                             )}
                           </div>
