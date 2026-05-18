@@ -10,6 +10,7 @@ import NotesPage from "./pages/NotesPage";
 import MindMapsPage from "./pages/MindMapsPage";
 import DPPPage from "./pages/DPPPage";
 import PYQPage from "./pages/PYQPage";
+import PYQPapersPage from "./pages/PYQPapersPage";
 import BooksPage from "./pages/BooksPage";
 import BookSubjectPage from "./pages/BookSubjectPage";
 import CoachingPage from "./pages/CoachingPage";
