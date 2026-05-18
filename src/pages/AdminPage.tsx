@@ -32,7 +32,7 @@ const AdminPage = () => {
   const navigate = useNavigate();
 
   const [tab, setTab] = useState<"content" | "users" | "bans">("content");
-  const [form, setForm] = useState({ type: "notes", subject: "Physics", section: "", title: "", link: "", description: "" });
+  const [form, setForm] = useState({ type: "notes", subject: "Physics", section: "", title: "", link: "", description: "", pyqShift: "Shift 1", pyqMonth: "January" });
   const [items, setItems] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [profiles, setProfiles] = useState<Record<string, any>>({});
