@@ -80,11 +80,12 @@ const AdminPage = () => {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
+    const titleValue = form.title.trim() || (form.type === "pyq" ? `JEE Main ${form.subject}${form.section ? ` — ${form.section}` : ""}` : form.title);
     const { error } = await supabase.from("content_items").insert({
       type: form.type as any,
       subject: form.subject,
       section: form.section || null,
-      title: form.title,
+      title: titleValue,
       link: form.link,
       description: form.description || null,
       created_by: user!.id,
