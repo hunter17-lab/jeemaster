@@ -1,15 +1,16 @@
 import { ExternalLink } from "lucide-react";
 
 const TopBanner = () => (
-  <div className="gradient-primary py-2 px-4 text-center text-primary-foreground text-sm font-medium">
+  <div className="bg-surface border-b border-stroke text-text-primary/90 text-xs uppercase tracking-[0.2em] py-2 px-4 text-center">
     <a
       href="https://t.me/class11cbsescience"
       target="_blank"
       rel="noopener noreferrer"
-      className="inline-flex items-center gap-2 hover:underline"
+      className="inline-flex items-center gap-2 hover:text-text-primary"
     >
-      📢 Join our Telegram for more resources & support
-      <ExternalLink size={14} />
+      <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+      Join our Telegram for free resources
+      <ExternalLink size={12} />
     </a>
   </div>
 );

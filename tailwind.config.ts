@@ -12,8 +12,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['"Space Grotesk"', 'system-ui', 'sans-serif'],
+        display: ['"Instrument Serif"', 'ui-serif', 'serif'],
         body: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['"Instrument Serif"', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -21,6 +22,10 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        bg: "hsl(var(--bg))",
+        surface: "hsl(var(--surface))",
+        "text-primary": "hsl(var(--text))",
+        stroke: "hsl(var(--stroke))",
         primary: { DEFAULT: "hsl(var(--primary))", foreground: "hsl(var(--primary-foreground))" },
         secondary: { DEFAULT: "hsl(var(--secondary))", foreground: "hsl(var(--secondary-foreground))" },
         destructive: { DEFAULT: "hsl(var(--destructive))", foreground: "hsl(var(--destructive-foreground))" },
