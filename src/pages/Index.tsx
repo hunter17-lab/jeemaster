@@ -1,137 +1,271 @@
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { FileText, Brain, Target, Library, GraduationCap, Zap, BookOpen, ArrowRight, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+import { gsap } from "gsap";
+import Hls from "hls.js";
 import Layout from "@/components/Layout";
-import StartPopup from "@/components/StartPopup";
-import PinnedResources from "@/components/PinnedResources";
+import LoadingScreen from "@/components/LoadingScreen";
 import useSEO from "@/hooks/useSEO";
 
+const roles = ["Toppers", "Droppers", "Class 11", "Class 12"];
+const HLS_SRC = "https://stream.mux.com/Aa02T7oM1wH5Mk5EEVDYhbZ1ChcdhRsS2m1NYyx4Ua1g.m3u8";
+
 const sections = [
-  { path: "/notes", label: "📝 Notes", desc: "Long, Short & Topper Notes", icon: FileText, gradient: "gradient-primary", emoji: "📝" },
-  { path: "/mindmaps", label: "🧠 Mind Maps", desc: "Visual chapter summaries", icon: Brain, gradient: "gradient-physics", emoji: "🧠" },
-  { path: "/dpp", label: "⚡ DPP", desc: "Daily Practice Problems", icon: Zap, gradient: "gradient-chemistry", emoji: "⚡" },
-  { path: "/pyq", label: "🎯 PYQ", desc: "Previous Year Questions", icon: Target, gradient: "gradient-maths", emoji: "🎯" },
-  { path: "/books", label: "📚 Books", desc: "Recommended study material", icon: Library, gradient: "gradient-primary", emoji: "📚" },
-  { path: "/coaching", label: "🏫 Coaching Material", desc: "Allen, PW & more", icon: GraduationCap, gradient: "gradient-physics", emoji: "🏫" },
+  { path: "/notes", label: "Notes", desc: "Short, long & topper notes", img: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1200&q=80" },
+  { path: "/mindmaps", label: "Mind Maps", desc: "Visual chapter summaries", img: "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?w=1200&q=80" },
+  { path: "/pyq", label: "PYQ", desc: "25+ years of papers", img: "https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=1200&q=80" },
+  { path: "/books", label: "Books", desc: "Curated study material", img: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1200&q=80" },
 ];
 
 const stats = [
-  { value: "200+", label: "Chapters Covered", emoji: "📖" },
-  { value: "25+", label: "Years of PYQs", emoji: "📅" },
-  { value: "1000+", label: "Practice Problems", emoji: "✏️" },
-  { value: "100%", label: "Free Forever", emoji: "💯" },
+  { value: "25+", label: "Years of PYQs" },
+  { value: "200+", label: "Chapters" },
+  { value: "100%", label: "Free Forever" },
 ];
+
+const useHls = (ref: React.RefObject<HTMLVideoElement>) => {
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    if (Hls.isSupported()) {
+      const hls = new Hls();
+      hls.loadSource(HLS_SRC);
+      hls.attachMedia(v);
+      return () => hls.destroy();
+    } else if (v.canPlayType("application/vnd.apple.mpegurl")) {
+      v.src = HLS_SRC;
+    }
+  }, [ref]);
+};
 
 const Index = () => {
   useSEO({
     title: "JEE MASTER — Free IIT JEE Notes, Mind Maps, DPP, PYQs & Books",
-    description: "Free IIT JEE preparation hub: chapter-wise short notes, mind maps, DPPs, 25+ years PYQs, books and Allen/PW coaching material for Class 11, 12 & droppers.",
+    description: "Free IIT JEE preparation: notes, mind maps, DPPs, 25+ years PYQs, books and coaching material for Class 11, 12 & droppers.",
   });
-  return (
-  <Layout>
-    <StartPopup />
 
-    {/* Hero */}
-    <section className="relative overflow-hidden gradient-mesh">
-      <div className="absolute inset-0 gradient-primary opacity-[0.05]" />
-      <motion.div animate={{ x: [0, 30, 0], y: [0, -20, 0] }} transition={{ duration: 12, repeat: Infinity }} className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl" />
-      <motion.div animate={{ x: [0, -25, 0], y: [0, 25, 0] }} transition={{ duration: 14, repeat: Infinity }} className="absolute bottom-10 right-10 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
-      <div className="page-container relative py-20 md:py-28 text-center">
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-          <motion.div
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="inline-flex items-center gap-2 bg-primary/10 text-primary px-5 py-2 rounded-full text-sm font-semibold mb-8 border border-primary/20"
-          >
-            <Sparkles size={16} className="animate-pulse" /> Your Complete JEE Preparation Hub
-          </motion.div>
-          <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 tracking-tight leading-tight">
-            Crack IIT JEE with{" "}
-            <span className="text-gradient">JEE MASTER</span> 🚀
+  const [loading, setLoading] = useState(true);
+  const [roleIdx, setRoleIdx] = useState(0);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
+  const footerVideoRef = useRef<HTMLVideoElement>(null);
+  useHls(heroVideoRef);
+  useHls(footerVideoRef);
+
+  useEffect(() => {
+    if (loading) return;
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    tl.fromTo(".name-reveal", { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1.2, delay: 0.1 });
+    tl.fromTo(".blur-in", { opacity: 0, filter: "blur(10px)", y: 20 }, { opacity: 1, filter: "blur(0px)", y: 0, duration: 1, stagger: 0.1 }, "-=0.8");
+  }, [loading]);
+
+  useEffect(() => {
+    const i = setInterval(() => setRoleIdx((r) => (r + 1) % roles.length), 2000);
+    return () => clearInterval(i);
+  }, []);
+
+  if (loading) return <LoadingScreen onComplete={() => setLoading(false)} />;
+
+  return (
+    <Layout fullBleed>
+      {/* HERO */}
+      <section className="relative h-screen min-h-[640px] w-full overflow-hidden bg-bg">
+        <div className="absolute inset-0">
+          <video
+            ref={heroVideoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute top-1/2 left-1/2 min-w-full min-h-full w-auto h-auto object-cover -translate-x-1/2 -translate-y-1/2"
+          />
+          <div className="absolute inset-0 bg-black/40" />
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-bg to-transparent" />
+        </div>
+
+        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+          <div className="blur-in eyebrow mb-6">Edition '26 · IIT JEE</div>
+          <h1 className="name-reveal text-6xl md:text-8xl lg:text-[8.5rem] font-display italic leading-[0.9] tracking-tight text-text-primary mb-6">
+            JEE Master
           </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            Everything you need — Notes, Mind Maps, DPP, PYQs, Books & Coaching Material. 
-            <span className="text-foreground font-medium"> All free, all in one place.</span>
+          <p className="blur-in text-base md:text-xl text-text-primary/85 mb-4">
+            Built for{" "}
+            <span
+              key={roleIdx}
+              className="font-display italic text-text-primary animate-role-fade-in inline-block"
+            >
+              {roles[roleIdx]}
+            </span>
+            . Free. Forever.
           </p>
-          <div className="flex flex-wrap justify-center gap-4">
+          <p className="blur-in text-sm md:text-base text-muted-foreground max-w-md mb-10">
+            Chapter-wise notes, mind maps, DPPs, 25+ years of PYQs and full coaching material — all in one calm, focused place.
+          </p>
+          <div className="blur-in inline-flex flex-wrap items-center justify-center gap-3">
             <Link
               to="/notes"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl gradient-primary text-primary-foreground font-semibold text-base hover:opacity-90 transition-opacity shadow-lg shadow-primary/25"
+              className="gradient-ring rounded-full"
             >
-              Start Learning <ArrowRight size={18} />
+              <span className="inline-flex items-center gap-2 bg-text-primary text-bg rounded-full text-sm px-7 py-3.5 hover:bg-bg hover:text-text-primary transition-colors">
+                Start Learning
+              </span>
             </Link>
             <Link
               to="/pyq"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-secondary text-foreground font-semibold text-base hover:bg-secondary/80 transition-colors border border-border"
+              className="gradient-ring rounded-full"
             >
-              🎯 Solve PYQs
+              <span className="inline-flex items-center gap-2 border-2 border-stroke bg-bg text-text-primary rounded-full text-sm px-7 py-3.5 hover:border-transparent transition-colors">
+                Solve PYQs ↗
+              </span>
             </Link>
           </div>
-        </motion.div>
-      </div>
-    </section>
+        </div>
 
-    <PinnedResources />
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3">
+          <span className="text-xs text-muted-foreground uppercase tracking-[0.2em]">Scroll</span>
+          <div className="relative w-px h-10 bg-stroke overflow-hidden">
+            <span className="absolute inset-x-0 top-0 h-1/2 accent-gradient animate-scroll-down" />
+          </div>
+        </div>
+      </section>
 
-    {/* Sections Grid */}
-    <section className="page-container pb-6">
-      <motion.h2
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="text-2xl md:text-3xl font-display font-bold mb-2 text-center"
-      >
-        📂 Explore Resources
-      </motion.h2>
-      <p className="text-muted-foreground text-center mb-10">Pick a section and start your preparation</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {sections.map((sec, i) => (
+      {/* SELECTED RESOURCES */}
+      <section className="bg-bg py-16 md:py-24">
+        <div className="max-w-[1200px] mx-auto px-6 md:px-10 lg:px-16">
           <motion.div
-            key={sec.path}
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+            className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12"
           >
-            <Link
-              to={sec.path}
-              className="group section-card flex items-center gap-4 h-full hover-lift"
-            >
-              <motion.div whileHover={{ rotate: [0, -8, 8, 0] }} transition={{ duration: 0.5 }} className={`w-14 h-14 rounded-2xl ${sec.gradient} flex items-center justify-center shrink-0 shadow-md`}>
-                <sec.icon size={26} className="text-primary-foreground" />
-              </motion.div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-display font-semibold text-lg mb-0.5">{sec.label}</h3>
-                <p className="text-sm text-muted-foreground">{sec.desc}</p>
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <span className="w-8 h-px bg-stroke" />
+                <span className="eyebrow">Curated Resources</span>
               </div>
-              <ArrowRight size={18} className="text-muted-foreground group-hover:text-primary transition-colors shrink-0" />
+              <h2 className="text-4xl md:text-5xl font-display text-text-primary leading-tight">
+                Everything you need to <span className="italic">crack JEE</span>
+              </h2>
+              <p className="text-muted-foreground mt-4 max-w-md text-sm md:text-base">
+                A complete library of notes, problems and previous year papers — organised the way you actually study.
+              </p>
+            </div>
+            <Link
+              to="/notes"
+              className="hidden md:inline-flex gradient-ring rounded-full"
+            >
+              <span className="inline-flex items-center gap-2 bg-surface text-text-primary rounded-full text-sm px-5 py-2.5 border border-stroke">
+                Browse all ↗
+              </span>
             </Link>
           </motion.div>
-        ))}
-      </div>
-    </section>
 
-    {/* Stats */}
-    <section className="page-container pb-20">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto"
-      >
-        {stats.map((s, i) => (
-          <motion.div
-            key={i}
-            whileHover={{ scale: 1.05 }}
-            className="glass-card p-5 text-center group cursor-default"
-          >
-            <div className="text-2xl mb-1">{s.emoji}</div>
-            <div className="text-2xl md:text-3xl font-display font-bold text-primary">{s.value}</div>
-            <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
-          </motion.div>
-        ))}
-      </motion.div>
-    </section>
-  </Layout>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-6">
+            {sections.map((s, i) => {
+              const spans = ["md:col-span-7", "md:col-span-5", "md:col-span-5", "md:col-span-7"];
+              return (
+                <motion.div
+                  key={s.path}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ duration: 0.8, delay: i * 0.05 }}
+                  className={spans[i]}
+                >
+                  <Link
+                    to={s.path}
+                    className="group relative block bg-surface border border-stroke rounded-3xl overflow-hidden aspect-[4/3] md:aspect-[16/10]"
+                  >
+                    <img
+                      src={s.img}
+                      alt={s.label}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div
+                      className="absolute inset-0 opacity-20 mix-blend-multiply pointer-events-none"
+                      style={{
+                        backgroundImage: "radial-gradient(circle, #000 1px, transparent 1px)",
+                        backgroundSize: "4px 4px",
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-bg/70 opacity-0 group-hover:opacity-100 backdrop-blur-lg transition-opacity duration-500 flex items-center justify-center">
+                      <span className="gradient-ring rounded-full">
+                        <span className="inline-flex items-center gap-2 bg-text-primary text-bg rounded-full text-sm px-5 py-2.5">
+                          View — <span className="font-display italic">{s.label}</span>
+                        </span>
+                      </span>
+                    </div>
+                    <div className="absolute bottom-0 inset-x-0 p-5 bg-gradient-to-t from-black/70 to-transparent">
+                      <h3 className="text-xl md:text-2xl font-display italic text-text-primary">{s.label}</h3>
+                      <p className="text-xs text-text-primary/70 mt-1">{s.desc}</p>
+                    </div>
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* STATS */}
+      <section className="bg-bg py-16 md:py-24 border-t border-stroke">
+        <div className="max-w-[1200px] mx-auto px-6 md:px-10 lg:px-16 grid grid-cols-1 md:grid-cols-3 gap-10">
+          {stats.map((s, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: i * 0.1 }}
+              className="border-l border-stroke pl-6"
+            >
+              <div className="text-5xl md:text-7xl font-display italic text-text-primary mb-3">{s.value}</div>
+              <div className="text-xs uppercase tracking-[0.3em] text-muted-foreground">{s.label}</div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* CONTACT / FOOTER VIDEO */}
+      <section className="relative bg-bg pt-16 md:pt-24 pb-12 overflow-hidden border-t border-stroke">
+        <div className="absolute inset-0 -z-0">
+          <video
+            ref={footerVideoRef}
+            autoPlay muted loop playsInline
+            className="absolute top-1/2 left-1/2 min-w-full min-h-full object-cover -translate-x-1/2 -translate-y-1/2 scale-y-[-1] opacity-60"
+          />
+          <div className="absolute inset-0 bg-black/70" />
+        </div>
+
+        <div className="relative z-10 max-w-[1200px] mx-auto px-6 md:px-10 text-center">
+          <div className="eyebrow mb-6">Ready when you are</div>
+          <h2 className="text-5xl md:text-7xl font-display italic text-text-primary leading-[0.95] mb-8">
+            Begin your <br className="md:hidden" /> JEE journey.
+          </h2>
+          <Link to="/auth" className="gradient-ring rounded-full inline-block">
+            <span className="inline-flex items-center gap-2 bg-text-primary text-bg rounded-full text-sm px-7 py-3.5 hover:bg-bg hover:text-text-primary transition-colors">
+              Get Started ↗
+            </span>
+          </Link>
+        </div>
+
+        <div className="relative z-10 mt-16 overflow-hidden">
+          <div className="whitespace-nowrap text-text-primary/10 font-display italic text-7xl md:text-9xl select-none animate-[scroll-x_40s_linear_infinite]">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <span key={i} className="mx-8">JEE MASTER · MASTER JEE ·</span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <style>{`
+        @keyframes scroll-x {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+      `}</style>
+    </Layout>
   );
 };
 
