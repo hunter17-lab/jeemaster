@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
-import { AnimatePresence } from "framer-motion";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "@/components/ScrollToTop";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
@@ -26,36 +25,9 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-// Force dark theme always
-document.documentElement.classList.add("dark");
-document.documentElement.classList.remove("light");
-
-const AnimatedRoutes = () => {
-  const location = useLocation();
-  return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Index />} />
-        <Route path="/notes" element={<NotesPage />} />
-        <Route path="/mindmaps" element={<MindMapsPage />} />
-        <Route path="/dpp" element={<DPPPage />} />
-        <Route path="/pyq" element={<PYQPage />} />
-        <Route path="/pyq/:year/:shift/:month" element={<PYQPapersPage />} />
-        <Route path="/books" element={<BooksPage />} />
-        <Route path="/books/:subject" element={<BookSubjectPage />} />
-        <Route path="/coaching" element={<CoachingPage />} />
-        <Route path="/search" element={<SearchPage />} />
-        <Route path="/install" element={<InstallPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </AnimatePresence>
-  );
-};
+if (!document.documentElement.classList.contains("light")) {
+  document.documentElement.classList.add("dark");
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -65,7 +37,25 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
-          <AnimatedRoutes />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/notes" element={<NotesPage />} />
+            <Route path="/mindmaps" element={<MindMapsPage />} />
+            <Route path="/dpp" element={<DPPPage />} />
+            <Route path="/pyq" element={<PYQPage />} />
+            <Route path="/pyq/:year/:shift/:month" element={<PYQPapersPage />} />
+            <Route path="/books" element={<BooksPage />} />
+            <Route path="/books/:subject" element={<BookSubjectPage />} />
+            <Route path="/coaching" element={<CoachingPage />} />
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/install" element={<InstallPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
