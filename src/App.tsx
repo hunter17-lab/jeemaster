@@ -12,6 +12,8 @@ import DPPPage from "./pages/DPPPage";
 import PYQPage from "./pages/PYQPage";
 import PYQPapersPage from "./pages/PYQPapersPage";
 import BooksPage from "./pages/BooksPage";
+import JeeHubPage from "./pages/JeeHubPage";
+import JeeHubFramePage from "./pages/JeeHubFramePage";
 import BookSubjectPage from "./pages/BookSubjectPage";
 import CoachingPage from "./pages/CoachingPage";
 import SearchPage from "./pages/SearchPage";
