@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useParams, Navigate } from "react-router-dom";
 import { ArrowLeft, ExternalLink, RefreshCw, Maximize2 } from "lucide-react";
 import { getHubTool } from "@/data/jeeHub";
-import { useSEO } from "@/hooks/useSEO";
+import useSEO from "@/hooks/useSEO";
 
 const JeeHubFramePage = () => {
   const { slug } = useParams<{ slug: string }>();
