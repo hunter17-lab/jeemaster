@@ -48,6 +48,8 @@ const App = () => (
             <Route path="/pyq/:year/:shift/:month" element={<PYQPapersPage />} />
             <Route path="/books" element={<BooksPage />} />
             <Route path="/books/:subject" element={<BookSubjectPage />} />
+            <Route path="/hub" element={<JeeHubPage />} />
+            <Route path="/hub/:slug" element={<JeeHubFramePage />} />
             <Route path="/coaching" element={<CoachingPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/install" element={<InstallPage />} />
