@@ -12,6 +12,8 @@ import DPPPage from "./pages/DPPPage";
 import PYQPage from "./pages/PYQPage";
 import PYQPapersPage from "./pages/PYQPapersPage";
 import BooksPage from "./pages/BooksPage";
+import JeeHubPage from "./pages/JeeHubPage";
+import JeeHubFramePage from "./pages/JeeHubFramePage";
 import BookSubjectPage from "./pages/BookSubjectPage";
 import CoachingPage from "./pages/CoachingPage";
 import SearchPage from "./pages/SearchPage";
@@ -46,6 +48,8 @@ const App = () => (
             <Route path="/pyq/:year/:shift/:month" element={<PYQPapersPage />} />
             <Route path="/books" element={<BooksPage />} />
             <Route path="/books/:subject" element={<BookSubjectPage />} />
+            <Route path="/hub" element={<JeeHubPage />} />
+            <Route path="/hub/:slug" element={<JeeHubFramePage />} />
             <Route path="/coaching" element={<CoachingPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/install" element={<InstallPage />} />
