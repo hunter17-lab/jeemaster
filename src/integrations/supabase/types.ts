@@ -80,6 +80,92 @@ export type Database = {
         }
         Relationships: []
       }
+      giveaway_entries: {
+        Row: {
+          created_at: string
+          email: string
+          giveaway_id: string
+          id: string
+          name: string
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          giveaway_id: string
+          id?: string
+          name: string
+          reason: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          giveaway_id?: string
+          id?: string
+          name?: string
+          reason?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "giveaway_entries_giveaway_id_fkey"
+            columns: ["giveaway_id"]
+            isOneToOne: false
+            referencedRelation: "giveaways"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      giveaways: {
+        Row: {
+          auto_pick: boolean
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          prize: string
+          result_at: string
+          status: string
+          title: string
+          updated_at: string
+          winner_entry_id: string | null
+          winner_picked_at: string | null
+        }
+        Insert: {
+          auto_pick?: boolean
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          prize: string
+          result_at: string
+          status?: string
+          title: string
+          updated_at?: string
+          winner_entry_id?: string | null
+          winner_picked_at?: string | null
+        }
+        Update: {
+          auto_pick?: boolean
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          prize?: string
+          result_at?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          winner_entry_id?: string | null
+          winner_picked_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -139,6 +225,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      giveaway_entry_count: { Args: { _giveaway_id: string }; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -146,6 +233,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      pick_giveaway_winner: { Args: { _giveaway_id: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "user"
