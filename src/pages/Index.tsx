@@ -1,12 +1,14 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { FileText, Brain, Target, Library, GraduationCap, Zap, BookOpen, ArrowRight, Sparkles } from "lucide-react";
+import { FileText, Brain, Target, Library, GraduationCap, Zap, BookOpen, ArrowRight, Sparkles, Gift } from "lucide-react";
 import Layout from "@/components/Layout";
 import StartPopup from "@/components/StartPopup";
 import PinnedResources from "@/components/PinnedResources";
 import useSEO from "@/hooks/useSEO";
 
 const sections = [
+  { path: "/hub", label: "✨ JEE Hub", desc: "AI tutor, mocks, infinity bank & more", icon: Sparkles, gradient: "gradient-primary", emoji: "✨" },
+  { path: "/giveaways", label: "🎁 Giveaways", desc: "Enter & win free goodies", icon: Gift, gradient: "gradient-maths", emoji: "🎁" },
   { path: "/notes", label: "📝 Notes", desc: "Long, Short & Topper Notes", icon: FileText, gradient: "gradient-primary", emoji: "📝" },
   { path: "/mindmaps", label: "🧠 Mind Maps", desc: "Visual chapter summaries", icon: Brain, gradient: "gradient-physics", emoji: "🧠" },
   { path: "/dpp", label: "⚡ DPP", desc: "Daily Practice Problems", icon: Zap, gradient: "gradient-chemistry", emoji: "⚡" },

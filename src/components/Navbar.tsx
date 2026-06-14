@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { BookOpen, Brain, FileText, Target, Library, GraduationCap, Menu, X, Search, Moon, Sun, Download, Info, LogIn, LogOut, UserCircle, Shield, Sparkles } from "lucide-react";
+import { BookOpen, Brain, FileText, Target, Library, GraduationCap, Menu, X, Search, Moon, Sun, Download, Info, LogIn, LogOut, UserCircle, Shield, Sparkles, Gift } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 
@@ -14,6 +14,7 @@ const navItems = [
   { path: "/pyq", label: "PYQ", icon: Target },
   { path: "/books", label: "Books", icon: Library },
   { path: "/coaching", label: "Coaching", icon: GraduationCap },
+  { path: "/giveaways", label: "Giveaways", icon: Gift },
   { path: "/about", label: "About Us", icon: Info },
 ];
 
