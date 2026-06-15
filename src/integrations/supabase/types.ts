@@ -118,9 +118,106 @@ export type Database = {
           },
         ]
       }
+      giveaway_proofs: {
+        Row: {
+          approved_at: string | null
+          caption: string | null
+          created_at: string
+          giveaway_id: string
+          id: string
+          image_url: string
+          status: string
+          updated_at: string
+          user_id: string
+          visible_until: string | null
+          winner_entry_id: string
+        }
+        Insert: {
+          approved_at?: string | null
+          caption?: string | null
+          created_at?: string
+          giveaway_id: string
+          id?: string
+          image_url: string
+          status?: string
+          updated_at?: string
+          user_id: string
+          visible_until?: string | null
+          winner_entry_id: string
+        }
+        Update: {
+          approved_at?: string | null
+          caption?: string | null
+          created_at?: string
+          giveaway_id?: string
+          id?: string
+          image_url?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+          visible_until?: string | null
+          winner_entry_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "giveaway_proofs_giveaway_id_fkey"
+            columns: ["giveaway_id"]
+            isOneToOne: false
+            referencedRelation: "giveaways"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "giveaway_proofs_winner_entry_id_fkey"
+            columns: ["winner_entry_id"]
+            isOneToOne: false
+            referencedRelation: "giveaway_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      giveaway_winners: {
+        Row: {
+          entry_id: string
+          giveaway_id: string
+          id: string
+          picked_at: string
+          win_position: number
+        }
+        Insert: {
+          entry_id: string
+          giveaway_id: string
+          id?: string
+          picked_at?: string
+          win_position?: number
+        }
+        Update: {
+          entry_id?: string
+          giveaway_id?: string
+          id?: string
+          picked_at?: string
+          win_position?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "giveaway_winners_entry_id_fkey"
+            columns: ["entry_id"]
+            isOneToOne: false
+            referencedRelation: "giveaway_entries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "giveaway_winners_giveaway_id_fkey"
+            columns: ["giveaway_id"]
+            isOneToOne: false
+            referencedRelation: "giveaways"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       giveaways: {
         Row: {
           auto_pick: boolean
+          celebration_seen: boolean
           created_at: string
           created_by: string | null
           description: string | null
@@ -131,11 +228,13 @@ export type Database = {
           status: string
           title: string
           updated_at: string
+          winner_count: number
           winner_entry_id: string | null
           winner_picked_at: string | null
         }
         Insert: {
           auto_pick?: boolean
+          celebration_seen?: boolean
           created_at?: string
           created_by?: string | null
           description?: string | null
@@ -146,11 +245,13 @@ export type Database = {
           status?: string
           title: string
           updated_at?: string
+          winner_count?: number
           winner_entry_id?: string | null
           winner_picked_at?: string | null
         }
         Update: {
           auto_pick?: boolean
+          celebration_seen?: boolean
           created_at?: string
           created_by?: string | null
           description?: string | null
@@ -161,6 +262,7 @@ export type Database = {
           status?: string
           title?: string
           updated_at?: string
+          winner_count?: number
           winner_entry_id?: string | null
           winner_picked_at?: string | null
         }
@@ -225,6 +327,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_giveaway_winners: {
+        Args: { _giveaway_id: string }
+        Returns: {
+          entry_id: string
+          win_position: number
+          winner_name: string
+        }[]
+      }
       giveaway_entry_count: { Args: { _giveaway_id: string }; Returns: number }
       has_role: {
         Args: {
@@ -234,6 +344,10 @@ export type Database = {
         Returns: boolean
       }
       pick_giveaway_winner: { Args: { _giveaway_id: string }; Returns: string }
+      pick_giveaway_winners: {
+        Args: { _giveaway_id: string }
+        Returns: string[]
+      }
     }
     Enums: {
       app_role: "admin" | "user"
