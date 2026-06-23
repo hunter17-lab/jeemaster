@@ -39,6 +39,7 @@ const AdminPage = () => {
   const [profiles, setProfiles] = useState<Record<string, any>>({});
   const [bans, setBans] = useState<any[]>([]);
   const [busy, setBusy] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
@@ -259,21 +260,107 @@ const AdminPage = () => {
         {tab === "users" && (
           <div className="glass-card p-6">
             <h3 className="font-display font-semibold mb-3">All Users ({users.length})</h3>
+            <p className="text-xs text-muted-foreground mb-3">Click a user's name to see their full profile.</p>
             <div className="space-y-2 max-h-[700px] overflow-auto">
-              {users.map((u) => (
-                <div key={u.id} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50">
-                  <div className="w-9 h-9 rounded-full gradient-primary flex items-center justify-center text-primary-foreground font-bold uppercase text-sm">
-                    {(profiles[u.id]?.display_name || u.email || "U")[0]}
+              {users.map((u) => {
+                const p = profiles[u.id] || {};
+                return (
+                  <div key={u.id} className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50">
+                    <button
+                      onClick={() => setSelectedUser(u)}
+                      className="w-9 h-9 rounded-full overflow-hidden gradient-primary flex items-center justify-center text-primary-foreground font-bold uppercase text-sm shrink-0"
+                      title="View profile"
+                    >
+                      {p.avatar_url ? (
+                        <img src={p.avatar_url} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        (p.display_name || u.email || "U")[0]
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setSelectedUser(u)}
+                      className="flex-1 min-w-0 text-left hover:opacity-80 transition"
+                    >
+                      <div className="text-sm font-medium truncate hover:underline">{p.display_name || "—"}</div>
+                      <div className="text-xs text-muted-foreground truncate flex items-center gap-1"><Mail size={10}/> {u.email}</div>
+                    </button>
+                    <button onClick={() => banUser(u)} className="px-2 py-1 rounded bg-destructive/10 text-destructive text-xs flex items-center gap-1"><Ban size={12}/> Ban</button>
+                    <button onClick={() => deleteUser(u)} className="px-2 py-1 rounded bg-destructive/15 text-destructive text-xs flex items-center gap-1"><Trash2 size={12}/> Delete</button>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium truncate">{profiles[u.id]?.display_name || "—"}</div>
-                    <div className="text-xs text-muted-foreground truncate flex items-center gap-1"><Mail size={10}/> {u.email}</div>
-                  </div>
-                  <button onClick={() => banUser(u)} className="px-2 py-1 rounded bg-destructive/10 text-destructive text-xs flex items-center gap-1"><Ban size={12}/> Ban</button>
-                  <button onClick={() => deleteUser(u)} className="px-2 py-1 rounded bg-destructive/15 text-destructive text-xs flex items-center gap-1"><Trash2 size={12}/> Delete</button>
-                </div>
-              ))}
+                );
+              })}
               {users.length === 0 && <p className="text-sm text-muted-foreground">No users.</p>}
+            </div>
+          </div>
+        )}
+
+        {selectedUser && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4"
+            onClick={() => setSelectedUser(null)}
+          >
+            <div
+              className="relative w-full max-w-md rounded-2xl border border-border/60 bg-card p-6 shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setSelectedUser(null)}
+                className="absolute top-3 right-3 text-muted-foreground hover:text-foreground"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+              {(() => {
+                const p = profiles[selectedUser.id] || {};
+                const initials = (p.display_name || selectedUser.email || "U")[0]?.toUpperCase();
+                const rows: [string, string][] = [
+                  ["Display name", p.display_name || "—"],
+                  ["Email", selectedUser.email || "—"],
+                  ["Phone", p.phone || "—"],
+                  ["Class", p.class_name || "—"],
+                  ["Coaching institute", p.coaching_institute || "—"],
+                  ["State", p.state || "—"],
+                  ["User ID", selectedUser.id],
+                  ["Joined", selectedUser.created_at ? new Date(selectedUser.created_at).toLocaleString() : "—"],
+                ];
+                return (
+                  <>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-14 h-14 rounded-full overflow-hidden gradient-primary flex items-center justify-center text-primary-foreground text-xl font-bold">
+                        {p.avatar_url ? (
+                          <img src={p.avatar_url} alt="" className="w-full h-full object-cover" />
+                        ) : initials}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="font-display font-semibold truncate">{p.display_name || "Unnamed user"}</div>
+                        <div className="text-xs text-muted-foreground truncate">{selectedUser.email}</div>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      {rows.map(([k, v]) => (
+                        <div key={k} className="flex items-start justify-between gap-3 text-sm border-b border-border/40 pb-1.5">
+                          <span className="text-muted-foreground">{k}</span>
+                          <span className="text-right break-words max-w-[60%] font-medium">{v}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex gap-2 mt-5">
+                      <button
+                        onClick={() => { banUser(selectedUser); setSelectedUser(null); }}
+                        className="flex-1 px-3 py-2 rounded-lg bg-destructive/10 text-destructive text-sm font-medium flex items-center justify-center gap-1"
+                      >
+                        <Ban size={14}/> Ban
+                      </button>
+                      <button
+                        onClick={() => { deleteUser(selectedUser); setSelectedUser(null); }}
+                        className="flex-1 px-3 py-2 rounded-lg bg-destructive/15 text-destructive text-sm font-medium flex items-center justify-center gap-1"
+                      >
+                        <Trash2 size={14}/> Delete
+                      </button>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
           </div>
         )}
