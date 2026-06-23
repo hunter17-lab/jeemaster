@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FileText, Brain, Target, Library, GraduationCap, Zap, BookOpen, ArrowRight, Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
 import StartPopup from "@/components/StartPopup";
+import ProfileReminderPopup from "@/components/ProfileReminderPopup";
 import PinnedResources from "@/components/PinnedResources";
 import useSEO from "@/hooks/useSEO";
 
@@ -31,6 +32,7 @@ const Index = () => {
   return (
   <Layout>
     <StartPopup />
+    <ProfileReminderPopup />
 
     {/* Hero */}
     <section className="relative overflow-hidden gradient-mesh">

@@ -19,6 +19,8 @@ const ProfilePage = () => {
     phone: "",
     class_name: "11",
     avatar_url: "",
+    coaching_institute: "",
+    state: "",
   });
 
   useEffect(() => {
@@ -41,6 +43,8 @@ const ProfilePage = () => {
         phone: data.phone || "",
         class_name: data.class_name || "11",
         avatar_url: data.avatar_url || "",
+        coaching_institute: (data as any).coaching_institute || "",
+        state: (data as any).state || "",
       });
     }
     setLoading(false);
@@ -55,7 +59,9 @@ const ProfilePage = () => {
         phone: profile.phone,
         class_name: profile.class_name,
         avatar_url: profile.avatar_url,
-      })
+        coaching_institute: profile.coaching_institute,
+        state: profile.state,
+      } as any)
       .eq("user_id", user!.id);
 
     if (error) {
@@ -145,6 +151,34 @@ const ProfilePage = () => {
                 <option value="dropper">Dropper</option>
               </select>
             </div>
+
+            {/* Coaching Institute */}
+            <div>
+              <label className="block text-sm font-medium mb-1.5">🏫 Coaching Institute</label>
+              <input
+                type="text"
+                value={profile.coaching_institute}
+                onChange={(e) => setProfile({ ...profile, coaching_institute: e.target.value })}
+                className="w-full px-4 py-2.5 rounded-lg bg-secondary border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                placeholder="Allen, PW, Aakash, Self-study…"
+              />
+            </div>
+
+            {/* State */}
+            <div>
+              <label className="block text-sm font-medium mb-1.5">📍 State</label>
+              <select
+                value={profile.state}
+                onChange={(e) => setProfile({ ...profile, state: e.target.value })}
+                className="w-full px-4 py-2.5 rounded-lg bg-secondary border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+              >
+                <option value="">Select your state</option>
+                {[
+                  "Andhra Pradesh","Arunachal Pradesh","Assam","Bihar","Chhattisgarh","Goa","Gujarat","Haryana","Himachal Pradesh","Jharkhand","Karnataka","Kerala","Madhya Pradesh","Maharashtra","Manipur","Meghalaya","Mizoram","Nagaland","Odisha","Punjab","Rajasthan","Sikkim","Tamil Nadu","Telangana","Tripura","Uttar Pradesh","Uttarakhand","West Bengal","Andaman & Nicobar Islands","Chandigarh","Dadra & Nagar Haveli and Daman & Diu","Delhi","Jammu & Kashmir","Ladakh","Lakshadweep","Puducherry"
+                ].map((s) => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+
 
             {/* Avatar URL */}
             <div>
