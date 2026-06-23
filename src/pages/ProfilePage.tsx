@@ -19,6 +19,8 @@ const ProfilePage = () => {
     phone: "",
     class_name: "11",
     avatar_url: "",
+    coaching_institute: "",
+    state: "",
   });
 
   useEffect(() => {
@@ -41,6 +43,8 @@ const ProfilePage = () => {
         phone: data.phone || "",
         class_name: data.class_name || "11",
         avatar_url: data.avatar_url || "",
+        coaching_institute: (data as any).coaching_institute || "",
+        state: (data as any).state || "",
       });
     }
     setLoading(false);
@@ -55,7 +59,9 @@ const ProfilePage = () => {
         phone: profile.phone,
         class_name: profile.class_name,
         avatar_url: profile.avatar_url,
-      })
+        coaching_institute: profile.coaching_institute,
+        state: profile.state,
+      } as any)
       .eq("user_id", user!.id);
 
     if (error) {
