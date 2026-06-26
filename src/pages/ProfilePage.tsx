@@ -252,17 +252,7 @@ const ProfilePage = () => {
             </div>
 
 
-            {/* Avatar URL */}
-            <div>
-              <label className="block text-sm font-medium mb-1.5">🖼️ Profile Picture URL</label>
-              <input
-                type="url"
-                value={profile.avatar_url}
-                onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-lg bg-secondary border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                placeholder="https://example.com/photo.jpg"
-              />
-            </div>
+
 
             <button
               onClick={handleSave}
