@@ -148,17 +148,41 @@ const ProfilePage = () => {
           transition={{ delay: 0.1 }}
           className="glass-card p-8"
         >
-          {/* Avatar */}
+          {/* Avatar with upload */}
           <div className="flex flex-col items-center mb-8">
-            <Avatar className="w-24 h-24 mb-3 border-4 border-primary/20">
-              <AvatarImage src={profile.avatar_url} />
-              <AvatarFallback className="bg-primary/10 text-primary text-2xl font-bold">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
-            <p className="text-sm text-muted-foreground">
-              {user?.email}
-            </p>
+            <div className="relative group">
+              <Avatar className="w-28 h-28 mb-3 border-4 border-primary/20 shadow-lg">
+                <AvatarImage src={avatarPreview || undefined} />
+                <AvatarFallback className="bg-primary/10 text-primary text-2xl font-bold">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="absolute bottom-3 right-0 w-9 h-9 rounded-full gradient-primary text-primary-foreground shadow-lg flex items-center justify-center hover:scale-110 transition-transform disabled:opacity-60"
+                aria-label="Change profile picture"
+              >
+                {uploading ? <Loader2 size={16} className="animate-spin" /> : <Camera size={16} />}
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleAvatarUpload}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="text-xs text-primary font-medium inline-flex items-center gap-1.5 hover:underline disabled:opacity-60"
+            >
+              <Upload size={12} /> {uploading ? "Uploading…" : "Choose from gallery"}
+            </button>
+            <p className="text-sm text-muted-foreground mt-2">{user?.email}</p>
           </div>
 
           <div className="space-y-5">
