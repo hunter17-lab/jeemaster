@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, Share, X, Smartphone, CheckCircle2, Sparkles } from "lucide-react";
+import { Download, Share, X, MonitorSmartphone, PartyPopper, Sparkles, Check } from "lucide-react";
 import Layout from "@/components/Layout";
 
 interface BeforeInstallPromptEvent extends Event {
