@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Camera, Save, User, Trash2 } from "lucide-react";
+import { Camera, Save, User, Trash2, Loader2, Upload } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
