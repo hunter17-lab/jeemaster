@@ -125,9 +125,12 @@ const Index = () => {
       <motion.h2
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="text-2xl md:text-3xl font-display font-bold mb-2 text-center"
+        className="text-2xl md:text-3xl font-display font-bold mb-2 text-center flex items-center justify-center gap-3"
       >
-        📂 Explore Resources
+        <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl gradient-primary text-primary-foreground shadow-md shadow-primary/30">
+          <LayoutGrid size={20} strokeWidth={2.4} />
+        </span>
+        Explore Resources
       </motion.h2>
       <p className="text-muted-foreground text-center mb-10">Pick a section and start your preparation</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
