@@ -62,6 +62,27 @@ const Index = () => {
       <motion.div animate={{ x: [0, 30, 0], y: [0, -20, 0] }} transition={{ duration: 12, repeat: Infinity }} className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl" />
       <motion.div animate={{ x: [0, -25, 0], y: [0, 25, 0] }} transition={{ duration: 14, repeat: Infinity }} className="absolute bottom-10 right-10 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
       <div className="page-container relative py-20 md:py-28 text-center">
+        {user && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8 flex justify-center"
+          >
+            <Link
+              to="/profile"
+              className="group flex items-center gap-3 px-4 py-2 rounded-full bg-card/70 backdrop-blur-xl border border-border/60 hover:border-primary/40 shadow-sm transition-colors"
+            >
+              <Avatar className="w-9 h-9 ring-2 ring-primary/30">
+                <AvatarImage src={avatarUrl || undefined} alt={firstName} />
+                <AvatarFallback className="bg-primary/15 text-primary text-xs font-bold">{initials}</AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-medium pr-2">
+                Hi, <span className="text-primary">{firstName || "Learner"}</span> 👋
+              </span>
+            </Link>
+          </motion.div>
+        )}
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
           <motion.div
             initial={{ scale: 0.9 }}
