@@ -49,8 +49,53 @@ const ProfilePage = () => {
         coaching_institute: (data as any).coaching_institute || "",
         state: (data as any).state || "",
       });
+      const raw = data.avatar_url || "";
+      if (raw) {
+        if (/^https?:\/\//i.test(raw)) {
+          setAvatarPreview(raw);
+        } else {
+          const { data: signed } = await supabase.storage.from("avatars").createSignedUrl(raw, 60 * 60 * 24 * 365);
+          setAvatarPreview(signed?.signedUrl || null);
+        }
+      } else {
+        setAvatarPreview(null);
+      }
     }
     setLoading(false);
+  };
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (!file.type.startsWith("image/")) {
+      toast({ title: "Invalid file", description: "Please choose an image", variant: "destructive" });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "Too large", description: "Image must be under 5 MB", variant: "destructive" });
+      return;
+    }
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop() || "png";
+      const path = `${user.id}/avatar-${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, {
+        contentType: file.type,
+        upsert: true,
+      });
+      if (upErr) throw upErr;
+      // Sign for preview
+      const { data: signed } = await supabase.storage.from("avatars").createSignedUrl(path, 60 * 60 * 24 * 365);
+      setAvatarPreview(signed?.signedUrl || null);
+      setProfile((p) => ({ ...p, avatar_url: path }));
+      // Persist immediately
+      await supabase.from("profiles").update({ avatar_url: path }).eq("user_id", user.id);
+      toast({ title: "📸 Photo updated!" });
+    } catch (err: any) {
+      toast({ title: "Upload failed", description: err.message, variant: "destructive" });
+    }
+    setUploading(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleSave = async () => {
