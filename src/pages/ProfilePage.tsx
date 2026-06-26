@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Camera, Save, User, Trash2 } from "lucide-react";
+import { Camera, Save, User, Trash2, Loader2, Upload } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,6 +14,9 @@ const ProfilePage = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [profile, setProfile] = useState({
     display_name: "",
     phone: "",
@@ -46,8 +49,53 @@ const ProfilePage = () => {
         coaching_institute: (data as any).coaching_institute || "",
         state: (data as any).state || "",
       });
+      const raw = data.avatar_url || "";
+      if (raw) {
+        if (/^https?:\/\//i.test(raw)) {
+          setAvatarPreview(raw);
+        } else {
+          const { data: signed } = await supabase.storage.from("avatars").createSignedUrl(raw, 60 * 60 * 24 * 365);
+          setAvatarPreview(signed?.signedUrl || null);
+        }
+      } else {
+        setAvatarPreview(null);
+      }
     }
     setLoading(false);
+  };
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (!file.type.startsWith("image/")) {
+      toast({ title: "Invalid file", description: "Please choose an image", variant: "destructive" });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "Too large", description: "Image must be under 5 MB", variant: "destructive" });
+      return;
+    }
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop() || "png";
+      const path = `${user.id}/avatar-${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from("avatars").upload(path, file, {
+        contentType: file.type,
+        upsert: true,
+      });
+      if (upErr) throw upErr;
+      // Sign for preview
+      const { data: signed } = await supabase.storage.from("avatars").createSignedUrl(path, 60 * 60 * 24 * 365);
+      setAvatarPreview(signed?.signedUrl || null);
+      setProfile((p) => ({ ...p, avatar_url: path }));
+      // Persist immediately
+      await supabase.from("profiles").update({ avatar_url: path }).eq("user_id", user.id);
+      toast({ title: "📸 Photo updated!" });
+    } catch (err: any) {
+      toast({ title: "Upload failed", description: err.message, variant: "destructive" });
+    }
+    setUploading(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleSave = async () => {
@@ -100,17 +148,41 @@ const ProfilePage = () => {
           transition={{ delay: 0.1 }}
           className="glass-card p-8"
         >
-          {/* Avatar */}
+          {/* Avatar with upload */}
           <div className="flex flex-col items-center mb-8">
-            <Avatar className="w-24 h-24 mb-3 border-4 border-primary/20">
-              <AvatarImage src={profile.avatar_url} />
-              <AvatarFallback className="bg-primary/10 text-primary text-2xl font-bold">
-                {initials}
-              </AvatarFallback>
-            </Avatar>
-            <p className="text-sm text-muted-foreground">
-              {user?.email}
-            </p>
+            <div className="relative group">
+              <Avatar className="w-28 h-28 mb-3 border-4 border-primary/20 shadow-lg">
+                <AvatarImage src={avatarPreview || undefined} />
+                <AvatarFallback className="bg-primary/10 text-primary text-2xl font-bold">
+                  {initials}
+                </AvatarFallback>
+              </Avatar>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+                className="absolute bottom-3 right-0 w-9 h-9 rounded-full gradient-primary text-primary-foreground shadow-lg flex items-center justify-center hover:scale-110 transition-transform disabled:opacity-60"
+                aria-label="Change profile picture"
+              >
+                {uploading ? <Loader2 size={16} className="animate-spin" /> : <Camera size={16} />}
+              </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleAvatarUpload}
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="text-xs text-primary font-medium inline-flex items-center gap-1.5 hover:underline disabled:opacity-60"
+            >
+              <Upload size={12} /> {uploading ? "Uploading…" : "Choose from gallery"}
+            </button>
+            <p className="text-sm text-muted-foreground mt-2">{user?.email}</p>
           </div>
 
           <div className="space-y-5">
@@ -180,17 +252,7 @@ const ProfilePage = () => {
             </div>
 
 
-            {/* Avatar URL */}
-            <div>
-              <label className="block text-sm font-medium mb-1.5">🖼️ Profile Picture URL</label>
-              <input
-                type="url"
-                value={profile.avatar_url}
-                onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-lg bg-secondary border border-border text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                placeholder="https://example.com/photo.jpg"
-              />
-            </div>
+
 
             <button
               onClick={handleSave}

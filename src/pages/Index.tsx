@@ -1,11 +1,16 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { FileText, Brain, Target, Library, GraduationCap, Zap, BookOpen, ArrowRight, Sparkles } from "lucide-react";
+import { FileText, Brain, Target, Library, GraduationCap, Zap, BookOpen, ArrowRight, Sparkles, LayoutGrid } from "lucide-react";
 import Layout from "@/components/Layout";
 import StartPopup from "@/components/StartPopup";
 import ProfileReminderPopup from "@/components/ProfileReminderPopup";
 import PinnedResources from "@/components/PinnedResources";
 import useSEO from "@/hooks/useSEO";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { resolveMediaUrl } from "@/lib/giveawayMedia";
 
 const sections = [
   { path: "/hub", label: "✨ JEE Hub", desc: "AI tutor, mocks, infinity bank & more", icon: Sparkles, gradient: "gradient-primary", emoji: "✨" },
@@ -29,6 +34,23 @@ const Index = () => {
     title: "JEE MASTER — Free IIT JEE Notes, Mind Maps, DPP, PYQs & Books",
     description: "Free IIT JEE preparation hub: chapter-wise short notes, mind maps, DPPs, 25+ years PYQs, books and Allen/PW coaching material for Class 11, 12 & droppers.",
   });
+  const { user } = useAuth();
+  const [profile, setProfile] = useState<{ display_name: string | null; avatar_url: string | null } | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) { setProfile(null); setAvatarUrl(null); return; }
+    supabase.from("profiles").select("display_name, avatar_url").eq("user_id", user.id).maybeSingle()
+      .then(({ data }) => {
+        setProfile(data ?? null);
+        resolveMediaUrl(data?.avatar_url).then(setAvatarUrl);
+      });
+  }, [user]);
+
+  const firstName = (profile?.display_name || user?.email?.split("@")[0] || "").split(" ")[0];
+  const initials = (profile?.display_name || user?.email || "U")
+    .split(/[\s@]/).filter(Boolean).map((n) => n[0]).join("").toUpperCase().slice(0, 2);
+
   return (
   <Layout>
     <StartPopup />
@@ -40,6 +62,27 @@ const Index = () => {
       <motion.div animate={{ x: [0, 30, 0], y: [0, -20, 0] }} transition={{ duration: 12, repeat: Infinity }} className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl" />
       <motion.div animate={{ x: [0, -25, 0], y: [0, 25, 0] }} transition={{ duration: 14, repeat: Infinity }} className="absolute bottom-10 right-10 w-96 h-96 bg-accent/20 rounded-full blur-3xl" />
       <div className="page-container relative py-20 md:py-28 text-center">
+        {user && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8 flex justify-center"
+          >
+            <Link
+              to="/profile"
+              className="group flex items-center gap-3 px-4 py-2 rounded-full bg-card/70 backdrop-blur-xl border border-border/60 hover:border-primary/40 shadow-sm transition-colors"
+            >
+              <Avatar className="w-9 h-9 ring-2 ring-primary/30">
+                <AvatarImage src={avatarUrl || undefined} alt={firstName} />
+                <AvatarFallback className="bg-primary/15 text-primary text-xs font-bold">{initials}</AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-medium pr-2">
+                Hi, <span className="text-primary">{firstName || "Learner"}</span> 👋
+              </span>
+            </Link>
+          </motion.div>
+        )}
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
           <motion.div
             initial={{ scale: 0.9 }}
@@ -82,9 +125,12 @@ const Index = () => {
       <motion.h2
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="text-2xl md:text-3xl font-display font-bold mb-2 text-center"
+        className="text-2xl md:text-3xl font-display font-bold mb-2 text-center flex items-center justify-center gap-3"
       >
-        📂 Explore Resources
+        <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl gradient-primary text-primary-foreground shadow-md shadow-primary/30">
+          <LayoutGrid size={20} strokeWidth={2.4} />
+        </span>
+        Explore Resources
       </motion.h2>
       <p className="text-muted-foreground text-center mb-10">Pick a section and start your preparation</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">

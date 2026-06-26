@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bot, X, Send, Loader2, LogIn } from "lucide-react";
+import { Sparkles, X, Send, Loader2, LogIn } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -113,13 +113,26 @@ const AITutor = () => {
   return (
     <>
       {/* Floating button */}
-      <button
+      <motion.button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full gradient-primary text-primary-foreground shadow-lg flex items-center justify-center hover:scale-105 transition-transform"
+        whileHover={{ scale: 1.08 }}
+        whileTap={{ scale: 0.95 }}
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-2xl gradient-primary text-primary-foreground shadow-xl shadow-primary/40 flex items-center justify-center overflow-hidden"
         aria-label="AI Tutor"
       >
-        {open ? <X size={22} /> : <Bot size={24} />}
-      </button>
+        {open ? (
+          <X size={22} />
+        ) : (
+          <>
+            <Sparkles size={24} strokeWidth={2.2} />
+            <motion.span
+              animate={{ scale: [1, 1.3, 1], opacity: [0.7, 0, 0.7] }}
+              transition={{ duration: 2.2, repeat: Infinity }}
+              className="absolute inset-0 rounded-2xl border-2 border-primary-foreground/40"
+            />
+          </>
+        )}
+      </motion.button>
 
       {/* Chat panel */}
       <AnimatePresence>
@@ -132,7 +145,7 @@ const AITutor = () => {
           >
             {/* Header */}
             <div className="gradient-primary px-4 py-3 flex items-center gap-2 text-primary-foreground">
-              <Bot size={20} />
+              <Sparkles size={18} />
               <span className="font-display font-bold text-sm">JEE AI Tutor</span>
             </div>
 
