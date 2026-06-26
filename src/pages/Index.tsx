@@ -1,11 +1,16 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { FileText, Brain, Target, Library, GraduationCap, Zap, BookOpen, ArrowRight, Sparkles } from "lucide-react";
+import { FileText, Brain, Target, Library, GraduationCap, Zap, BookOpen, ArrowRight, Sparkles, LayoutGrid } from "lucide-react";
 import Layout from "@/components/Layout";
 import StartPopup from "@/components/StartPopup";
 import ProfileReminderPopup from "@/components/ProfileReminderPopup";
 import PinnedResources from "@/components/PinnedResources";
 import useSEO from "@/hooks/useSEO";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { resolveMediaUrl } from "@/lib/giveawayMedia";
 
 const sections = [
   { path: "/hub", label: "✨ JEE Hub", desc: "AI tutor, mocks, infinity bank & more", icon: Sparkles, gradient: "gradient-primary", emoji: "✨" },
