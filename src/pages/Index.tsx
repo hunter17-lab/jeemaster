@@ -127,9 +127,18 @@ const Index = () => {
         animate={{ opacity: 1 }}
         className="text-2xl md:text-3xl font-display font-bold mb-2 text-center flex items-center justify-center gap-3"
       >
-        <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl gradient-primary text-primary-foreground shadow-md shadow-primary/30">
-          <LayoutGrid size={20} strokeWidth={2.4} />
-        </span>
+        <motion.span
+          animate={{ rotate: [0, 360] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+          className="relative inline-flex items-center justify-center w-11 h-11 rounded-2xl gradient-primary text-primary-foreground shadow-lg shadow-primary/40"
+        >
+          <Compass size={22} strokeWidth={2.4} />
+          <motion.span
+            animate={{ scale: [1, 1.25, 1], opacity: [0.7, 0, 0.7] }}
+            transition={{ duration: 2.4, repeat: Infinity }}
+            className="absolute inset-0 rounded-2xl border-2 border-primary-foreground/50"
+          />
+        </motion.span>
         Explore Resources
       </motion.h2>
       <p className="text-muted-foreground text-center mb-10">Pick a section and start your preparation</p>
