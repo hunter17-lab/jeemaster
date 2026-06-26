@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, X, Send, Loader2, LogIn } from "lucide-react";
+import { Sparkles, X, Send, Loader2, LogIn, BrainCircuit } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -117,19 +117,43 @@ const AITutor = () => {
         onClick={() => setOpen(!open)}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-2xl gradient-primary text-primary-foreground shadow-xl shadow-primary/40 flex items-center justify-center overflow-hidden"
+        animate={open ? {} : { y: [0, -4, 0] }}
+        transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-2xl gradient-primary text-primary-foreground shadow-xl shadow-primary/40 flex items-center justify-center overflow-visible"
         aria-label="AI Tutor"
       >
         {open ? (
           <X size={22} />
         ) : (
           <>
-            <Sparkles size={24} strokeWidth={2.2} />
+            {/* outer glow */}
             <motion.span
-              animate={{ scale: [1, 1.3, 1], opacity: [0.7, 0, 0.7] }}
+              animate={{ scale: [1, 1.35, 1], opacity: [0.55, 0, 0.55] }}
               transition={{ duration: 2.2, repeat: Infinity }}
-              className="absolute inset-0 rounded-2xl border-2 border-primary-foreground/40"
+              className="absolute inset-0 rounded-2xl bg-primary/40 blur-md"
             />
+            {/* rotating ring */}
+            <motion.span
+              animate={{ rotate: 360 }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              className="absolute inset-0 rounded-2xl border-2 border-dashed border-primary-foreground/40"
+            />
+            {/* core icon with subtle pulse */}
+            <motion.span
+              animate={{ scale: [1, 1.08, 1] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              className="relative z-10 flex items-center justify-center"
+            >
+              <BrainCircuit size={26} strokeWidth={2.2} />
+            </motion.span>
+            {/* orbiting sparkle */}
+            <motion.span
+              animate={{ rotate: 360 }}
+              transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+              className="absolute inset-0 z-10"
+            >
+              <Sparkles size={12} className="absolute -top-1 left-1/2 -translate-x-1/2 text-yellow-300 drop-shadow" fill="currentColor" />
+            </motion.span>
           </>
         )}
       </motion.button>
