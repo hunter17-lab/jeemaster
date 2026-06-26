@@ -40,13 +40,33 @@ const InstallPage = () => {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-md">
           {installed ? (
             <>
-              <div className="text-6xl mb-4">✅</div>
+              <motion.div
+                initial={{ scale: 0, rotate: -20 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 200, damping: 14 }}
+                className="relative mx-auto mb-6 w-24 h-24 rounded-3xl gradient-primary flex items-center justify-center shadow-2xl shadow-primary/40"
+              >
+                <CheckCircle2 size={52} className="text-primary-foreground" strokeWidth={2.4} />
+                <motion.span
+                  animate={{ scale: [1, 1.15, 1], opacity: [0.6, 0, 0.6] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="absolute inset-0 rounded-3xl border-2 border-primary/60"
+                />
+              </motion.div>
               <h1 className="text-2xl font-display font-bold mb-2">App Installed!</h1>
               <p className="text-muted-foreground">You can now use JEE MASTER from your home screen.</p>
             </>
           ) : (
             <>
-              <div className="text-6xl mb-6 animate-float">📱</div>
+              <motion.div
+                initial={{ scale: 0.85, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 160, damping: 14 }}
+                className="relative mx-auto mb-6 w-24 h-24 rounded-3xl gradient-primary flex items-center justify-center shadow-2xl shadow-primary/40"
+              >
+                <Smartphone size={48} className="text-primary-foreground" strokeWidth={2.2} />
+                <Sparkles size={18} className="absolute -top-1.5 -right-1.5 text-primary-foreground bg-accent rounded-full p-1 w-7 h-7 shadow-md" />
+              </motion.div>
               <h1 className="text-2xl font-display font-bold mb-3">Install JEE MASTER</h1>
               <p className="text-muted-foreground mb-8">
                 Install this app on your phone for the best experience — fast loading, offline access, and no browser tabs.
