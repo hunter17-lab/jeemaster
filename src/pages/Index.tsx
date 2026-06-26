@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { FileText, Brain, Target, Library, GraduationCap, Zap, BookOpen, ArrowRight, Sparkles, LayoutGrid } from "lucide-react";
+import { FileText, Brain, Target, Library, GraduationCap, Zap, BookOpen, ArrowRight, Sparkles, Compass } from "lucide-react";
 import Layout from "@/components/Layout";
 import StartPopup from "@/components/StartPopup";
 import ProfileReminderPopup from "@/components/ProfileReminderPopup";
