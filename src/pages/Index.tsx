@@ -34,6 +34,23 @@ const Index = () => {
     title: "JEE MASTER — Free IIT JEE Notes, Mind Maps, DPP, PYQs & Books",
     description: "Free IIT JEE preparation hub: chapter-wise short notes, mind maps, DPPs, 25+ years PYQs, books and Allen/PW coaching material for Class 11, 12 & droppers.",
   });
+  const { user } = useAuth();
+  const [profile, setProfile] = useState<{ display_name: string | null; avatar_url: string | null } | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user) { setProfile(null); setAvatarUrl(null); return; }
+    supabase.from("profiles").select("display_name, avatar_url").eq("user_id", user.id).maybeSingle()
+      .then(({ data }) => {
+        setProfile(data ?? null);
+        resolveMediaUrl(data?.avatar_url).then(setAvatarUrl);
+      });
+  }, [user]);
+
+  const firstName = (profile?.display_name || user?.email?.split("@")[0] || "").split(" ")[0];
+  const initials = (profile?.display_name || user?.email || "U")
+    .split(/[\s@]/).filter(Boolean).map((n) => n[0]).join("").toUpperCase().slice(0, 2);
+
   return (
   <Layout>
     <StartPopup />
