@@ -10,7 +10,6 @@ import useSEO from "@/hooks/useSEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { resolveMediaUrl } from "@/lib/giveawayMedia";
 
 const sections = [
   { path: "/hub", label: "✨ JEE Hub", desc: "AI tutor, mocks, infinity bank & more", icon: Sparkles, gradient: "gradient-primary", emoji: "✨" },
