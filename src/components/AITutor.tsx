@@ -18,6 +18,8 @@ const AITutor = () => {
     { role: "assistant", content: "Hi! 👋 I'm your JEE AI Tutor. Ask me anything about Physics, Chemistry, or Maths!" },
   ]);
   const [loading, setLoading] = useState(false);
+  const [greetName, setGreetName] = useState<string | null>(null);
+  const [showGreet, setShowGreet] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const { user, session } = useAuth();
   const navigate = useNavigate();
@@ -25,6 +27,29 @@ const AITutor = () => {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("ai-greet-dismissed")) return;
+    let cancelled = false;
+    (async () => {
+      let name = "there";
+      if (user) {
+        const { data } = await supabase.from("profiles").select("display_name").eq("user_id", user.id).maybeSingle();
+        const dn = (data?.display_name || user.email?.split("@")[0] || "").split(" ")[0];
+        if (dn) name = dn;
+      }
+      if (cancelled) return;
+      setGreetName(name);
+      setShowGreet(true);
+    })();
+    return () => { cancelled = true; };
+  }, [user]);
+
+  const dismissGreet = () => {
+    setShowGreet(false);
+    sessionStorage.setItem("ai-greet-dismissed", "1");
+  };
+
 
   const send = async () => {
     const text = input.trim();
