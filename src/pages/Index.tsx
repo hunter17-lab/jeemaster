@@ -40,9 +40,13 @@ const Index = () => {
   useEffect(() => {
     if (!user) { setProfile(null); setAvatarUrl(null); return; }
     supabase.from("profiles").select("display_name, avatar_url").eq("user_id", user.id).maybeSingle()
-      .then(({ data }) => {
+      .then(async ({ data }) => {
         setProfile(data ?? null);
-        resolveMediaUrl(data?.avatar_url).then(setAvatarUrl);
+        const raw = data?.avatar_url;
+        if (!raw) { setAvatarUrl(null); return; }
+        if (/^https?:\/\//i.test(raw)) { setAvatarUrl(raw); return; }
+        const { data: signed } = await supabase.storage.from("avatars").createSignedUrl(raw, 60 * 60 * 24 * 365);
+        setAvatarUrl(signed?.signedUrl || null);
       });
   }, [user]);
 
