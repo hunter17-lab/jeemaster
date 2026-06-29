@@ -112,7 +112,20 @@ const ProfileReminderPopup = () => {
             </motion.div>
 
             <h2 className="text-2xl font-display font-bold mb-1">
-              {mode === "new-user" ? "Hello User 👋" : "Almost there!"}
+              {mode === "new-user" ? (
+                <>
+                  Hello User{" "}
+                  <motion.span
+                    style={{ display: "inline-block", transformOrigin: "70% 70%" }}
+                    animate={{ rotate: [0, 18, -10, 18, -6, 14, 0] }}
+                    transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 0.6, ease: "easeInOut" }}
+                  >
+                    👋
+                  </motion.span>
+                </>
+              ) : (
+                "Almost there!"
+              )}
             </h2>
             <p className="text-xs uppercase tracking-widest text-primary/80 font-semibold mb-3 inline-flex items-center gap-1 justify-center">
               <Sparkles size={12} /> Message from Admin

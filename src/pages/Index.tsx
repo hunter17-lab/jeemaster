@@ -94,7 +94,14 @@ const Index = () => {
           </motion.div>
           <h1 className="text-5xl md:text-7xl font-display font-bold mb-6 tracking-tight leading-tight">
             Crack IIT JEE with{" "}
-            <span className="text-gradient">JEE MASTER</span> 🚀
+            <span className="text-gradient">JEE MASTER</span>{" "}
+            <motion.span
+              style={{ display: "inline-block", transformOrigin: "50% 60%" }}
+              animate={{ y: [0, -8, 0], rotate: [-6, 6, -6] }}
+              transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              🚀
+            </motion.span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
             Everything you need — Notes, Mind Maps, DPP, PYQs, Books & Coaching Material. 
