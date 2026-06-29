@@ -143,9 +143,10 @@ const AITutor = () => {
               animate={{ scale: [1, 1.08, 1] }}
               transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
               className="relative z-10 flex items-center justify-center"
-              style={{ transform: "rotate(90deg)" }}
             >
-              <BrainCircuit size={26} strokeWidth={2.2} />
+              <span className="block" style={{ transform: "rotate(90deg)" }}>
+                <BrainCircuit size={26} strokeWidth={2.2} />
+              </span>
             </motion.span>
             {/* orbiting sparkle */}
             <motion.span
