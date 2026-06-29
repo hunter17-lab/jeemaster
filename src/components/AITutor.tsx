@@ -138,11 +138,12 @@ const AITutor = () => {
               transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
               className="absolute inset-0 rounded-2xl border-2 border-dashed border-primary-foreground/40"
             />
-            {/* core icon with subtle pulse */}
+            {/* core icon with subtle pulse — rotated 90° downward */}
             <motion.span
               animate={{ scale: [1, 1.08, 1] }}
               transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
               className="relative z-10 flex items-center justify-center"
+              style={{ transform: "rotate(90deg)" }}
             >
               <BrainCircuit size={26} strokeWidth={2.2} />
             </motion.span>
