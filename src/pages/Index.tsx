@@ -10,7 +10,6 @@ import useSEO from "@/hooks/useSEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { resolveMediaUrl } from "@/lib/giveawayMedia";
 
 const sections = [
   { path: "/hub", label: "✨ JEE Hub", desc: "AI tutor, mocks, infinity bank & more", icon: Sparkles, gradient: "gradient-primary", emoji: "✨" },
@@ -41,9 +40,13 @@ const Index = () => {
   useEffect(() => {
     if (!user) { setProfile(null); setAvatarUrl(null); return; }
     supabase.from("profiles").select("display_name, avatar_url").eq("user_id", user.id).maybeSingle()
-      .then(({ data }) => {
+      .then(async ({ data }) => {
         setProfile(data ?? null);
-        resolveMediaUrl(data?.avatar_url).then(setAvatarUrl);
+        const raw = data?.avatar_url;
+        if (!raw) { setAvatarUrl(null); return; }
+        if (/^https?:\/\//i.test(raw)) { setAvatarUrl(raw); return; }
+        const { data: signed } = await supabase.storage.from("avatars").createSignedUrl(raw, 60 * 60 * 24 * 365);
+        setAvatarUrl(signed?.signedUrl || null);
       });
   }, [user]);
 
