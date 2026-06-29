@@ -1,4 +1,4 @@
-const CACHE_NAME = 'jee-master-v2';
+const CACHE_NAME = 'jee-master-v3';
 const OFFLINE_URL = '/';
 
 self.addEventListener('install', (event) => {
