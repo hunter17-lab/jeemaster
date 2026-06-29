@@ -137,9 +137,34 @@ const AITutor = () => {
 
   return (
     <>
+      {/* Greeting bubble */}
+      <AnimatePresence>
+        {showGreet && !open && greetName && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.9 }}
+            transition={{ type: "spring", duration: 0.5 }}
+            className="fixed bottom-24 right-6 z-50 max-w-[240px] rounded-2xl rounded-br-sm bg-card border border-border/60 shadow-xl px-4 py-3 pr-8"
+          >
+            <button
+              onClick={dismissGreet}
+              aria-label="Dismiss"
+              className="absolute top-1.5 right-1.5 text-muted-foreground hover:text-foreground p-1"
+            >
+              <X size={13} />
+            </button>
+            <p className="text-sm text-foreground leading-snug">
+              Hey <span className="font-semibold text-primary">{greetName}</span>!! Want any help? Tell me 😊
+            </p>
+            <span className="absolute -bottom-1.5 right-5 w-3 h-3 bg-card border-r border-b border-border/60 rotate-45" />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Floating button */}
       <motion.button
-        onClick={() => setOpen(!open)}
+        onClick={() => { setOpen(!open); if (showGreet) dismissGreet(); }}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
         animate={open ? {} : { y: [0, -4, 0] }}
@@ -157,12 +182,6 @@ const AITutor = () => {
               transition={{ duration: 2.2, repeat: Infinity }}
               className="absolute inset-0 rounded-2xl bg-primary/40 blur-md"
             />
-            {/* rotating ring */}
-            <motion.span
-              animate={{ rotate: 360 }}
-              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-0 rounded-2xl border-2 border-dashed border-primary-foreground/40"
-            />
             {/* core icon with subtle pulse — rotated 90° downward */}
             <motion.span
               animate={{ scale: [1, 1.08, 1] }}
@@ -173,17 +192,10 @@ const AITutor = () => {
                 <BrainCircuit size={26} strokeWidth={2.2} />
               </span>
             </motion.span>
-            {/* orbiting sparkle */}
-            <motion.span
-              animate={{ rotate: 360 }}
-              transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-0 z-10"
-            >
-              <Sparkles size={12} className="absolute -top-1 left-1/2 -translate-x-1/2 text-yellow-300 drop-shadow" fill="currentColor" />
-            </motion.span>
           </>
         )}
       </motion.button>
+
 
       {/* Chat panel */}
       <AnimatePresence>
