@@ -35,11 +35,12 @@ const ProfilePage = () => {
   }, [user, authLoading]);
 
   const fetchProfile = async () => {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("profiles")
       .select("*")
       .eq("user_id", user!.id)
-      .single();
+      .maybeSingle();
+    if (error) { toast.error(error.message); return; }
     if (data) {
       setProfile({
         display_name: data.display_name || "",

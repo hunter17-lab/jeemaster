@@ -32,8 +32,8 @@ const Navbar = () => {
   });
 
   const toggleDark = () => {
-    document.documentElement.classList.toggle("dark");
-    setDark(!dark);
+    const isDark = document.documentElement.classList.toggle("dark");
+    setDark(isDark);
   };
 
   const closeMobile = () => setMobileOpen(false);

@@ -58,7 +58,8 @@ const AdminPage = () => {
     setProfiles(map);
 
     const { data: ud, error } = await supabase.functions.invoke("admin-actions", { body: { action: "list_users" } });
-    if (!error) setUsers(ud?.users || []);
+    if (error) { toast.error(`Failed to load users: ${error.message}`); }
+    else setUsers(ud?.users || []);
   };
 
   useEffect(() => {

@@ -41,7 +41,11 @@ const Countdown = ({ to }: { to: string }) => {
 const GiveawayCard = ({ g }: { g: Giveaway }) => {
   const [count, setCount] = useState<number | null>(null);
   useEffect(() => {
-    supabase.rpc("giveaway_entry_count", { _giveaway_id: g.id }).then(({ data }) => setCount(data as number));
+    let active = true;
+    supabase.rpc("giveaway_entry_count", { _giveaway_id: g.id })
+      .then(({ data, error }) => { if (active && !error) setCount((data as number) ?? 0); })
+      .then(undefined, () => { if (active) setCount(0); });
+    return () => { active = false; };
   }, [g.id]);
   const ended = g.status === "ended" || new Date(g.result_at) < new Date();
   return (
