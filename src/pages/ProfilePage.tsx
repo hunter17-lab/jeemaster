@@ -40,7 +40,7 @@ const ProfilePage = () => {
       .select("*")
       .eq("user_id", user!.id)
       .maybeSingle();
-    if (error) { toast.error(error.message); return; }
+    if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
     if (data) {
       setProfile({
         display_name: data.display_name || "",
