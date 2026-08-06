@@ -39,14 +39,8 @@ const Countdown = ({ to }: { to: string }) => {
 };
 
 const GiveawayCard = ({ g }: { g: Giveaway }) => {
-  const [count, setCount] = useState<number | null>(null);
-  useEffect(() => {
-    let active = true;
-    supabase.rpc("giveaway_entry_count", { _giveaway_id: g.id })
-      .then(({ data, error }) => { if (active && !error) setCount((data as number) ?? 0); })
-      .then(undefined, () => { if (active) setCount(0); });
-    return () => { active = false; };
-  }, [g.id]);
+  const count = g.entry_count ?? 0;
+
   const ended = g.status === "ended" || new Date(g.result_at) < new Date();
   return (
     <Link to={`/giveaways/${g.id}`} className="group block rounded-2xl overflow-hidden border border-red-500/20 bg-gradient-to-br from-background to-red-950/10 hover:border-red-500/50 hover:shadow-[0_0_30px_-10px_rgba(220,38,38,0.5)] transition-all hover:-translate-y-1">
