@@ -25,7 +25,9 @@ import AuthPage from "./pages/AuthPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
 import AdminPage from "./pages/AdminPage";
+import ComingSoonPage from "./pages/ComingSoonPage";
 import NotFound from "./pages/NotFound";
+
 
 const queryClient = new QueryClient();
 
@@ -58,6 +60,10 @@ const App = () => (
             <Route path="/search" element={<SearchPage />} />
             <Route path="/install" element={<InstallPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/terms" element={<ComingSoonPage title="Copyright & Terms" />} />
+            <Route path="/dmca" element={<ComingSoonPage title="DMCA Policy" />} />
+            <Route path="/privacy" element={<ComingSoonPage title="Privacy Policy" />} />
+
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/profile" element={<ProfilePage />} />
