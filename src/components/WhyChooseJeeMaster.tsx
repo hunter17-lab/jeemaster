@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, Target, Zap, RefreshCw, ArrowRight } from "lucide-react";
+import { BookOpen, Target, Zap, RefreshCw, ArrowRight, Send } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const features = [
@@ -108,6 +108,16 @@ const WhyChooseJeeMaster = () => {
           >
             Start Learning <ArrowRight size={18} />
           </button>
+          <div className="mt-5">
+            <a
+              href="https://t.me/class11cbsescience"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-secondary text-foreground font-semibold text-sm md:text-base border border-border hover:border-primary/40 hover:bg-secondary/80 transition-all duration-[350ms]"
+            >
+              <Send size={17} className="text-primary" /> Join our official TG channel
+            </a>
+          </div>
         </motion.div>
       </div>
     </section>
