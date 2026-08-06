@@ -17,6 +17,7 @@ interface Giveaway {
   status: string;
   winner_entry_id: string | null;
   winner_count: number;
+  entry_count?: number;
 }
 
 const Countdown = ({ to }: { to: string }) => {
