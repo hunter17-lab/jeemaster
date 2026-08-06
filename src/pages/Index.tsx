@@ -6,6 +6,7 @@ import Layout from "@/components/Layout";
 import StartPopup from "@/components/StartPopup";
 import ProfileReminderPopup from "@/components/ProfileReminderPopup";
 import PinnedResources from "@/components/PinnedResources";
+import WhyChooseJeeMaster from "@/components/WhyChooseJeeMaster";
 import useSEO from "@/hooks/useSEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -131,7 +132,7 @@ const Index = () => {
     <PinnedResources />
 
     {/* Sections Grid */}
-    <section className="page-container pb-6">
+    <section id="resources" className="page-container pb-6 scroll-mt-24">
       <motion.h2
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -199,6 +200,8 @@ const Index = () => {
         ))}
       </motion.div>
     </section>
+
+    <WhyChooseJeeMaster />
   </Layout>
   );
 };
