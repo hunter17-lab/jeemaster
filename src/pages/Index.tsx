@@ -6,6 +6,7 @@ import Layout from "@/components/Layout";
 import StartPopup from "@/components/StartPopup";
 import ProfileReminderPopup from "@/components/ProfileReminderPopup";
 import PinnedResources from "@/components/PinnedResources";
+import WhyChooseJeeMaster from "@/components/WhyChooseJeeMaster";
 import useSEO from "@/hooks/useSEO";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
