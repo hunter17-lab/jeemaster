@@ -180,7 +180,7 @@ const GiveawayDetailPage = () => {
                   </div>
                   <div className="space-y-3">
                     {winners.map((w, i) => (
-                      <motion.div key={w.entry_id} initial={{ x: -40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: i * 0.15 }}>
+                      <motion.div key={`${w.win_position}-${w.winner_name}`} initial={{ x: -40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: i * 0.15 }}>
                         <WinnerCard giveawayTitle={g.title} prize={g.prize} winnerName={w.winner_name} position={w.win_position} />
                       </motion.div>
                     ))}
