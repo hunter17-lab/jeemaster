@@ -131,7 +131,7 @@ const Index = () => {
     <PinnedResources />
 
     {/* Sections Grid */}
-    <section className="page-container pb-6">
+    <section id="resources" className="page-container pb-6 scroll-mt-24">
       <motion.h2
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
