@@ -137,7 +137,7 @@ const GiveawayDetailPage = () => {
 
   const ended = new Date(g.result_at) <= new Date();
   const hasWinners = winners.length > 0;
-  const isWinner = user && winners.some((w) => myEntry && w.entry_id === myEntry.id);
+  const isWinner = !!user && !!myEntry && myWins.includes(myEntry.id);
 
   return (
     <Layout>
