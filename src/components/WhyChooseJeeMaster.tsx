@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, Target, Zap, RefreshCw, ArrowRight } from "lucide-react";
+import { BookOpen, Target, Zap, RefreshCw, ArrowRight, Send } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 const features = [
