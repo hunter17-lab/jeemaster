@@ -200,6 +200,8 @@ const Index = () => {
         ))}
       </motion.div>
     </section>
+
+    <WhyChooseJeeMaster />
   </Layout>
   );
 };
