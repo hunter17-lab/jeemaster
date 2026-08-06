@@ -48,6 +48,7 @@ const GiveawayDetailPage = () => {
   const [count, setCount] = useState(0);
   const [myEntry, setMyEntry] = useState<any>(null);
   const [winners, setWinners] = useState<any[]>([]);
+  const [myWins, setMyWins] = useState<string[]>([]);
   const [proofs, setProofs] = useState<any[]>([]);
   const [form, setForm] = useState({ name: "", email: "", reason: "" });
   const [editing, setEditing] = useState(false);
