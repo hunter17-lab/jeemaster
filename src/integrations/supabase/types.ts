@@ -175,6 +175,41 @@ export type Database = {
           },
         ]
       }
+      giveaway_public_winners: {
+        Row: {
+          created_at: string
+          giveaway_id: string
+          id: string
+          win_position: number
+          winner_entry_ref: string | null
+          winner_name: string
+        }
+        Insert: {
+          created_at?: string
+          giveaway_id: string
+          id?: string
+          win_position?: number
+          winner_entry_ref?: string | null
+          winner_name: string
+        }
+        Update: {
+          created_at?: string
+          giveaway_id?: string
+          id?: string
+          win_position?: number
+          winner_entry_ref?: string | null
+          winner_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "giveaway_public_winners_giveaway_id_fkey"
+            columns: ["giveaway_id"]
+            isOneToOne: false
+            referencedRelation: "giveaways"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       giveaway_winners: {
         Row: {
           entry_id: string
@@ -221,6 +256,7 @@ export type Database = {
           created_at: string
           created_by: string | null
           description: string | null
+          entry_count: number
           id: string
           image_url: string | null
           prize: string
@@ -238,6 +274,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           description?: string | null
+          entry_count?: number
           id?: string
           image_url?: string | null
           prize: string
@@ -255,6 +292,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           description?: string | null
+          entry_count?: number
           id?: string
           image_url?: string | null
           prize?: string

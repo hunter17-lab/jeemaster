@@ -1,0 +1,2 @@
+REVOKE SELECT ON public.giveaway_public_winners FROM anon, authenticated;
+GRANT SELECT (id, giveaway_id, winner_name, win_position, created_at) ON public.giveaway_public_winners TO anon, authenticated;

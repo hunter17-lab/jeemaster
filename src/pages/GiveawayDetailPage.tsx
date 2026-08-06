@@ -48,6 +48,7 @@ const GiveawayDetailPage = () => {
   const [count, setCount] = useState(0);
   const [myEntry, setMyEntry] = useState<any>(null);
   const [winners, setWinners] = useState<any[]>([]);
+  const [myWins, setMyWins] = useState<string[]>([]);
   const [proofs, setProofs] = useState<any[]>([]);
   const [form, setForm] = useState({ name: "", email: "", reason: "" });
   const [editing, setEditing] = useState(false);
@@ -58,20 +59,23 @@ const GiveawayDetailPage = () => {
   useSEO({ title: g ? `${g.title} — Giveaway` : "Giveaway" });
 
   const reload = async () => {
-    const [{ data: gv }, { data: cnt }, { data: w }, { data: p }] = await Promise.all([
+    const [{ data: gv }, { data: w }, { data: p }] = await Promise.all([
       supabase.from("giveaways").select("*").eq("id", id!).maybeSingle(),
-      supabase.rpc("giveaway_entry_count", { _giveaway_id: id! }),
-      supabase.rpc("get_giveaway_winners", { _giveaway_id: id! }),
+      supabase.from("giveaway_public_winners").select("giveaway_id, winner_name, win_position").eq("giveaway_id", id!).order("win_position"),
       supabase.from("giveaway_proofs").select("*").eq("giveaway_id", id!).eq("status", "approved"),
     ]);
     setG(gv);
-    setCount((cnt as number) ?? 0);
+    setCount((gv as any)?.entry_count ?? 0);
     setWinners((w as any[]) || []);
     setProofs((p as any[])?.filter((x) => !x.visible_until || new Date(x.visible_until) > new Date()) || []);
     if (user) {
       const { data: e } = await supabase.from("giveaway_entries").select("*").eq("giveaway_id", id!).eq("user_id", user.id).maybeSingle();
       setMyEntry(e);
       if (e && !editing) setForm({ name: e.name, email: e.email, reason: e.reason });
+      const { data: mine } = await supabase.from("giveaway_winners").select("entry_id").eq("giveaway_id", id!);
+      setMyWins(((mine as any[]) || []).map((x) => x.entry_id));
+    } else {
+      setMyWins([]);
     }
   };
 
@@ -133,7 +137,7 @@ const GiveawayDetailPage = () => {
 
   const ended = new Date(g.result_at) <= new Date();
   const hasWinners = winners.length > 0;
-  const isWinner = user && winners.some((w) => myEntry && w.entry_id === myEntry.id);
+  const isWinner = !!user && !!myEntry && myWins.includes(myEntry.id);
 
   return (
     <Layout>
@@ -176,7 +180,7 @@ const GiveawayDetailPage = () => {
                   </div>
                   <div className="space-y-3">
                     {winners.map((w, i) => (
-                      <motion.div key={w.entry_id} initial={{ x: -40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: i * 0.15 }}>
+                      <motion.div key={`${w.win_position}-${w.winner_name}`} initial={{ x: -40, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: i * 0.15 }}>
                         <WinnerCard giveawayTitle={g.title} prize={g.prize} winnerName={w.winner_name} position={w.win_position} />
                       </motion.div>
                     ))}
