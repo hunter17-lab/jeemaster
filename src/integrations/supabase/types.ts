@@ -330,7 +330,37 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      giveaway_entry_counts: {
+        Row: {
+          entry_count: number | null
+          giveaway_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "giveaway_entries_giveaway_id_fkey"
+            columns: ["giveaway_id"]
+            isOneToOne: false
+            referencedRelation: "giveaways"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      giveaway_public_winners: {
+        Row: {
+          giveaway_id: string | null
+          win_position: number | null
+          winner_name: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "giveaway_winners_giveaway_id_fkey"
+            columns: ["giveaway_id"]
+            isOneToOne: false
+            referencedRelation: "giveaways"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       get_giveaway_winners: {
