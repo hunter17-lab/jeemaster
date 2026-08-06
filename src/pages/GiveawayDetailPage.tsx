@@ -58,20 +58,23 @@ const GiveawayDetailPage = () => {
   useSEO({ title: g ? `${g.title} — Giveaway` : "Giveaway" });
 
   const reload = async () => {
-    const [{ data: gv }, { data: cnt }, { data: w }, { data: p }] = await Promise.all([
+    const [{ data: gv }, { data: w }, { data: p }] = await Promise.all([
       supabase.from("giveaways").select("*").eq("id", id!).maybeSingle(),
-      supabase.rpc("giveaway_entry_count", { _giveaway_id: id! }),
-      supabase.rpc("get_giveaway_winners", { _giveaway_id: id! }),
+      supabase.from("giveaway_public_winners").select("giveaway_id, winner_name, win_position").eq("giveaway_id", id!).order("win_position"),
       supabase.from("giveaway_proofs").select("*").eq("giveaway_id", id!).eq("status", "approved"),
     ]);
     setG(gv);
-    setCount((cnt as number) ?? 0);
+    setCount((gv as any)?.entry_count ?? 0);
     setWinners((w as any[]) || []);
     setProofs((p as any[])?.filter((x) => !x.visible_until || new Date(x.visible_until) > new Date()) || []);
     if (user) {
       const { data: e } = await supabase.from("giveaway_entries").select("*").eq("giveaway_id", id!).eq("user_id", user.id).maybeSingle();
       setMyEntry(e);
       if (e && !editing) setForm({ name: e.name, email: e.email, reason: e.reason });
+      const { data: mine } = await supabase.from("giveaway_winners").select("entry_id").eq("giveaway_id", id!);
+      setMyWins(((mine as any[]) || []).map((x) => x.entry_id));
+    } else {
+      setMyWins([]);
     }
   };
 
