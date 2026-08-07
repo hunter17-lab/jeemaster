@@ -25,22 +25,13 @@ export const useVisitorTracking = () => {
       if (stopped) return;
       const now = Date.now();
       const last = Number(localStorage.getItem(PING_KEY) || 0);
-      // Only re-register the visit row once per 24h window; heartbeat still updates activity.
-      const firstVisitWindow = !last || now - last > DAY_MS;
+      const newWindow = !last || now - last > DAY_MS;
 
-      const { error } = await supabase
-        .from("site_visitors")
-        .upsert(
-          { visitor_id: visitorId, last_seen_at: new Date(now).toISOString() },
-          { onConflict: "visitor_id" }
-        );
-      if (error) {
-        console.warn("visitor ping failed", error.message);
-        return;
-      }
-      if (!last || firstVisitWindow) localStorage.setItem(PING_KEY, String(now));
-
+      const { error } = await supabase.rpc("track_visit", { _visitor_id: visitorId });
+      if (error) return;
+      if (newWindow) localStorage.setItem(PING_KEY, String(now));
     };
+
 
     ping();
     const interval = window.setInterval(() => {
