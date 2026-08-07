@@ -345,6 +345,33 @@ export type Database = {
         }
         Relationships: []
       }
+      site_visitors: {
+        Row: {
+          created_at: string
+          first_seen_at: string
+          id: string
+          last_seen_at: string
+          updated_at: string
+          visitor_id: string
+        }
+        Insert: {
+          created_at?: string
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          updated_at?: string
+          visitor_id: string
+        }
+        Update: {
+          created_at?: string
+          first_seen_at?: string
+          id?: string
+          last_seen_at?: string
+          updated_at?: string
+          visitor_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
