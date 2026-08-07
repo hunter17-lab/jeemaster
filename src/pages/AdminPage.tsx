@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Shield, Plus, Trash2, Ban, ShieldOff, RefreshCw, Users, FileText, Mail, Pin, PinOff, Gift } from "lucide-react";
+import { Shield, Plus, Trash2, Ban, ShieldOff, RefreshCw, Users, FileText, Mail, Pin, PinOff, Gift, BarChart3 } from "lucide-react";
 import Layout from "@/components/Layout";
 import AdminGiveaways from "@/components/AdminGiveaways";
+import AdminAnalytics from "@/components/AdminAnalytics";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { supabase } from "@/integrations/supabase/client";
@@ -32,7 +33,7 @@ const AdminPage = () => {
   const { isAdmin, loading: roleLoading } = useIsAdmin();
   const navigate = useNavigate();
 
-  const [tab, setTab] = useState<"content" | "giveaways" | "users" | "bans">("content");
+  const [tab, setTab] = useState<"content" | "analytics" | "giveaways" | "users" | "bans">("content");
   const [form, setForm] = useState({ type: "notes", subject: "Physics", section: "", title: "", link: "", description: "", pyqShift: "Shift 1", pyqMonth: "January" });
   const [items, setItems] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
@@ -161,6 +162,7 @@ const AdminPage = () => {
         <div className="flex gap-2 mb-6 flex-wrap">
           {[
             { k: "content", label: "📦 Content", icon: FileText },
+            { k: "analytics", label: "📊 Analytics", icon: BarChart3 },
             { k: "giveaways", label: "🎁 Giveaways", icon: Gift },
             { k: "users", label: "👥 Users", icon: Users },
             { k: "bans", label: "🚫 Bans", icon: Ban },
@@ -255,6 +257,8 @@ const AdminPage = () => {
             </div>
           </div>
         )}
+
+        {tab === "analytics" && <AdminAnalytics />}
 
         {tab === "giveaways" && <AdminGiveaways />}
 
