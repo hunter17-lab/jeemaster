@@ -33,7 +33,7 @@ const AdminPage = () => {
   const { isAdmin, loading: roleLoading } = useIsAdmin();
   const navigate = useNavigate();
 
-  const [tab, setTab] = useState<"content" | "giveaways" | "users" | "bans">("content");
+  const [tab, setTab] = useState<"content" | "analytics" | "giveaways" | "users" | "bans">("content");
   const [form, setForm] = useState({ type: "notes", subject: "Physics", section: "", title: "", link: "", description: "", pyqShift: "Shift 1", pyqMonth: "January" });
   const [items, setItems] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
