@@ -162,6 +162,7 @@ const AdminPage = () => {
         <div className="flex gap-2 mb-6 flex-wrap">
           {[
             { k: "content", label: "📦 Content", icon: FileText },
+            { k: "analytics", label: "📊 Analytics", icon: BarChart3 },
             { k: "giveaways", label: "🎁 Giveaways", icon: Gift },
             { k: "users", label: "👥 Users", icon: Users },
             { k: "bans", label: "🚫 Bans", icon: Ban },
