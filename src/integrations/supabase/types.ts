@@ -419,6 +419,7 @@ export type Database = {
         Args: { _giveaway_id: string }
         Returns: string[]
       }
+      track_visit: { Args: { _visitor_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "user"
