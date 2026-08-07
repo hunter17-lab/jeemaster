@@ -258,6 +258,8 @@ const AdminPage = () => {
           </div>
         )}
 
+        {tab === "analytics" && <AdminAnalytics />}
+
         {tab === "giveaways" && <AdminGiveaways />}
 
         {tab === "users" && (
