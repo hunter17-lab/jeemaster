@@ -34,8 +34,12 @@ export const useVisitorTracking = () => {
           { visitor_id: visitorId, last_seen_at: new Date(now).toISOString() },
           { onConflict: "visitor_id" }
         );
-      if (!error && firstVisitWindow) localStorage.setItem(PING_KEY, String(now));
-      else if (!error) localStorage.setItem(PING_KEY, localStorage.getItem(PING_KEY) || String(now));
+      if (error) {
+        console.warn("visitor ping failed", error.message);
+        return;
+      }
+      if (!last || firstVisitWindow) localStorage.setItem(PING_KEY, String(now));
+
     };
 
     ping();
