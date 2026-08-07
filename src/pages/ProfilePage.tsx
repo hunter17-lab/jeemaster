@@ -106,7 +106,11 @@ const ProfilePage = () => {
       setAvatarPreview(signed?.signedUrl || null);
       setProfile((p) => ({ ...p, avatar_url: path }));
       // Persist immediately
-      await supabase.from("profiles").update({ avatar_url: path }).eq("user_id", user.id);
+      const { error: dbErr } = await supabase
+        .from("profiles")
+        .update({ avatar_url: path })
+        .eq("user_id", user.id);
+      if (dbErr) throw dbErr;
       toast({ title: "📸 Photo updated!" });
     } catch (err: any) {
       toast({ title: "Upload failed", description: err.message, variant: "destructive" });
@@ -116,21 +120,22 @@ const ProfilePage = () => {
   };
 
   const handleSave = async () => {
+    if (!user) return;
     setSaving(true);
     const { error } = await supabase
       .from("profiles")
-      .update({
+      .upsert({
+        user_id: user.id,
         display_name: profile.display_name,
         phone: profile.phone,
         class_name: profile.class_name,
         avatar_url: profile.avatar_url,
         coaching_institute: profile.coaching_institute,
         state: profile.state,
-      } as any)
-      .eq("user_id", user!.id);
+      } as any, { onConflict: "user_id" });
 
     if (error) {
-      toast({ title: "Error", description: "Failed to save profile", variant: "destructive" });
+      toast({ title: "Error", description: error.message || "Failed to save profile", variant: "destructive" });
     } else {
       toast({ title: "✅ Saved!", description: "Profile updated successfully" });
     }
