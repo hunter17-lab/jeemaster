@@ -35,34 +35,50 @@ const ProfilePage = () => {
   }, [user, authLoading]);
 
   const fetchProfile = async () => {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", user!.id)
-      .maybeSingle();
-    if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
-    if (data) {
-      setProfile({
-        display_name: data.display_name || "",
-        phone: data.phone || "",
-        class_name: data.class_name || "11",
-        avatar_url: data.avatar_url || "",
-        coaching_institute: (data as any).coaching_institute || "",
-        state: (data as any).state || "",
-      });
-      const raw = data.avatar_url || "";
-      if (raw) {
-        if (/^https?:\/\//i.test(raw)) {
-          setAvatarPreview(raw);
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user!.id)
+        .maybeSingle();
+      if (error) throw error;
+
+      if (data) {
+        setProfile({
+          display_name: data.display_name || "",
+          phone: data.phone || "",
+          class_name: data.class_name || "11",
+          avatar_url: data.avatar_url || "",
+          coaching_institute: (data as any).coaching_institute || "",
+          state: (data as any).state || "",
+        });
+        const raw = data.avatar_url || "";
+        if (raw) {
+          if (/^https?:\/\//i.test(raw)) {
+            setAvatarPreview(raw);
+          } else {
+            const { data: signed } = await supabase.storage
+              .from("avatars")
+              .createSignedUrl(raw, 60 * 60 * 24 * 365);
+            setAvatarPreview(signed?.signedUrl || null);
+          }
         } else {
-          const { data: signed } = await supabase.storage.from("avatars").createSignedUrl(raw, 60 * 60 * 24 * 365);
-          setAvatarPreview(signed?.signedUrl || null);
+          setAvatarPreview(null);
         }
       } else {
+        // No profile row yet (e.g. older accounts) — create one so saving works
+        await supabase.from("profiles").insert({
+          user_id: user!.id,
+          display_name: user!.email ?? "",
+        } as any);
+        setProfile((p) => ({ ...p, display_name: user!.email ?? "" }));
         setAvatarPreview(null);
       }
+    } catch (err: any) {
+      toast({ title: "Error", description: err?.message ?? "Could not load profile", variant: "destructive" });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
