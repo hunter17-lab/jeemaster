@@ -35,7 +35,9 @@ if (!document.documentElement.classList.contains("light")) {
   document.documentElement.classList.add("dark");
 }
 
-const App = () => (
+const App = () => {
+  useVisitorTracking();
+  return (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <TooltipProvider>
