@@ -35,34 +35,50 @@ const ProfilePage = () => {
   }, [user, authLoading]);
 
   const fetchProfile = async () => {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", user!.id)
-      .maybeSingle();
-    if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
-    if (data) {
-      setProfile({
-        display_name: data.display_name || "",
-        phone: data.phone || "",
-        class_name: data.class_name || "11",
-        avatar_url: data.avatar_url || "",
-        coaching_institute: (data as any).coaching_institute || "",
-        state: (data as any).state || "",
-      });
-      const raw = data.avatar_url || "";
-      if (raw) {
-        if (/^https?:\/\//i.test(raw)) {
-          setAvatarPreview(raw);
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("user_id", user!.id)
+        .maybeSingle();
+      if (error) throw error;
+
+      if (data) {
+        setProfile({
+          display_name: data.display_name || "",
+          phone: data.phone || "",
+          class_name: data.class_name || "11",
+          avatar_url: data.avatar_url || "",
+          coaching_institute: (data as any).coaching_institute || "",
+          state: (data as any).state || "",
+        });
+        const raw = data.avatar_url || "";
+        if (raw) {
+          if (/^https?:\/\//i.test(raw)) {
+            setAvatarPreview(raw);
+          } else {
+            const { data: signed } = await supabase.storage
+              .from("avatars")
+              .createSignedUrl(raw, 60 * 60 * 24 * 365);
+            setAvatarPreview(signed?.signedUrl || null);
+          }
         } else {
-          const { data: signed } = await supabase.storage.from("avatars").createSignedUrl(raw, 60 * 60 * 24 * 365);
-          setAvatarPreview(signed?.signedUrl || null);
+          setAvatarPreview(null);
         }
       } else {
+        // No profile row yet (e.g. older accounts) — create one so saving works
+        await supabase.from("profiles").insert({
+          user_id: user!.id,
+          display_name: user!.email ?? "",
+        } as any);
+        setProfile((p) => ({ ...p, display_name: user!.email ?? "" }));
         setAvatarPreview(null);
       }
+    } catch (err: any) {
+      toast({ title: "Error", description: err?.message ?? "Could not load profile", variant: "destructive" });
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,7 +106,11 @@ const ProfilePage = () => {
       setAvatarPreview(signed?.signedUrl || null);
       setProfile((p) => ({ ...p, avatar_url: path }));
       // Persist immediately
-      await supabase.from("profiles").update({ avatar_url: path }).eq("user_id", user.id);
+      const { error: dbErr } = await supabase
+        .from("profiles")
+        .update({ avatar_url: path })
+        .eq("user_id", user.id);
+      if (dbErr) throw dbErr;
       toast({ title: "📸 Photo updated!" });
     } catch (err: any) {
       toast({ title: "Upload failed", description: err.message, variant: "destructive" });
@@ -100,21 +120,22 @@ const ProfilePage = () => {
   };
 
   const handleSave = async () => {
+    if (!user) return;
     setSaving(true);
     const { error } = await supabase
       .from("profiles")
-      .update({
+      .upsert({
+        user_id: user.id,
         display_name: profile.display_name,
         phone: profile.phone,
         class_name: profile.class_name,
         avatar_url: profile.avatar_url,
         coaching_institute: profile.coaching_institute,
         state: profile.state,
-      } as any)
-      .eq("user_id", user!.id);
+      } as any, { onConflict: "user_id" });
 
     if (error) {
-      toast({ title: "Error", description: "Failed to save profile", variant: "destructive" });
+      toast({ title: "Error", description: error.message || "Failed to save profile", variant: "destructive" });
     } else {
       toast({ title: "✅ Saved!", description: "Profile updated successfully" });
     }
