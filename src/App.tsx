@@ -27,6 +27,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ProfilePage from "./pages/ProfilePage";
 import AdminPage from "./pages/AdminPage";
 import ComingSoonPage from "./pages/ComingSoonPage";
+import LegalPage from "./pages/LegalPage";
 import NotFound from "./pages/NotFound";
 
 
