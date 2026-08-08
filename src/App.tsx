@@ -64,9 +64,10 @@ const App = () => {
             <Route path="/search" element={<SearchPage />} />
             <Route path="/install" element={<InstallPage />} />
             <Route path="/about" element={<AboutPage />} />
-            <Route path="/terms" element={<ComingSoonPage title="Copyright & Terms" />} />
-            <Route path="/dmca" element={<ComingSoonPage title="DMCA Policy" />} />
-            <Route path="/privacy" element={<ComingSoonPage title="Privacy Policy" />} />
+            <Route path="/terms" element={<LegalPage kind="terms" />} />
+            <Route path="/dmca" element={<LegalPage kind="dmca" />} />
+            <Route path="/privacy" element={<LegalPage kind="privacy" />} />
+
 
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
