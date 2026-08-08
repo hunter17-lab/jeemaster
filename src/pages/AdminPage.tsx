@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Shield, Plus, Trash2, Ban, ShieldOff, RefreshCw, Users, FileText, Mail, Pin, PinOff, Gift, BarChart3 } from "lucide-react";
+import { Shield, Plus, Trash2, Ban, ShieldOff, RefreshCw, Users, FileText, Mail, Pin, PinOff, Gift, BarChart3, Pencil } from "lucide-react";
 import Layout from "@/components/Layout";
 import AdminGiveaways from "@/components/AdminGiveaways";
 import AdminAnalytics from "@/components/AdminAnalytics";
