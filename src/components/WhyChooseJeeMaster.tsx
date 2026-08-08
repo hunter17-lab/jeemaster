@@ -110,7 +110,7 @@ const WhyChooseJeeMaster = () => {
           </button>
           <div className="mt-5">
             <a
-              href="https://t.me/class11cbsescience"
+              href="https://t.me/+_-F7r5UIv6Q3YzA9"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-secondary text-foreground font-semibold text-sm md:text-base border border-border hover:border-primary/40 hover:bg-secondary/80 transition-all duration-[350ms]"
