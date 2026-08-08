@@ -41,6 +41,26 @@ const AdminPage = () => {
   const [bans, setBans] = useState<any[]>([]);
   const [busy, setBusy] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
+  const [editItem, setEditItem] = useState<any | null>(null);
+
+  const saveEdit = async () => {
+    if (!editItem) return;
+    const { error } = await supabase
+      .from("content_items")
+      .update({
+        title: editItem.title,
+        link: editItem.link,
+        subject: editItem.subject,
+        section: editItem.section || null,
+        description: editItem.description || null,
+      })
+      .eq("id", editItem.id);
+    if (error) { toast.error(error.message); return; }
+    toast.success("Updated ✅");
+    setEditItem(null);
+    loadAll();
+  };
+
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
