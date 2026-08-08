@@ -260,6 +260,10 @@ const AdminPage = () => {
                       <div className="text-xs text-muted-foreground truncate">{it.type} · {it.subject}{it.section ? ` · ${it.section}` : ""}</div>
                     </div>
                     <a href={it.link} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline">open</a>
+                    <button onClick={() => setEditItem({ ...it })} title="Edit" className="p-1.5 rounded text-muted-foreground hover:bg-secondary">
+                      <Pencil size={14} />
+                    </button>
+
                     <button
                       onClick={() => togglePin(it)}
                       title={it.pinned ? "Unpin" : "Pin to landing"}
