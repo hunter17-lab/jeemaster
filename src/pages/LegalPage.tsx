@@ -203,12 +203,18 @@ const LegalPage = ({ kind }: { kind: LegalKind }) => {
                 <p className="text-sm text-muted-foreground">
                   Telegram:{" "}
                   <a
-                    href="https://t.me/class11cbsescience"
+                    href={
+                      kind === "terms"
+                        ? "https://t.me/+_-F7r5UIv6Q3YzA9"
+                        : "https://t.me/class11cbsescience"
+                    }
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-primary hover:underline break-all"
                   >
-                    https://t.me/class11cbsescience
+                    {kind === "terms"
+                      ? "https://t.me/+_-F7r5UIv6Q3YzA9"
+                      : "https://t.me/class11cbsescience"}
                   </a>
                 </p>
                 {kind === "privacy" && (
