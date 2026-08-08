@@ -46,36 +46,57 @@ const BookSubjectPage = () => {
           </div>
         </motion.div>
 
-        <div className="glass-card p-4 space-y-2">
-          {!loading && items.length === 0 && (
-            <div className="text-center py-12 text-sm text-muted-foreground">
-              <BookOpen size={32} className="mx-auto mb-2 opacity-50" />
-              No books uploaded yet in this category.
-            </div>
-          )}
+        {!loading && items.length === 0 && (
+          <div className="glass-card p-4 text-center py-12 text-sm text-muted-foreground">
+            <BookOpen size={32} className="mx-auto mb-2 opacity-50" />
+            No books uploaded yet in this category.
+          </div>
+        )}
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((it, i) => (
-            <motion.a
+            <motion.div
               key={it.id}
-              href={it.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.04 }}
-              className="chapter-item group"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: Math.min(i * 0.03, 0.4) }}
+              className="glass-card p-5 flex flex-col gap-3 hover:scale-[1.01] transition-transform"
             >
-              <div className="min-w-0 flex-1">
-                <div className="text-sm font-medium truncate">{it.title}</div>
-                {(it.section || it.description) && (
-                  <div className="text-xs text-muted-foreground truncate">
-                    {it.section}{it.section && it.description ? " · " : ""}{it.description}
-                  </div>
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center shrink-0">
+                  <BookOpen size={18} className="text-primary-foreground" />
+                </div>
+                <div className="min-w-0">
+                  <h2 className="text-sm font-semibold leading-snug line-clamp-3">{it.title}</h2>
+                  {it.section && (
+                    <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">by {it.section}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-1.5">
+                <span className="px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[11px] font-medium">
+                  {meta.label.replace(" Books", "")}
+                </span>
+                {it.description && (
+                  <span className="px-2 py-0.5 rounded-full bg-secondary text-[11px] text-muted-foreground">
+                    {it.description}
+                  </span>
                 )}
               </div>
-              <ExternalLink size={14} className="text-muted-foreground group-hover:text-primary" />
-            </motion.a>
+
+              <a
+                href={it.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-auto inline-flex items-center justify-center gap-2 w-full py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition"
+              >
+                Open Book <ExternalLink size={14} />
+              </a>
+            </motion.div>
           ))}
         </div>
+
       </div>
     </Layout>
   );
