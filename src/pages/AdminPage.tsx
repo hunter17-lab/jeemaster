@@ -282,7 +282,27 @@ const AdminPage = () => {
           </div>
         )}
 
+        {editItem && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4" onClick={() => setEditItem(null)}>
+            <div className="relative w-full max-w-md rounded-2xl border border-border/60 bg-card p-6 shadow-2xl space-y-3" onClick={(e) => e.stopPropagation()}>
+              <h3 className="font-display font-semibold flex items-center gap-2"><Pencil size={16} /> Edit item</h3>
+              <input value={editItem.title || ""} onChange={(e) => setEditItem({ ...editItem, title: e.target.value })} placeholder="Title" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              <select value={editItem.subject} onChange={(e) => setEditItem({ ...editItem, subject: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border">
+                {getSubjects(editItem.type).map((s) => <option key={s}>{s}</option>)}
+              </select>
+              <input value={editItem.section || ""} onChange={(e) => setEditItem({ ...editItem, section: e.target.value })} placeholder="Author / section" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              <input value={editItem.description || ""} onChange={(e) => setEditItem({ ...editItem, description: e.target.value })} placeholder="Edition / year / description" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              <input type="url" value={editItem.link || ""} onChange={(e) => setEditItem({ ...editItem, link: e.target.value })} placeholder="Link" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              <div className="flex gap-2 pt-1">
+                <button onClick={saveEdit} className="flex-1 py-2 rounded-lg gradient-primary text-primary-foreground font-semibold">Save</button>
+                <button onClick={() => setEditItem(null)} className="px-4 py-2 rounded-lg bg-secondary">Cancel</button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {tab === "analytics" && <AdminAnalytics />}
+
 
         {tab === "giveaways" && <AdminGiveaways />}
 
