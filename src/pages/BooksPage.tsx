@@ -1,39 +1,56 @@
 import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { BookOpen, ChevronRight, ExternalLink, Search as SearchIcon, X } from "lucide-react";
+import { BookOpen, ArrowRight, Search as SearchIcon, X } from "lucide-react";
 import Layout from "@/components/Layout";
-import { useAdminContent } from "@/hooks/useAdminContent";
+import BookCard from "@/components/BookCard";
 import { useAllBooks } from "@/hooks/useAllBooks";
 import { searchBooks } from "@/lib/bookSearch";
 
 const CATEGORIES = [
-  { slug: "physics",     key: "Physics",     label: "Physics Books",     short: "Physics",      icon: "⚡", accent: "from-blue-500/20 to-cyan-500/10" },
-  { slug: "chemistry",   key: "Chemistry",   label: "Chemistry Books",   short: "Chemistry",    icon: "🧪", accent: "from-emerald-500/20 to-teal-500/10" },
-  { slug: "mathematics", key: "Mathematics", label: "Maths Books",       short: "Maths",        icon: "📐", accent: "from-violet-500/20 to-fuchsia-500/10" },
-  { slug: "pcm",         key: "PCM",         label: "PCM Combined",      short: "PCM Combined", icon: "📚", accent: "from-amber-500/20 to-orange-500/10" },
+  { slug: "physics",     key: "Physics",     label: "Physics Books",   short: "Physics",      subtitle: "Physics study resources",   icon: "⚡", accent: "from-blue-500/25 via-cyan-500/10 to-transparent" },
+  { slug: "chemistry",   key: "Chemistry",   label: "Chemistry Books", short: "Chemistry",    subtitle: "Chemistry study resources", icon: "🧪", accent: "from-emerald-500/25 via-teal-500/10 to-transparent" },
+  { slug: "mathematics", key: "Mathematics", label: "Maths Books",     short: "Maths",        subtitle: "Mathematics study resources", icon: "📐", accent: "from-violet-500/25 via-fuchsia-500/10 to-transparent" },
+  { slug: "pcm",         key: "PCM",         label: "PCM Combined",    short: "PCM Combined", subtitle: "Complete PCM resources",    icon: "📚", accent: "from-amber-500/25 via-orange-500/10 to-transparent" },
 ] as const;
 
-const CategoryTile = ({ cat }: { cat: typeof CATEGORIES[number] }) => {
-  const { items, loading } = useAdminContent("books", cat.key);
-  return (
-    <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
-      <Link
-        to={`/books/${cat.slug}`}
-        className={`glass-card group flex items-center gap-4 p-5 bg-gradient-to-r ${cat.accent} hover:scale-[1.01] transition-transform`}
-      >
-        <span className="text-3xl">{cat.icon}</span>
-        <div className="flex-1 min-w-0">
-          <h3 className="font-display font-semibold text-lg">{cat.label}</h3>
-          <p className="text-xs text-muted-foreground">
-            {loading ? "Loading…" : `${items.length} ${items.length === 1 ? "book" : "books"} available`}
-          </p>
-        </div>
-        <ChevronRight size={20} className="text-muted-foreground group-hover:text-primary transition-colors" />
-      </Link>
-    </motion.div>
-  );
-};
+const CategoryCard = ({
+  cat,
+  count,
+  loading,
+  index,
+}: {
+  cat: typeof CATEGORIES[number];
+  count: number;
+  loading: boolean;
+  index: number;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 16 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay: index * 0.06 }}
+  >
+    <Link
+      to={`/books/${cat.slug}`}
+      className={`group relative flex h-full items-center gap-5 overflow-hidden rounded-3xl border border-border/60 bg-gradient-to-br ${cat.accent} p-6 sm:p-8 shadow-lg backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:scale-[1.01] hover:border-primary/50 hover:shadow-2xl hover:shadow-primary/15 active:scale-[0.99]`}
+    >
+      <div className="absolute inset-0 bg-card/60 -z-10" />
+      <span className="text-4xl sm:text-5xl drop-shadow transition-transform duration-300 group-hover:scale-110">
+        {cat.icon}
+      </span>
+      <div className="min-w-0 flex-1">
+        <h2 className="font-display text-xl sm:text-2xl font-bold leading-tight">{cat.label}</h2>
+        <p className="mt-1 text-sm font-semibold text-primary">
+          {loading ? "Loading…" : `${count} ${count === 1 ? "Book" : "Books"} Available`}
+        </p>
+        <p className="mt-0.5 text-xs sm:text-sm text-muted-foreground">{cat.subtitle}</p>
+      </div>
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border/60 bg-background/50 text-muted-foreground transition-all duration-300 group-hover:border-primary/50 group-hover:bg-primary/15 group-hover:text-primary">
+        <ArrowRight size={20} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+      </span>
+    </Link>
+  </motion.div>
+);
 
 const BooksPage = () => {
   const [query, setQuery] = useState("");
@@ -47,6 +64,12 @@ const BooksPage = () => {
     return () => clearTimeout(t);
   }, [query]);
 
+  const counts = useMemo(() => {
+    const map: Record<string, number> = {};
+    books.forEach((b) => { map[b.subjectKey] = (map[b.subjectKey] || 0) + 1; });
+    return map;
+  }, [books]);
+
   const pool = useMemo(
     () => (filter === "all" ? books : books.filter((b) => b.subjectKey === filter)),
     [books, filter],
@@ -59,10 +82,20 @@ const BooksPage = () => {
   return (
     <Layout>
       <div className="page-container">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-          <h1 className="text-3xl font-display font-bold mb-2">📚 Books</h1>
-          <p className="text-muted-foreground mb-6">Recommended books for IIT JEE preparation</p>
-        </motion.div>
+        {/* Hero */}
+        <motion.section
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative mb-6 overflow-hidden rounded-3xl border border-border/60 gradient-mesh p-6 sm:p-8"
+        >
+          <h1 className="font-display text-3xl sm:text-4xl font-bold">📚 JEE Book Library</h1>
+          <p className="mt-2 max-w-2xl text-sm sm:text-base text-muted-foreground">
+            Explore carefully organized books and study resources for IIT JEE preparation.
+          </p>
+          <p className="mt-3 text-xs font-semibold uppercase tracking-widest text-primary">
+            Physics • Chemistry • Mathematics • PCM Combined
+          </p>
+        </motion.section>
 
         {/* Search bar */}
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-4">
@@ -151,45 +184,18 @@ const BooksPage = () => {
 
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {results.map(({ book }, i) => (
-                  <motion.div
+                  <BookCard
                     key={book.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: Math.min(i * 0.02, 0.3) }}
-                    className="glass-card p-5 flex flex-col gap-3 hover:scale-[1.01] transition-transform"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center shrink-0">
-                        <BookOpen size={18} className="text-primary-foreground" />
-                      </div>
-                      <div className="min-w-0">
-                        <h3 className="text-sm font-semibold leading-snug line-clamp-3">{book.title}</h3>
-                        {book.author && (
-                          <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">by {book.author}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap gap-1.5">
-                      <span className="px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-[11px] font-medium">
-                        {CATEGORIES.find((c) => c.key === book.subjectKey)?.short || book.subject}
-                      </span>
-                      {book.edition && (
-                        <span className="px-2 py-0.5 rounded-full bg-secondary text-[11px] text-muted-foreground">
-                          {book.edition}
-                        </span>
-                      )}
-                    </div>
-
-                    <a
-                      href={book.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-auto inline-flex items-center justify-center gap-2 w-full py-2 rounded-lg gradient-primary text-primary-foreground text-sm font-semibold hover:opacity-90 transition"
-                    >
-                      Open Book <ExternalLink size={14} />
-                    </a>
-                  </motion.div>
+                    index={i}
+                    book={{
+                      id: book.id,
+                      title: book.title,
+                      author: book.author,
+                      edition: book.edition,
+                      link: book.link,
+                      resource_type: (book as any).resource_type,
+                    }}
+                  />
                 ))}
               </div>
             </motion.div>
@@ -199,10 +205,10 @@ const BooksPage = () => {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+              className="grid grid-cols-1 md:grid-cols-2 gap-5"
             >
-              {CATEGORIES.filter((c) => filter === "all" || filter === c.key).map((cat) => (
-                <CategoryTile key={cat.slug} cat={cat} />
+              {CATEGORIES.filter((c) => filter === "all" || filter === c.key).map((cat, i) => (
+                <CategoryCard key={cat.slug} cat={cat} count={counts[cat.key] || 0} loading={loading} index={i} />
               ))}
             </motion.div>
           )}

@@ -12,6 +12,7 @@ export interface ContentItem {
   link: string;
   description: string | null;
   created_at: string;
+  resource_type?: string | null;
 }
 
 export const useAdminContent = (type: ContentType, subject?: string) => {

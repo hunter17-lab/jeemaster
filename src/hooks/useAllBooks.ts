@@ -4,6 +4,7 @@ import type { SearchableBook } from "@/lib/bookSearch";
 
 export interface BookRecord extends SearchableBook {
   subjectKey: string;
+  resource_type?: string | null;
 }
 
 /** Fetches the full books dataset once, for client-side searching. */
@@ -15,7 +16,7 @@ export const useAllBooks = () => {
     let active = true;
     supabase
       .from("content_items")
-      .select("id,title,section,description,subject,link")
+      .select("id,title,section,description,subject,link,resource_type")
       .eq("type", "books")
       .order("created_at", { ascending: false })
       .then(({ data }) => {
@@ -29,6 +30,7 @@ export const useAllBooks = () => {
             subject: d.subject,
             subjectKey: d.subject,
             link: d.link,
+            resource_type: d.resource_type ?? null,
           })),
         );
         setLoading(false);

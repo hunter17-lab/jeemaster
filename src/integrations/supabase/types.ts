@@ -44,6 +44,7 @@ export type Database = {
           link: string
           pinned: boolean
           pinned_at: string | null
+          resource_type: string | null
           section: string | null
           subject: string
           title: string
@@ -58,6 +59,7 @@ export type Database = {
           link: string
           pinned?: boolean
           pinned_at?: string | null
+          resource_type?: string | null
           section?: string | null
           subject: string
           title: string
@@ -72,6 +74,7 @@ export type Database = {
           link?: string
           pinned?: boolean
           pinned_at?: string | null
+          resource_type?: string | null
           section?: string | null
           subject?: string
           title?: string
