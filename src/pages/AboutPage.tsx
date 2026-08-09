@@ -41,7 +41,7 @@ const AboutPage = () => (
 
           <div className="pt-2">
             <a
-              href="https://t.me/+_-F7r5UIv6Q3YzA9"
+              href="https://t.me/+QEURlTuGeKA3ZTc1"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 gradient-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity"

@@ -79,7 +79,7 @@ const StartPopup = () => {
             {/* CTAs */}
             <div className="space-y-2.5">
               <a
-                href="https://t.me/+_-F7r5UIv6Q3YzA9"
+                href="https://t.me/+QEURlTuGeKA3ZTc1"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary/90 hover:bg-primary text-primary-foreground px-5 py-3 font-semibold text-sm transition-colors shadow-lg shadow-primary/20"
