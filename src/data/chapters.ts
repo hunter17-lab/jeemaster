@@ -103,17 +103,17 @@ export const coachingMaterials = [
   {
     name: "Allen",
     items: [
-      { type: "Modules", link: "https://t.me/+_-F7r5UIv6Q3YzA9" },
-      { type: "DPP", link: "https://t.me/+_-F7r5UIv6Q3YzA9" },
-      { type: "Tests", link: "https://t.me/+_-F7r5UIv6Q3YzA9" },
+      { type: "Modules", link: "https://t.me/+QEURlTuGeKA3ZTc1" },
+      { type: "DPP", link: "https://t.me/+QEURlTuGeKA3ZTc1" },
+      { type: "Tests", link: "https://t.me/+QEURlTuGeKA3ZTc1" },
     ],
   },
   {
     name: "PW (Physics Wallah)",
     items: [
-      { type: "Modules", link: "https://t.me/+_-F7r5UIv6Q3YzA9" },
-      { type: "DPP", link: "https://t.me/+_-F7r5UIv6Q3YzA9" },
-      { type: "Tests", link: "https://t.me/+_-F7r5UIv6Q3YzA9" },
+      { type: "Modules", link: "https://t.me/+QEURlTuGeKA3ZTc1" },
+      { type: "DPP", link: "https://t.me/+QEURlTuGeKA3ZTc1" },
+      { type: "Tests", link: "https://t.me/+QEURlTuGeKA3ZTc1" },
     ],
   },
 ];

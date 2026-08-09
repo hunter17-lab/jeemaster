@@ -77,7 +77,7 @@ const SiteFooter = () => (
           </p>
 
           <motion.a
-            href="https://t.me/+_-F7r5UIv6Q3YzA9"
+            href="https://t.me/+QEURlTuGeKA3ZTc1"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Support us — join our Telegram channel"
