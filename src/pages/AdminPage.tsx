@@ -239,6 +239,10 @@ const AdminPage = () => {
               <input required={form.type !== "pyq"} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder={form.type === "pyq" ? "Paper title (e.g. 24 Jan Morning) — optional" : "Title (chapter / topic name)"} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               <input required type="url" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} placeholder="https://drive.google.com/..." className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description (optional)" rows={2} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              <select value={form.resourceType} onChange={(e) => setForm({ ...form, resourceType: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border">
+                <option value="">Resource Type: Auto Detect</option>
+                {RESOURCE_TYPES.map((r) => <option key={r} value={r}>{r.charAt(0) + r.slice(1).toLowerCase()}</option>)}
+              </select>
               <button disabled={busy} className="w-full py-2.5 rounded-lg gradient-primary text-primary-foreground font-semibold disabled:opacity-50">
                 {busy ? "Uploading…" : "Upload"}
               </button>
@@ -295,6 +299,10 @@ const AdminPage = () => {
               <input value={editItem.section || ""} onChange={(e) => setEditItem({ ...editItem, section: e.target.value })} placeholder="Author / section" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               <input value={editItem.description || ""} onChange={(e) => setEditItem({ ...editItem, description: e.target.value })} placeholder="Edition / year / description" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               <input type="url" value={editItem.link || ""} onChange={(e) => setEditItem({ ...editItem, link: e.target.value })} placeholder="Link" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              <select value={editItem.resource_type || ""} onChange={(e) => setEditItem({ ...editItem, resource_type: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border">
+                <option value="">Resource Type: Auto Detect</option>
+                {RESOURCE_TYPES.map((r) => <option key={r} value={r}>{r.charAt(0) + r.slice(1).toLowerCase()}</option>)}
+              </select>
               <div className="flex gap-2 pt-1">
                 <button onClick={saveEdit} className="flex-1 py-2 rounded-lg gradient-primary text-primary-foreground font-semibold">Save</button>
                 <button onClick={() => setEditItem(null)} className="px-4 py-2 rounded-lg bg-secondary">Cancel</button>
