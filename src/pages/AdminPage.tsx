@@ -118,8 +118,9 @@ const AdminPage = () => {
       title: titleValue,
       link: form.link,
       description: form.description || null,
+      resource_type: form.resourceType || null,
       created_by: user!.id,
-    });
+    } as any);
     setBusy(false);
     if (error) { toast.error(error.message); return; }
     toast.success("Uploaded ✨");
