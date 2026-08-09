@@ -34,7 +34,7 @@ const AdminPage = () => {
   const navigate = useNavigate();
 
   const [tab, setTab] = useState<"content" | "analytics" | "giveaways" | "users" | "bans">("content");
-  const [form, setForm] = useState({ type: "notes", subject: "Physics", section: "", title: "", link: "", description: "", pyqShift: "Shift 1", pyqMonth: "January" });
+  const [form, setForm] = useState({ type: "notes", subject: "Physics", section: "", title: "", link: "", description: "", pyqShift: "Shift 1", pyqMonth: "January", resourceType: "" });
   const [items, setItems] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [profiles, setProfiles] = useState<Record<string, any>>({});
@@ -53,7 +53,8 @@ const AdminPage = () => {
         subject: editItem.subject,
         section: editItem.section || null,
         description: editItem.description || null,
-      })
+        resource_type: editItem.resource_type || null,
+      } as any)
       .eq("id", editItem.id);
     if (error) { toast.error(error.message); return; }
     toast.success("Updated ✅");
