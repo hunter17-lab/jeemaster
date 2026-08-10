@@ -108,11 +108,24 @@ const AdminPage = () => {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const isCoaching = form.type === "coaching";
+    if (isCoaching) {
+      if (!getCoaching(form.subject)) { toast.error("Select a coaching institute"); return; }
+      if (!form.title.trim()) { toast.error("Material name is required"); return; }
+      const dup = items.some(
+        (it) =>
+          it.type === "coaching" &&
+          String(it.subject).toLowerCase() === form.subject &&
+          String(it.title).trim().toLowerCase() === form.title.trim().toLowerCase() &&
+          String(it.link).trim() === form.link.trim()
+      );
+      if (dup) { toast.error("This material already exists for that coaching"); return; }
+    }
     setBusy(true);
     const isPyqShift = form.type === "pyq" && Number(form.subject) >= PYQ_SHIFT_START_YEAR;
     const sectionValue = isPyqShift
       ? `${form.pyqShift} - ${form.pyqMonth}`
-      : (form.section || null);
+      : (isCoaching ? null : (form.section || null));
     const titleValue = form.title.trim() || (form.type === "pyq" ? `JEE Main ${form.subject}${sectionValue ? ` — ${sectionValue}` : ""}` : form.title);
     const { error } = await supabase.from("content_items").insert({
       type: form.type as any,
@@ -121,7 +134,7 @@ const AdminPage = () => {
       title: titleValue,
       link: form.link,
       description: form.description || null,
-      resource_type: form.resourceType || null,
+      resource_type: isCoaching ? (form.resourceType || "OTHER") : (form.resourceType || null),
       created_by: user!.id,
     } as any);
     setBusy(false);
