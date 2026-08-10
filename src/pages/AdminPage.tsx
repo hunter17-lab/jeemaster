@@ -287,7 +287,11 @@ const AdminPage = () => {
                         {it.pinned && <Pin size={12} className="text-primary shrink-0" />}
                         {it.title}
                       </div>
-                      <div className="text-xs text-muted-foreground truncate">{it.type} · {it.subject}{it.section ? ` · ${it.section}` : ""}</div>
+                      <div className="text-xs text-muted-foreground truncate">
+                        {it.type === "coaching"
+                          ? `coaching · ${getCoaching(String(it.subject).toLowerCase())?.name || it.subject} · ${(it.resource_type || "OTHER").toUpperCase()}`
+                          : `${it.type} · ${it.subject}${it.section ? ` · ${it.section}` : ""}`}
+                      </div>
                     </div>
                     <a href={it.link} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline">open</a>
                     <button onClick={() => setEditItem({ ...it })} title="Edit" className="p-1.5 rounded text-muted-foreground hover:bg-secondary">
