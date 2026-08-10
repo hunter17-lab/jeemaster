@@ -26,6 +26,7 @@ const PYQ_YEARS = Array.from({ length: new Date().getFullYear() - 2002 + 1 }, (_
 const SUBJECTS_BY_TYPE: Record<string, string[]> = {
   books: ["Physics", "Chemistry", "Mathematics", "PCM"],
   pyq: PYQ_YEARS,
+  coaching: COACHINGS.map((c) => c.slug),
 };
 const getSubjects = (type: string) => SUBJECTS_BY_TYPE[type] || SUBJECTS_DEFAULT;
 
