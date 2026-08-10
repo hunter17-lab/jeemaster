@@ -224,7 +224,9 @@ const AdminPage = () => {
                   const months = form.type === "pyq" ? getMonthsForYear(newSubject) : [];
                   setForm({ ...form, subject: newSubject, pyqMonth: months.includes(form.pyqMonth) ? form.pyqMonth : (months[0] || form.pyqMonth) });
                 }} className="px-3 py-2 rounded-lg bg-secondary border border-border">
-                  {getSubjects(form.type).map(s => <option key={s}>{s}</option>)}
+                  {form.type === "coaching"
+                    ? COACHINGS.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)
+                    : getSubjects(form.type).map(s => <option key={s}>{s}</option>)}
                 </select>
               </div>
               {form.type === "pyq" && Number(form.subject) >= PYQ_SHIFT_START_YEAR ? (
@@ -236,16 +238,22 @@ const AdminPage = () => {
                     {getMonthsForYear(form.subject).map(m => <option key={m} value={m}>{m} Attempt</option>)}
                   </select>
                 </div>
-              ) : form.type !== "pyq" ? (
+              ) : form.type !== "pyq" && form.type !== "coaching" ? (
                 <input value={form.section} onChange={(e) => setForm({ ...form, section: e.target.value })} placeholder="Section (e.g. Class 11) — optional" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               ) : null}
-              <input required={form.type !== "pyq"} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder={form.type === "pyq" ? "Paper title (e.g. 24 Jan Morning) — optional" : "Title (chapter / topic name)"} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
-              <input required type="url" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} placeholder="https://drive.google.com/..." className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              <input required={form.type !== "pyq"} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder={form.type === "coaching" ? "Material Name (e.g. Allen Physics Module 1)" : form.type === "pyq" ? "Paper title (e.g. 24 Jan Morning) — optional" : "Title (chapter / topic name)"} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              <input required type="url" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} placeholder={form.type === "coaching" ? "Material Link — https://drive.google.com/..." : "https://drive.google.com/..."} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description (optional)" rows={2} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
-              <select value={form.resourceType} onChange={(e) => setForm({ ...form, resourceType: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border">
-                <option value="">Resource Type: Auto Detect</option>
-                {RESOURCE_TYPES.map((r) => <option key={r} value={r}>{r.charAt(0) + r.slice(1).toLowerCase()}</option>)}
-              </select>
+              {form.type === "coaching" ? (
+                <select value={form.resourceType || "OTHER"} onChange={(e) => setForm({ ...form, resourceType: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border">
+                  {COACHING_MATERIAL_TYPES.map((r) => <option key={r} value={r}>Material Type: {r.charAt(0) + r.slice(1).toLowerCase()}</option>)}
+                </select>
+              ) : (
+                <select value={form.resourceType} onChange={(e) => setForm({ ...form, resourceType: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border">
+                  <option value="">Resource Type: Auto Detect</option>
+                  {RESOURCE_TYPES.map((r) => <option key={r} value={r}>{r.charAt(0) + r.slice(1).toLowerCase()}</option>)}
+                </select>
+              )}
               <button disabled={busy} className="w-full py-2.5 rounded-lg gradient-primary text-primary-foreground font-semibold disabled:opacity-50">
                 {busy ? "Uploading…" : "Upload"}
               </button>
