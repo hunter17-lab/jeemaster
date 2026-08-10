@@ -1,4 +1,5 @@
 import { RESOURCE_TYPES } from "@/lib/resourceType";
+import { COACHINGS, COACHING_MATERIAL_TYPES, getCoaching } from "@/lib/coaching";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
