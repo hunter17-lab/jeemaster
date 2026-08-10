@@ -1,4 +1,5 @@
 import { RESOURCE_TYPES } from "@/lib/resourceType";
+import { COACHINGS, COACHING_MATERIAL_TYPES, getCoaching } from "@/lib/coaching";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +27,7 @@ const PYQ_YEARS = Array.from({ length: new Date().getFullYear() - 2002 + 1 }, (_
 const SUBJECTS_BY_TYPE: Record<string, string[]> = {
   books: ["Physics", "Chemistry", "Mathematics", "PCM"],
   pyq: PYQ_YEARS,
+  coaching: COACHINGS.map((c) => c.slug),
 };
 const getSubjects = (type: string) => SUBJECTS_BY_TYPE[type] || SUBJECTS_DEFAULT;
 
@@ -106,11 +108,24 @@ const AdminPage = () => {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const isCoaching = form.type === "coaching";
+    if (isCoaching) {
+      if (!getCoaching(form.subject)) { toast.error("Select a coaching institute"); return; }
+      if (!form.title.trim()) { toast.error("Material name is required"); return; }
+      const dup = items.some(
+        (it) =>
+          it.type === "coaching" &&
+          String(it.subject).toLowerCase() === form.subject &&
+          String(it.title).trim().toLowerCase() === form.title.trim().toLowerCase() &&
+          String(it.link).trim() === form.link.trim()
+      );
+      if (dup) { toast.error("This material already exists for that coaching"); return; }
+    }
     setBusy(true);
     const isPyqShift = form.type === "pyq" && Number(form.subject) >= PYQ_SHIFT_START_YEAR;
     const sectionValue = isPyqShift
       ? `${form.pyqShift} - ${form.pyqMonth}`
-      : (form.section || null);
+      : (isCoaching ? null : (form.section || null));
     const titleValue = form.title.trim() || (form.type === "pyq" ? `JEE Main ${form.subject}${sectionValue ? ` — ${sectionValue}` : ""}` : form.title);
     const { error } = await supabase.from("content_items").insert({
       type: form.type as any,
@@ -119,7 +134,7 @@ const AdminPage = () => {
       title: titleValue,
       link: form.link,
       description: form.description || null,
-      resource_type: form.resourceType || null,
+      resource_type: isCoaching ? (form.resourceType || "OTHER") : (form.resourceType || null),
       created_by: user!.id,
     } as any);
     setBusy(false);
@@ -222,7 +237,9 @@ const AdminPage = () => {
                   const months = form.type === "pyq" ? getMonthsForYear(newSubject) : [];
                   setForm({ ...form, subject: newSubject, pyqMonth: months.includes(form.pyqMonth) ? form.pyqMonth : (months[0] || form.pyqMonth) });
                 }} className="px-3 py-2 rounded-lg bg-secondary border border-border">
-                  {getSubjects(form.type).map(s => <option key={s}>{s}</option>)}
+                  {form.type === "coaching"
+                    ? COACHINGS.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)
+                    : getSubjects(form.type).map(s => <option key={s}>{s}</option>)}
                 </select>
               </div>
               {form.type === "pyq" && Number(form.subject) >= PYQ_SHIFT_START_YEAR ? (
@@ -234,16 +251,22 @@ const AdminPage = () => {
                     {getMonthsForYear(form.subject).map(m => <option key={m} value={m}>{m} Attempt</option>)}
                   </select>
                 </div>
-              ) : form.type !== "pyq" ? (
+              ) : form.type !== "pyq" && form.type !== "coaching" ? (
                 <input value={form.section} onChange={(e) => setForm({ ...form, section: e.target.value })} placeholder="Section (e.g. Class 11) — optional" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               ) : null}
-              <input required={form.type !== "pyq"} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder={form.type === "pyq" ? "Paper title (e.g. 24 Jan Morning) — optional" : "Title (chapter / topic name)"} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
-              <input required type="url" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} placeholder="https://drive.google.com/..." className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              <input required={form.type !== "pyq"} value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder={form.type === "coaching" ? "Material Name (e.g. Allen Physics Module 1)" : form.type === "pyq" ? "Paper title (e.g. 24 Jan Morning) — optional" : "Title (chapter / topic name)"} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              <input required type="url" value={form.link} onChange={(e) => setForm({ ...form, link: e.target.value })} placeholder={form.type === "coaching" ? "Material Link — https://drive.google.com/..." : "https://drive.google.com/..."} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Description (optional)" rows={2} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
-              <select value={form.resourceType} onChange={(e) => setForm({ ...form, resourceType: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border">
-                <option value="">Resource Type: Auto Detect</option>
-                {RESOURCE_TYPES.map((r) => <option key={r} value={r}>{r.charAt(0) + r.slice(1).toLowerCase()}</option>)}
-              </select>
+              {form.type === "coaching" ? (
+                <select value={form.resourceType || "OTHER"} onChange={(e) => setForm({ ...form, resourceType: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border">
+                  {COACHING_MATERIAL_TYPES.map((r) => <option key={r} value={r}>Material Type: {r.charAt(0) + r.slice(1).toLowerCase()}</option>)}
+                </select>
+              ) : (
+                <select value={form.resourceType} onChange={(e) => setForm({ ...form, resourceType: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border">
+                  <option value="">Resource Type: Auto Detect</option>
+                  {RESOURCE_TYPES.map((r) => <option key={r} value={r}>{r.charAt(0) + r.slice(1).toLowerCase()}</option>)}
+                </select>
+              )}
               <button disabled={busy} className="w-full py-2.5 rounded-lg gradient-primary text-primary-foreground font-semibold disabled:opacity-50">
                 {busy ? "Uploading…" : "Upload"}
               </button>
@@ -264,7 +287,11 @@ const AdminPage = () => {
                         {it.pinned && <Pin size={12} className="text-primary shrink-0" />}
                         {it.title}
                       </div>
-                      <div className="text-xs text-muted-foreground truncate">{it.type} · {it.subject}{it.section ? ` · ${it.section}` : ""}</div>
+                      <div className="text-xs text-muted-foreground truncate">
+                        {it.type === "coaching"
+                          ? `coaching · ${getCoaching(String(it.subject).toLowerCase())?.name || it.subject} · ${(it.resource_type || "OTHER").toUpperCase()}`
+                          : `${it.type} · ${it.subject}${it.section ? ` · ${it.section}` : ""}`}
+                      </div>
                     </div>
                     <a href={it.link} target="_blank" rel="noreferrer" className="text-xs text-primary hover:underline">open</a>
                     <button onClick={() => setEditItem({ ...it })} title="Edit" className="p-1.5 rounded text-muted-foreground hover:bg-secondary">
@@ -295,15 +322,25 @@ const AdminPage = () => {
               <h3 className="font-display font-semibold flex items-center gap-2"><Pencil size={16} /> Edit item</h3>
               <input value={editItem.title || ""} onChange={(e) => setEditItem({ ...editItem, title: e.target.value })} placeholder="Title" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               <select value={editItem.subject} onChange={(e) => setEditItem({ ...editItem, subject: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border">
-                {getSubjects(editItem.type).map((s) => <option key={s}>{s}</option>)}
+                {editItem.type === "coaching"
+                  ? COACHINGS.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)
+                  : getSubjects(editItem.type).map((s) => <option key={s}>{s}</option>)}
               </select>
-              <input value={editItem.section || ""} onChange={(e) => setEditItem({ ...editItem, section: e.target.value })} placeholder="Author / section" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              {editItem.type !== "coaching" && (
+                <input value={editItem.section || ""} onChange={(e) => setEditItem({ ...editItem, section: e.target.value })} placeholder="Author / section" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
+              )}
               <input value={editItem.description || ""} onChange={(e) => setEditItem({ ...editItem, description: e.target.value })} placeholder="Edition / year / description" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
               <input type="url" value={editItem.link || ""} onChange={(e) => setEditItem({ ...editItem, link: e.target.value })} placeholder="Link" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border" />
-              <select value={editItem.resource_type || ""} onChange={(e) => setEditItem({ ...editItem, resource_type: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border">
-                <option value="">Resource Type: Auto Detect</option>
-                {RESOURCE_TYPES.map((r) => <option key={r} value={r}>{r.charAt(0) + r.slice(1).toLowerCase()}</option>)}
-              </select>
+              {editItem.type === "coaching" ? (
+                <select value={(editItem.resource_type || "OTHER").toUpperCase()} onChange={(e) => setEditItem({ ...editItem, resource_type: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border">
+                  {COACHING_MATERIAL_TYPES.map((r) => <option key={r} value={r}>Material Type: {r.charAt(0) + r.slice(1).toLowerCase()}</option>)}
+                </select>
+              ) : (
+                <select value={editItem.resource_type || ""} onChange={(e) => setEditItem({ ...editItem, resource_type: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-secondary border border-border">
+                  <option value="">Resource Type: Auto Detect</option>
+                  {RESOURCE_TYPES.map((r) => <option key={r} value={r}>{r.charAt(0) + r.slice(1).toLowerCase()}</option>)}
+                </select>
+              )}
               <div className="flex gap-2 pt-1">
                 <button onClick={saveEdit} className="flex-1 py-2 rounded-lg gradient-primary text-primary-foreground font-semibold">Save</button>
                 <button onClick={() => setEditItem(null)} className="px-4 py-2 rounded-lg bg-secondary">Cancel</button>

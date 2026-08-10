@@ -19,6 +19,7 @@ import GiveawaysPage from "./pages/GiveawaysPage";
 import GiveawayDetailPage from "./pages/GiveawayDetailPage";
 import BookSubjectPage from "./pages/BookSubjectPage";
 import CoachingPage from "./pages/CoachingPage";
+import CoachingDetailPage from "./pages/CoachingDetailPage";
 import SearchPage from "./pages/SearchPage";
 import InstallPage from "./pages/InstallPage";
 import AboutPage from "./pages/AboutPage";
@@ -61,6 +62,7 @@ const App = () => {
             <Route path="/giveaways" element={<GiveawaysPage />} />
             <Route path="/giveaways/:id" element={<GiveawayDetailPage />} />
             <Route path="/coaching" element={<CoachingPage />} />
+            <Route path="/coaching/:slug" element={<CoachingDetailPage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/install" element={<InstallPage />} />
             <Route path="/about" element={<AboutPage />} />
