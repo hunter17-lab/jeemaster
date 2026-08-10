@@ -19,6 +19,7 @@ import GiveawaysPage from "./pages/GiveawaysPage";
 import GiveawayDetailPage from "./pages/GiveawayDetailPage";
 import BookSubjectPage from "./pages/BookSubjectPage";
 import CoachingPage from "./pages/CoachingPage";
+import CoachingDetailPage from "./pages/CoachingDetailPage";
 import SearchPage from "./pages/SearchPage";
 import InstallPage from "./pages/InstallPage";
 import AboutPage from "./pages/AboutPage";
