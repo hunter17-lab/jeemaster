@@ -40,16 +40,17 @@ const CoachingPage = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 items-stretch">
           {COACHINGS.map((c, i) => {
             const Icon = c.icon;
             const count = counts[c.slug] || 0;
             return (
               <motion.div
                 key={c.slug}
+                className="h-full"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08 }}
+                transition={{ delay: Math.min(i * 0.06, 0.4) }}
                 whileHover={{ y: -6 }}
                 whileTap={{ scale: 0.98 }}
               >
@@ -62,7 +63,7 @@ const CoachingPage = () => {
                       <Icon size={26} />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h2 className="font-display font-bold text-xl sm:text-2xl truncate">{c.name}</h2>
+                      <h2 className="font-display font-bold text-lg sm:text-xl leading-snug break-words">{c.name}</h2>
                       <p className="text-sm text-muted-foreground mt-0.5">{c.desc}</p>
                       <p className={`mt-3 text-sm font-semibold ${c.accent}`}>
                         {count} {count === 1 ? "Resource" : "Resources"}
