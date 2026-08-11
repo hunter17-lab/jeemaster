@@ -145,7 +145,7 @@ const SubjectChapterList = ({ data, sectionLabel }: Props) => {
                         </span>
                       </p>
 
-                      <div className="mt-2 flex items-center gap-2">
+                      <div className="mt-1.5 flex items-center gap-2">
                         <div className="h-1.5 flex-1 rounded-full bg-secondary overflow-hidden">
                           <div
                             className={`h-full rounded-full ${a.bar} transition-all duration-300`}
@@ -178,7 +178,7 @@ const SubjectChapterList = ({ data, sectionLabel }: Props) => {
 
                         <ArrowRight
                           size={15}
-                          className={`shrink-0 text-muted-foreground transition-all duration-300 group-hover:translate-x-1 group-hover:${a.text.replace("text-", "text-")}`}
+                          className="shrink-0 text-muted-foreground transition-all duration-300 group-hover:translate-x-1 group-hover:text-primary"
                         />
                       </div>
                     </div>
