@@ -63,7 +63,7 @@ const CoachingPage = () => {
                       <Icon size={26} />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h2 className="font-display font-bold text-xl sm:text-2xl truncate">{c.name}</h2>
+                      <h2 className="font-display font-bold text-lg sm:text-xl leading-snug break-words">{c.name}</h2>
                       <p className="text-sm text-muted-foreground mt-0.5">{c.desc}</p>
                       <p className={`mt-3 text-sm font-semibold ${c.accent}`}>
                         {count} {count === 1 ? "Resource" : "Resources"}
