@@ -1,4 +1,4 @@
-import { GraduationCap, Atom, Rocket, BookOpen } from "lucide-react";
+import { GraduationCap, Atom, Rocket, BookOpen, Sigma, Landmark, Lightbulb, School, Compass } from "lucide-react";
 
 export const COACHING_MATERIAL_TYPES = ["MODULE", "DPP", "TEST", "NOTES", "OTHER"] as const;
 export type CoachingMaterialType = (typeof COACHING_MATERIAL_TYPES)[number];
