@@ -1,19 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Trophy } from "lucide-react";
+import { Sparkles, Trophy, Search as SearchIcon, X, ArrowRight, Zap, FlaskConical, Sigma } from "lucide-react";
 import Layout from "@/components/Layout";
 import SubjectChapterList from "@/components/SubjectChapterList";
 import AdminItemsList from "@/components/AdminItemsList";
 import { allSubjects } from "@/data/chapters";
 import { chemistryShortNotes, physicsShortNotes, mathsShortNotes } from "@/data/shortNotes";
+import { searchBooks, type SearchableBook } from "@/lib/bookSearch";
 
 const noteTypes = ["Short Notes", "Topper Notes"] as const;
 
 const subjectEmojis = ["⚡ Physics", "🧪 Chemistry", "📐 Mathematics"];
 
+const subjectMeta = {
+  Physics: { icon: Zap, text: "text-physics", bg: "bg-physics/10" },
+  Chemistry: { icon: FlaskConical, text: "text-chemistry", bg: "bg-chemistry/10" },
+  Mathematics: { icon: Sigma, text: "text-maths", bg: "bg-maths/10" },
+} as const;
+
+interface NoteHit extends SearchableBook {
+  className: string;
+}
+
+/** Flatten every short-note chapter across all subjects for global search. */
+const allNotes: NoteHit[] = [physicsShortNotes, chemistryShortNotes, mathsShortNotes].flatMap((s) =>
+  s.sections.flatMap((sec) =>
+    sec.chapters.map((ch) => ({
+      id: `${s.subject}-${sec.title}-${ch.name}`,
+      title: ch.name,
+      author: s.subject,
+      edition: sec.title,
+      subject: `${s.subject} ${sec.title}`,
+      link: ch.link,
+      className: sec.title,
+    })),
+  ),
+);
+
 const NotesPage = () => {
   const [activeType, setActiveType] = useState<string>(noteTypes[0]);
   const [activeSubject, setActiveSubject] = useState(0);
+  const [query, setQuery] = useState("");
+  const [debounced, setDebounced] = useState("");
+  const [focused, setFocused] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebounced(query), 120);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  const results = useMemo(() => searchBooks(allNotes, debounced), [debounced]);
+  const searching = debounced.trim().length > 0;
+
 
   return (
     <Layout>
