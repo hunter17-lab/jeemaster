@@ -61,7 +61,47 @@ const NotesPage = () => {
           <p className="text-muted-foreground mb-6">Chapter-wise notes for Physics, Chemistry & Maths</p>
         </motion.div>
 
+        {/* Global notes search */}
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+          <div
+            className={`relative rounded-2xl transition-all duration-300 ${
+              focused ? "ring-2 ring-primary/60 shadow-lg shadow-primary/10 scale-[1.005]" : "ring-1 ring-border"
+            }`}
+          >
+            <SearchIcon
+              size={18}
+              className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${focused ? "text-primary" : "text-muted-foreground"}`}
+            />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              placeholder="🔍 Search all notes — chapters, subjects, class..."
+              aria-label="Search all notes"
+              className="w-full bg-secondary/60 backdrop-blur rounded-2xl pl-12 pr-11 py-3.5 text-sm outline-none placeholder:text-muted-foreground text-foreground [&::-webkit-search-cancel-button]:hidden"
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery("")}
+                aria-label="Clear search"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-full bg-muted hover:bg-primary/20 text-muted-foreground hover:text-primary transition-colors"
+              >
+                <X size={14} />
+              </button>
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground mt-2 px-1">
+            {focused && !query
+              ? "Try: complex numbers, kinematics, organic, class 12..."
+              : "Searches across Physics, Chemistry & Mathematics notes 📘"}
+          </p>
+        </motion.div>
+
         {/* Note type tabs */}
+        {!searching && (
         <div className="flex gap-2 mb-6 flex-wrap">
           {noteTypes.map((t) => (
             <button
@@ -75,9 +115,51 @@ const NotesPage = () => {
             </button>
           ))}
         </div>
+        )}
 
-        {activeType === "Topper Notes" ? (
+        {searching ? (
+          <div>
+            <h2 className="font-display font-bold text-lg mb-3">
+              🔍 Search Results for "{debounced.trim()}"
+              <span className="ml-2 text-xs font-normal text-muted-foreground">{results.length} found</span>
+            </h2>
+            {results.length === 0 ? (
+              <div className="glass-card p-8 text-center text-sm text-muted-foreground">
+                No notes matched your search. Try a shorter or different keyword.
+              </div>
+            ) : (
+              <div className="grid gap-2.5">
+                {results.map(({ book }) => {
+                  const meta = subjectMeta[(book.author || "Physics") as keyof typeof subjectMeta] ?? subjectMeta.Physics;
+                  const Icon = meta.icon;
+                  return (
+                    <a
+                      key={book.id}
+                      href={book.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-center gap-3 rounded-2xl border border-border/60 bg-gradient-to-br from-card/80 via-card/50 to-secondary/30 px-3.5 py-3 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-lg"
+                    >
+                      <span className={`shrink-0 rounded-xl ${meta.bg} ${meta.text} p-2`}>
+                        <Icon size={16} />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-semibold break-words">{book.title}</p>
+                        <p className="mt-0.5 text-[11px] text-muted-foreground">
+                          {book.author} • {book.edition}
+                        </p>
+                      </div>
+                      <span className="subject-badge bg-primary/15 text-primary shrink-0 hidden sm:inline">SHORT NOTES</span>
+                      <ArrowRight size={16} className="shrink-0 text-muted-foreground transition-transform duration-300 group-hover:translate-x-1 group-hover:text-primary" />
+                    </a>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        ) : activeType === "Topper Notes" ? (
           <motion.div
+
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4 }}
