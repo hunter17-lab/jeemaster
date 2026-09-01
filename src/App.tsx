@@ -15,6 +15,7 @@ import PYQPapersPage from "./pages/PYQPapersPage";
 import BooksPage from "./pages/BooksPage";
 import JeeHubPage from "./pages/JeeHubPage";
 import JeeHubFramePage from "./pages/JeeHubFramePage";
+import MockHubPage from "./pages/MockHubPage";
 import GiveawaysPage from "./pages/GiveawaysPage";
 import GiveawayDetailPage from "./pages/GiveawayDetailPage";
 import BookSubjectPage from "./pages/BookSubjectPage";
