@@ -15,6 +15,7 @@ import PYQPapersPage from "./pages/PYQPapersPage";
 import BooksPage from "./pages/BooksPage";
 import JeeHubPage from "./pages/JeeHubPage";
 import JeeHubFramePage from "./pages/JeeHubFramePage";
+import MockHubPage from "./pages/MockHubPage";
 import GiveawaysPage from "./pages/GiveawaysPage";
 import GiveawayDetailPage from "./pages/GiveawayDetailPage";
 import BookSubjectPage from "./pages/BookSubjectPage";
@@ -59,6 +60,7 @@ const App = () => {
             <Route path="/books/:subject" element={<BookSubjectPage />} />
             <Route path="/hub" element={<JeeHubPage />} />
             <Route path="/hub/:slug" element={<JeeHubFramePage />} />
+            <Route path="/mock-hub" element={<MockHubPage />} />
             <Route path="/giveaways" element={<GiveawaysPage />} />
             <Route path="/giveaways/:id" element={<GiveawayDetailPage />} />
             <Route path="/coaching" element={<CoachingPage />} />
