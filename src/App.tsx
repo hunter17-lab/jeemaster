@@ -60,6 +60,7 @@ const App = () => {
             <Route path="/books/:subject" element={<BookSubjectPage />} />
             <Route path="/hub" element={<JeeHubPage />} />
             <Route path="/hub/:slug" element={<JeeHubFramePage />} />
+            <Route path="/mock-hub" element={<MockHubPage />} />
             <Route path="/giveaways" element={<GiveawaysPage />} />
             <Route path="/giveaways/:id" element={<GiveawayDetailPage />} />
             <Route path="/coaching" element={<CoachingPage />} />
