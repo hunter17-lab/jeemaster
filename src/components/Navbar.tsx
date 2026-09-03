@@ -4,6 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BookOpen, Brain, FileText, Target, Library, GraduationCap, Menu, X, Search, Moon, Sun, Download, Info, LogIn, LogOut, UserCircle, Shield, Sparkles, Gift, Trophy } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
+import GlobalSearchOverlay from "@/components/GlobalSearchOverlay";
+
 
 const navItems = [
   { path: "/", label: "Home", icon: BookOpen },
@@ -25,6 +27,8 @@ const Navbar = () => {
   const { user, signOut } = useAuth();
   const { isAdmin } = useIsAdmin();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
   const [dark, setDark] = useState(() => {
     if (typeof window !== "undefined") {
       return document.documentElement.classList.contains("dark");
@@ -42,6 +46,19 @@ const Navbar = () => {
   useEffect(() => {
     closeMobile();
   }, [pathname]);
+
+  // Ctrl/Cmd+K opens the global search from anywhere in the app
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
 
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
@@ -90,9 +107,15 @@ const Navbar = () => {
             <Link to="/install" className="hidden sm:inline-flex p-2 rounded-lg text-primary hover:bg-primary/10 transition-colors" title="Install App">
               <Download size={18} />
             </Link>
-            <Link to="/search" className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+            <button
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search everything"
+              title="Search everything (Ctrl+K)"
+              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            >
               <Search size={18} />
-            </Link>
+            </button>
+
             <button onClick={toggleDark} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
               {dark ? <Sun size={18} /> : <Moon size={18} />}
             </button>
@@ -172,7 +195,9 @@ const Navbar = () => {
         </div>,
         document.body
       )}
+      <GlobalSearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </nav>
+
   );
 };
 
