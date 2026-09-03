@@ -172,7 +172,9 @@ const Navbar = () => {
         </div>,
         document.body
       )}
+      <GlobalSearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
     </nav>
+
   );
 };
 
