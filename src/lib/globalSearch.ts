@@ -179,9 +179,9 @@ export function searchIndex(index: SearchIndex, rawQuery: string, limit = 300): 
     else if (matched > 0) score += 45 * avg;
 
     // typo-tolerant fallback for glued/misspelled queries
-    if (score === 0) {
+    if (score === 0 && compact.length >= 4) {
       const sub = subsequenceScore(compact, entry.hayFlat.replace(/\s/g, ""));
-      if (sub > 0.4) score += sub * 60;
+      if (sub > 0.72) score += sub * 40;
     }
 
     if (score > 0) {
@@ -194,7 +194,10 @@ export function searchIndex(index: SearchIndex, rawQuery: string, limit = 300): 
   return hits.slice(0, limit);
 }
 
-/** Groups hits by section, preserving relevance order inside each group. */
+/**
+ * Groups hits by section. Groups are ordered by their most relevant hit so the
+ * best match always appears first, with section order as the tie-breaker.
+ */
 export function groupHits(hits: SearchHit[]): { kind: SearchKind; hits: SearchHit[] }[] {
   const map = new Map<SearchKind, SearchHit[]>();
   for (const h of hits) {
@@ -202,5 +205,12 @@ export function groupHits(hits: SearchHit[]): { kind: SearchKind; hits: SearchHi
     if (list) list.push(h);
     else map.set(h.doc.kind, [h]);
   }
-  return KIND_ORDER.filter((k) => map.has(k)).map((kind) => ({ kind, hits: map.get(kind)! }));
+  return [...map.entries()]
+    .map(([kind, list]) => ({ kind, hits: list }))
+    .sort(
+      (a, b) =>
+        b.hits[0].score - a.hits[0].score ||
+        KIND_ORDER.indexOf(a.kind) - KIND_ORDER.indexOf(b.kind),
+    );
 }
+
