@@ -4,6 +4,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BookOpen, Brain, FileText, Target, Library, GraduationCap, Menu, X, Search, Moon, Sun, Download, Info, LogIn, LogOut, UserCircle, Shield, Sparkles, Gift, Trophy } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
+import GlobalSearchOverlay from "@/components/GlobalSearchOverlay";
+
 
 const navItems = [
   { path: "/", label: "Home", icon: BookOpen },
