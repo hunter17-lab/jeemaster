@@ -14,6 +14,140 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_messages: {
+        Row: {
+          attachments: Json
+          content: string
+          conversation_id: string
+          created_at: string
+          feedback: string | null
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          attachments?: Json
+          content?: string
+          conversation_id: string
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          attachments?: Json
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "ai_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_settings: {
+        Row: {
+          allowed_types: string[]
+          daily_limit: number
+          enabled: boolean
+          id: number
+          maintenance: boolean
+          max_file_mb: number
+          model: string
+          provider: string
+          system_instructions: string
+          updated_at: string
+        }
+        Insert: {
+          allowed_types?: string[]
+          daily_limit?: number
+          enabled?: boolean
+          id?: number
+          maintenance?: boolean
+          max_file_mb?: number
+          model?: string
+          provider?: string
+          system_instructions?: string
+          updated_at?: string
+        }
+        Update: {
+          allowed_types?: string[]
+          daily_limit?: number
+          enabled?: boolean
+          id?: number
+          maintenance?: boolean
+          max_file_mb?: number
+          model?: string
+          provider?: string
+          system_instructions?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ai_usage: {
+        Row: {
+          day: string
+          errors: number
+          files: number
+          id: string
+          requests: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          day?: string
+          errors?: number
+          files?: number
+          id?: string
+          requests?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          day?: string
+          errors?: number
+          files?: number
+          id?: string
+          requests?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       banned_emails: {
         Row: {
           banned_at: string
