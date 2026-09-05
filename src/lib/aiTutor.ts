@@ -128,8 +128,9 @@ export const DEFAULT_SETTINGS: AiSettings = {
 };
 
 export async function loadAiSettings(): Promise<AiSettings> {
-  const { data } = await supabase.from("ai_settings").select("*").eq("id", 1).maybeSingle();
-  return data ? ({ ...DEFAULT_SETTINGS, ...(data as any) }) : DEFAULT_SETTINGS;
+  const { data } = await supabase.rpc("get_ai_client_settings");
+  const row = Array.isArray(data) ? data[0] : data;
+  return row ? ({ ...DEFAULT_SETTINGS, ...(row as any) }) : DEFAULT_SETTINGS;
 }
 
 /**

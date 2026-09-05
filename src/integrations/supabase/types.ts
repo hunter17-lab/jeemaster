@@ -535,6 +535,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_ai_client_settings: {
+        Args: never
+        Returns: {
+          allowed_types: string[]
+          daily_limit: number
+          enabled: boolean
+          maintenance: boolean
+          max_file_mb: number
+        }[]
+      }
       get_giveaway_winners: {
         Args: { _giveaway_id: string }
         Returns: {
