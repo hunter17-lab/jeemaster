@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Shield, Plus, Trash2, Ban, ShieldOff, RefreshCw, Users, FileText, Mail, Pin, PinOff, Gift, BarChart3, Pencil } from "lucide-react";
+import { Shield, Plus, Trash2, Ban, ShieldOff, RefreshCw, Users, FileText, Mail, Pin, PinOff, Gift, BarChart3, Pencil, Sparkles } from "lucide-react";
 import Layout from "@/components/Layout";
 import AdminGiveaways from "@/components/AdminGiveaways";
 import AdminAnalytics from "@/components/AdminAnalytics";
+import AdminAITutor from "@/components/AdminAITutor";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,7 +37,7 @@ const AdminPage = () => {
   const { isAdmin, loading: roleLoading } = useIsAdmin();
   const navigate = useNavigate();
 
-  const [tab, setTab] = useState<"content" | "analytics" | "giveaways" | "users" | "bans">("content");
+  const [tab, setTab] = useState<"content" | "analytics" | "giveaways" | "aitutor" | "users" | "bans">("content");
   const [form, setForm] = useState({ type: "notes", subject: "Physics", section: "", title: "", link: "", description: "", pyqShift: "Shift 1", pyqMonth: "January", resourceType: "" });
   const [items, setItems] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
@@ -202,6 +203,7 @@ const AdminPage = () => {
             { k: "content", label: "📦 Content", icon: FileText },
             { k: "analytics", label: "📊 Analytics", icon: BarChart3 },
             { k: "giveaways", label: "🎁 Giveaways", icon: Gift },
+            { k: "aitutor", label: "🤖 AI Tutor", icon: Sparkles },
             { k: "users", label: "👥 Users", icon: Users },
             { k: "bans", label: "🚫 Bans", icon: Ban },
           ].map(({ k, label }) => (
@@ -353,6 +355,8 @@ const AdminPage = () => {
 
 
         {tab === "giveaways" && <AdminGiveaways />}
+
+        {tab === "aitutor" && <AdminAITutor />}
 
         {tab === "users" && (
           <div className="glass-card p-6">
