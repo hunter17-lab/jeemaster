@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Target, Bot, School, ClipboardList, BookOpen, TrendingUp, Flame,
@@ -139,7 +139,7 @@ const MockHubPage = () => {
     </button>
   );
 
-  const emptyStateCard = (key: string, content: React.ReactNode) => (
+  const emptyStateCard = (key: string, content: ReactNode) => (
     <motion.div
       key={key}
       initial={{ opacity: 0, y: 16 }}
