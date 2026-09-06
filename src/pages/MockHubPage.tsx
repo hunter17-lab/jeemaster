@@ -33,7 +33,16 @@ const MockHubPage = () => {
   });
 
   const [hubTab, setHubTab] = useState<HubTab>("ai");
-  const [view, setView] = useState<"menu" | "create">("menu");
+  const [view, setView] = useState<"menu" | "create" | "past" | "performance" | "mistakes">("menu");
+
+  // Real completed test count (persisted by the future test engine)
+  const [completedTests] = useState<number>(() => {
+    try {
+      return Number(localStorage.getItem("jee-mock-tests-completed")) || 0;
+    } catch {
+      return 0;
+    }
+  });
 
   // Create-test state
   const [exam, setExam] = useState<Exam | null>(null);
