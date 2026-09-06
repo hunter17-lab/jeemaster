@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Target, Bot, School, ClipboardList, BookOpen, TrendingUp, Flame,
@@ -33,7 +33,16 @@ const MockHubPage = () => {
   });
 
   const [hubTab, setHubTab] = useState<HubTab>("ai");
-  const [view, setView] = useState<"menu" | "create">("menu");
+  const [view, setView] = useState<"menu" | "create" | "past" | "performance" | "mistakes">("menu");
+
+  // Real completed test count (persisted by the future test engine)
+  const [completedTests] = useState<number>(() => {
+    try {
+      return Number(localStorage.getItem("jee-mock-tests-completed")) || 0;
+    } catch {
+      return 0;
+    }
+  });
 
   // Create-test state
   const [exam, setExam] = useState<Exam | null>(null);
@@ -107,10 +116,42 @@ const MockHubPage = () => {
 
   const aiOptions = [
     { id: "create", emoji: "📝", title: "Create Your Test", desc: "Build a custom test by exam, subject, chapter, difficulty and time.", icon: ClipboardList, action: () => setView("create") },
-    { id: "past", emoji: "📚", title: "Past Tests", desc: "Revisit and re-attempt your previous tests.", icon: BookOpen, comingSoon: true },
-    { id: "performance", emoji: "📈", title: "Performance", desc: "Track scores, accuracy and progress over time.", icon: TrendingUp, comingSoon: true },
-    { id: "mistakes", emoji: "🔥", title: "Mistake Practice", desc: "Re-practice only the questions you got wrong.", icon: Flame, comingSoon: true },
+    { id: "past", emoji: "📚", title: "Past Tests", desc: "Revisit and re-attempt your previous tests.", icon: BookOpen, action: () => setView("past") },
+    { id: "performance", emoji: "📈", title: "Performance", desc: "Track scores, accuracy and progress over time.", icon: TrendingUp, action: () => setView("performance") },
+    { id: "mistakes", emoji: "🔥", title: "Mistake Practice", desc: "Re-practice only the questions you got wrong.", icon: Flame, action: () => setView("mistakes") },
   ];
+
+  const backBtn = (
+    <button
+      onClick={() => setView("menu")}
+      className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+    >
+      <ArrowLeft size={16} /> Back to AI Test Series
+    </button>
+  );
+
+  const createTestBtn = (
+    <button
+      onClick={() => setView("create")}
+      className="rounded-2xl gradient-primary text-primary-foreground font-display font-bold px-8 py-3 shadow-lg shadow-primary/30 hover:opacity-90 transition-opacity active:scale-[0.99]"
+    >
+      CREATE YOUR TEST
+    </button>
+  );
+
+  const emptyStateCard = (key: string, content: ReactNode) => (
+    <motion.div
+      key={key}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.3 }}
+      className="max-w-3xl mx-auto space-y-8"
+    >
+      {backBtn}
+      <div className="glass-card p-10 md:p-14 text-center">{content}</div>
+    </motion.div>
+  );
 
   const pill = (active: boolean) =>
     `inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 border ${
@@ -183,31 +224,81 @@ const MockHubPage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.06 }}
                   onClick={o.action}
-                  disabled={o.comingSoon}
-                  className={`group text-left glass-card p-6 transition-all duration-300 ${
-                    o.comingSoon ? "opacity-70 cursor-not-allowed" : "hover:-translate-y-1 hover:shadow-xl hover:border-primary/40"
-                  }`}
+                  className="group text-left glass-card p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/40"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <span className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
                       <o.icon size={22} />
                     </span>
-                    {o.comingSoon && (
-                      <span className="text-[10px] font-bold uppercase tracking-wider bg-secondary text-muted-foreground px-2.5 py-1 rounded-full border border-border">
-                        Coming Soon
-                      </span>
-                    )}
                   </div>
                   <h3 className="font-display font-bold text-lg mb-1">{o.emoji} {o.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{o.desc}</p>
-                  {!o.comingSoon && (
-                    <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
-                      Get started <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
-                    </span>
-                  )}
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+                    Get started <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+                  </span>
                 </motion.button>
               ))}
             </motion.div>
+          ) : view === "past" ? (
+            emptyStateCard(
+              "past",
+              <div className="space-y-5">
+                <h2 className="text-2xl md:text-3xl font-display font-bold">📭 No Tests Yet</h2>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  You haven't taken any mock tests yet. Create your first AI mock test to see your tests here.
+                </p>
+                {createTestBtn}
+              </div>
+            )
+          ) : view === "performance" ? (
+            emptyStateCard(
+              "performance",
+              completedTests === 0 ? (
+                <div className="space-y-5">
+                  <h2 className="text-2xl md:text-3xl font-display font-bold">📊 Start Your Performance Journey</h2>
+                  <p className="text-muted-foreground max-w-md mx-auto">
+                    Complete your first mock test to start tracking your performance.
+                  </p>
+                </div>
+              ) : completedTests < 3 ? (
+                <div className="space-y-5">
+                  <h2 className="text-2xl md:text-3xl font-display font-bold">🔒 Performance Tracker</h2>
+                  <p className="text-muted-foreground max-w-md mx-auto">
+                    Complete 3 mock tests to unlock detailed performance tracking.
+                  </p>
+                  <span className="inline-flex items-center rounded-full bg-secondary/70 border border-border px-4 py-2 text-sm font-semibold">
+                    {completedTests} / 3 Tests Completed
+                  </span>
+                </div>
+              ) : (
+                <div className="space-y-5">
+                  <h2 className="text-2xl md:text-3xl font-display font-bold">🎉 Performance Tracker Unlocked</h2>
+                  <p className="text-muted-foreground max-w-md mx-auto">
+                    Your detailed performance analysis will appear here.
+                  </p>
+                </div>
+              )
+            )
+          ) : view === "mistakes" ? (
+            emptyStateCard(
+              "mistakes",
+              completedTests === 0 ? (
+                <div className="space-y-5">
+                  <h2 className="text-2xl md:text-3xl font-display font-bold">🎯 No Mistakes Yet</h2>
+                  <p className="text-muted-foreground max-w-md mx-auto">
+                    Complete a mock test to build your mistake practice list.
+                  </p>
+                  {createTestBtn}
+                </div>
+              ) : (
+                <div className="space-y-5">
+                  <h2 className="text-2xl md:text-3xl font-display font-bold">🎉 No Mistakes To Practice</h2>
+                  <p className="text-muted-foreground max-w-md mx-auto">
+                    Your incorrect and unattempted questions will appear here after completing a mock test.
+                  </p>
+                </div>
+              )
+            )
           ) : (
             /* ================= CREATE YOUR TEST (single page) ================= */
             <motion.div
