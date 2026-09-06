@@ -224,28 +224,18 @@ const MockHubPage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.06 }}
                   onClick={o.action}
-                  disabled={o.comingSoon}
-                  className={`group text-left glass-card p-6 transition-all duration-300 ${
-                    o.comingSoon ? "opacity-70 cursor-not-allowed" : "hover:-translate-y-1 hover:shadow-xl hover:border-primary/40"
-                  }`}
+                  className="group text-left glass-card p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/40"
                 >
                   <div className="flex items-start justify-between mb-4">
                     <span className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
                       <o.icon size={22} />
                     </span>
-                    {o.comingSoon && (
-                      <span className="text-[10px] font-bold uppercase tracking-wider bg-secondary text-muted-foreground px-2.5 py-1 rounded-full border border-border">
-                        Coming Soon
-                      </span>
-                    )}
                   </div>
                   <h3 className="font-display font-bold text-lg mb-1">{o.emoji} {o.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">{o.desc}</p>
-                  {!o.comingSoon && (
-                    <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
-                      Get started <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
-                    </span>
-                  )}
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+                    Get started <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+                  </span>
                 </motion.button>
               ))}
             </motion.div>
