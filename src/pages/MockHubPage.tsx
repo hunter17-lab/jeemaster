@@ -116,10 +116,42 @@ const MockHubPage = () => {
 
   const aiOptions = [
     { id: "create", emoji: "📝", title: "Create Your Test", desc: "Build a custom test by exam, subject, chapter, difficulty and time.", icon: ClipboardList, action: () => setView("create") },
-    { id: "past", emoji: "📚", title: "Past Tests", desc: "Revisit and re-attempt your previous tests.", icon: BookOpen, comingSoon: true },
-    { id: "performance", emoji: "📈", title: "Performance", desc: "Track scores, accuracy and progress over time.", icon: TrendingUp, comingSoon: true },
-    { id: "mistakes", emoji: "🔥", title: "Mistake Practice", desc: "Re-practice only the questions you got wrong.", icon: Flame, comingSoon: true },
+    { id: "past", emoji: "📚", title: "Past Tests", desc: "Revisit and re-attempt your previous tests.", icon: BookOpen, action: () => setView("past") },
+    { id: "performance", emoji: "📈", title: "Performance", desc: "Track scores, accuracy and progress over time.", icon: TrendingUp, action: () => setView("performance") },
+    { id: "mistakes", emoji: "🔥", title: "Mistake Practice", desc: "Re-practice only the questions you got wrong.", icon: Flame, action: () => setView("mistakes") },
   ];
+
+  const backBtn = (
+    <button
+      onClick={() => setView("menu")}
+      className="inline-flex items-center gap-2 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+    >
+      <ArrowLeft size={16} /> Back to AI Test Series
+    </button>
+  );
+
+  const createTestBtn = (
+    <button
+      onClick={() => setView("create")}
+      className="rounded-2xl gradient-primary text-primary-foreground font-display font-bold px-8 py-3 shadow-lg shadow-primary/30 hover:opacity-90 transition-opacity active:scale-[0.99]"
+    >
+      CREATE YOUR TEST
+    </button>
+  );
+
+  const emptyStateCard = (key: string, content: React.ReactNode) => (
+    <motion.div
+      key={key}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.3 }}
+      className="max-w-3xl mx-auto space-y-8"
+    >
+      {backBtn}
+      <div className="glass-card p-10 md:p-14 text-center">{content}</div>
+    </motion.div>
+  );
 
   const pill = (active: boolean) =>
     `inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-all duration-300 border ${
