@@ -239,6 +239,66 @@ const MockHubPage = () => {
                 </motion.button>
               ))}
             </motion.div>
+          ) : view === "past" ? (
+            emptyStateCard(
+              "past",
+              <div className="space-y-5">
+                <h2 className="text-2xl md:text-3xl font-display font-bold">📭 No Tests Yet</h2>
+                <p className="text-muted-foreground max-w-md mx-auto">
+                  You haven't taken any mock tests yet. Create your first AI mock test to see your tests here.
+                </p>
+                {createTestBtn}
+              </div>
+            )
+          ) : view === "performance" ? (
+            emptyStateCard(
+              "performance",
+              completedTests === 0 ? (
+                <div className="space-y-5">
+                  <h2 className="text-2xl md:text-3xl font-display font-bold">📊 Start Your Performance Journey</h2>
+                  <p className="text-muted-foreground max-w-md mx-auto">
+                    Complete your first mock test to start tracking your performance.
+                  </p>
+                </div>
+              ) : completedTests < 3 ? (
+                <div className="space-y-5">
+                  <h2 className="text-2xl md:text-3xl font-display font-bold">🔒 Performance Tracker</h2>
+                  <p className="text-muted-foreground max-w-md mx-auto">
+                    Complete 3 mock tests to unlock detailed performance tracking.
+                  </p>
+                  <span className="inline-flex items-center rounded-full bg-secondary/70 border border-border px-4 py-2 text-sm font-semibold">
+                    {completedTests} / 3 Tests Completed
+                  </span>
+                </div>
+              ) : (
+                <div className="space-y-5">
+                  <h2 className="text-2xl md:text-3xl font-display font-bold">🎉 Performance Tracker Unlocked</h2>
+                  <p className="text-muted-foreground max-w-md mx-auto">
+                    Your detailed performance analysis will appear here.
+                  </p>
+                </div>
+              )
+            )
+          ) : view === "mistakes" ? (
+            emptyStateCard(
+              "mistakes",
+              completedTests === 0 ? (
+                <div className="space-y-5">
+                  <h2 className="text-2xl md:text-3xl font-display font-bold">🎯 No Mistakes Yet</h2>
+                  <p className="text-muted-foreground max-w-md mx-auto">
+                    Complete a mock test to build your mistake practice list.
+                  </p>
+                  {createTestBtn}
+                </div>
+              ) : (
+                <div className="space-y-5">
+                  <h2 className="text-2xl md:text-3xl font-display font-bold">🎉 No Mistakes To Practice</h2>
+                  <p className="text-muted-foreground max-w-md mx-auto">
+                    Your incorrect and unattempted questions will appear here after completing a mock test.
+                  </p>
+                </div>
+              )
+            )
           ) : (
             /* ================= CREATE YOUR TEST (single page) ================= */
             <motion.div
