@@ -11,11 +11,7 @@ import { allSubjects } from "@/data/chapters";
 
 type HubTab = "ai" | "coaching";
 type Exam = "JEE Main" | "JEE Advanced";
-type Difficulty = "Easy" | "Medium" | "Hard" | "Mixed";
-type TimeMode = "standard" | "challenge";
-
-const QUESTION_COUNTS = [10, 20, 30, 60, 75] as const;
-const DIFFICULTIES: Difficulty[] = ["Easy", "Medium", "Hard", "Mixed"];
+SEDPLACEHOLDER
 
 const subjectMeta = {
   Physics: { icon: Zap, emoji: "⚡", chip: "bg-physics/15 text-physics", bar: "bg-physics" },
@@ -29,7 +25,7 @@ const minsPerQuestion = (exam: Exam) => (exam === "JEE Main" ? 3 : 4);
 const MockHubPage = () => {
   useSEO({
     title: "Mock Hub — JEE MASTER",
-    description: "Create custom JEE Main and JEE Advanced mock tests by subject, chapter, difficulty, and time mode.",
+    description: "Create custom JEE Main and JEE Advanced mock tests by subject, chapter, and time mode.",
   });
 
   const [hubTab, setHubTab] = useState<HubTab>("ai");
@@ -48,7 +44,6 @@ const MockHubPage = () => {
   const [exam, setExam] = useState<Exam | null>(null);
   const [openSubjects, setOpenSubjects] = useState<string[]>([]);
   const [selectedChapters, setSelectedChapters] = useState<Set<string>>(new Set());
-  const [difficulty, setDifficulty] = useState<Difficulty>("Mixed");
   const [questionCount, setQuestionCount] = useState<number>(30);
   const [timeMode, setTimeMode] = useState<TimeMode>("standard");
   const [result, setResult] = useState<{ type: "error" | "success"; message: string } | null>(null);
@@ -103,7 +98,6 @@ const MockHubPage = () => {
   const handleGenerate = () => {
     if (!exam) return setResult({ type: "error", message: "Please select an exam: JEE Main or JEE Advanced." });
     if (totalChaptersSelected === 0) return setResult({ type: "error", message: "Please select at least one subject and chapter." });
-    if (!difficulty) return setResult({ type: "error", message: "Please select a difficulty." });
     if (!questionCount) return setResult({ type: "error", message: "Please select the number of questions." });
     if (!timeMode) return setResult({ type: "error", message: "Please select a time mode." });
     setResult({ type: "success", message: "Test configuration saved. Test generation will be added in the next step." });
@@ -418,17 +412,6 @@ const MockHubPage = () => {
                 </div>
               </section>
 
-              {/* 4. Difficulty */}
-              <section className="glass-card p-6">
-                <h3 className="font-display font-bold mb-4">3. Difficulty</h3>
-                <div className="flex gap-3 flex-wrap">
-                  {DIFFICULTIES.map((d) => (
-                    <button key={d} onClick={() => setDifficulty(d)} className={optionPill(difficulty === d)}>
-                      {d}
-                    </button>
-                  ))}
-                </div>
-              </section>
 
               {/* 5. Number of Questions */}
               <section className="glass-card p-6">
@@ -472,7 +455,6 @@ const MockHubPage = () => {
                     exam ?? "No exam selected",
                     selectedSubjects.length > 0 ? selectedSubjects.join(" + ") : "No subjects",
                     `${totalChaptersSelected} Chapter${totalChaptersSelected === 1 ? "" : "s"}`,
-                    `${difficulty} Difficulty`,
                     `${questionCount} Questions`,
                     `${timeMode === "standard" ? "Standard" : "Challenge"} Time · ${activeMinutes} min`,
                   ].map((s, i) => (
