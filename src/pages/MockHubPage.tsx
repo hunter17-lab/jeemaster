@@ -11,7 +11,9 @@ import { allSubjects } from "@/data/chapters";
 
 type HubTab = "ai" | "coaching";
 type Exam = "JEE Main" | "JEE Advanced";
-SEDPLACEHOLDER
+type TimeMode = "standard" | "challenge";
+
+const QUESTION_COUNTS = [10, 20, 30, 60, 75] as const;
 
 const subjectMeta = {
   Physics: { icon: Zap, emoji: "⚡", chip: "bg-physics/15 text-physics", bar: "bg-physics" },
@@ -415,7 +417,7 @@ const MockHubPage = () => {
 
               {/* 5. Number of Questions */}
               <section className="glass-card p-6">
-                <h3 className="font-display font-bold mb-4">4. Number of Questions</h3>
+                <h3 className="font-display font-bold mb-4">3. Number of Questions</h3>
                 <div className="flex gap-3 flex-wrap">
                   {QUESTION_COUNTS.map((n) => (
                     <button key={n} onClick={() => setQuestionCount(n)} className={optionPill(questionCount === n && n !== recommendedCount)}>
@@ -433,7 +435,7 @@ const MockHubPage = () => {
 
               {/* 6. Time Mode */}
               <section className="glass-card p-6">
-                <h3 className="font-display font-bold mb-4">5. Time Mode</h3>
+                <h3 className="font-display font-bold mb-4">4. Time Mode</h3>
                 <div className="flex gap-3 flex-wrap">
                   <button onClick={() => setTimeMode("standard")} className={`${optionPill(timeMode === "standard")} inline-flex items-center gap-2`}>
                     <Clock3 size={15} /> Standard · {standardMinutes} min
