@@ -115,10 +115,10 @@ const MockHubPage = () => {
   ];
 
   const aiOptions = [
-    { id: "create", emoji: "📝", title: "Create Your Test", desc: "Build a custom test by exam, subject, chapter, difficulty and time.", icon: ClipboardList, action: () => setView("create") },
-    { id: "past", emoji: "📚", title: "Past Tests", desc: "Revisit and re-attempt your previous tests.", icon: BookOpen, action: () => setView("past") },
-    { id: "performance", emoji: "📈", title: "Performance", desc: "Track scores, accuracy and progress over time.", icon: TrendingUp, action: () => setView("performance") },
-    { id: "mistakes", emoji: "🔥", title: "Mistake Practice", desc: "Re-practice only the questions you got wrong.", icon: Flame, action: () => setView("mistakes") },
+    { id: "create", title: "Create Your Test", desc: "Build a custom JEE mock from verified questions.", icon: ClipboardList, accent: "from-violet-500 to-blue-500", badge: "AI", action: () => setView("create") },
+    { id: "past", title: "Past Tests", desc: "Review your previous mock tests and results.", icon: BookOpen, accent: "from-sky-500 to-cyan-500", action: () => setView("past") },
+    { id: "performance", title: "Performance", desc: "Track your scores, accuracy and progress.", icon: TrendingUp, accent: "from-emerald-500 to-teal-500", action: () => setView("performance") },
+    { id: "mistakes", title: "Mistake Practice", desc: "Review and reattempt questions you got wrong.", icon: Flame, accent: "from-orange-500 to-rose-500", action: () => setView("mistakes") },
   ];
 
   const backBtn = (
@@ -170,15 +170,15 @@ const MockHubPage = () => {
   return (
     <Layout>
       <div className="page-container py-10 md:py-14">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-5 py-2 rounded-full text-sm font-semibold mb-5 border border-primary/20">
-            <Target size={16} className="animate-pulse" /> Mock Tests & Practice
+        {/* Header — JEE Hub style */}
+        <div className="mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-semibold uppercase tracking-widest mb-3">
+            <Target size={14} /> Mock Tests & Practice
           </div>
-          <h1 className="text-4xl md:text-5xl font-display font-bold tracking-tight mb-3">
-            🎯 <span className="text-gradient">Mock Hub</span>
+          <h1 className="text-3xl sm:text-4xl font-display font-bold mb-2">
+            🎯 Mock Hub
           </h1>
-          <p className="text-muted-foreground max-w-xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl">
             Build custom JEE tests from your syllabus and master every chapter.
           </p>
         </div>
@@ -215,29 +215,44 @@ const MockHubPage = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
-              className="grid gap-4 sm:grid-cols-2 max-w-3xl mx-auto"
+              className="grid gap-4 sm:grid-cols-2 max-w-4xl mx-auto"
             >
-              {aiOptions.map((o, i) => (
-                <motion.button
-                  key={o.id}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.06 }}
-                  onClick={o.action}
-                  className="group text-left glass-card p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/40"
-                >
-                  <div className="flex items-start justify-between mb-4">
-                    <span className="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
-                      <o.icon size={22} />
-                    </span>
-                  </div>
-                  <h3 className="font-display font-bold text-lg mb-1">{o.emoji} {o.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{o.desc}</p>
-                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
-                    Get started <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
-                  </span>
-                </motion.button>
-              ))}
+              {aiOptions.map((o, i) => {
+                const Icon = o.icon;
+                return (
+                  <motion.button
+                    key={o.id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                    onClick={o.action}
+                    className="group text-left glass-card p-5 flex flex-col h-full transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-primary/40 active:scale-[0.99] relative overflow-hidden"
+                  >
+                    <div
+                      className={`absolute -top-12 -right-12 w-40 h-40 rounded-full bg-gradient-to-br ${o.accent} opacity-20 blur-2xl group-hover:opacity-40 transition-opacity`}
+                    />
+                    <div className="flex items-start justify-between gap-3 mb-3 relative">
+                      <div
+                        className={`w-11 h-11 rounded-xl bg-gradient-to-br ${o.accent} flex items-center justify-center text-white shadow-lg`}
+                      >
+                        <Icon size={20} />
+                      </div>
+                      {o.badge && (
+                        <span className="text-[10px] uppercase tracking-widest font-bold px-2 py-1 rounded-full bg-primary/10 text-primary border border-primary/20">
+                          {o.badge}
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="font-display font-semibold text-lg leading-tight mb-1 relative">
+                      {o.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground flex-1 relative">{o.desc}</p>
+                    <div className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary relative">
+                      Launch <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </motion.button>
+                );
+              })}
             </motion.div>
           ) : view === "past" ? (
             emptyStateCard(
