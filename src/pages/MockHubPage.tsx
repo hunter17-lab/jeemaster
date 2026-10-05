@@ -8,6 +8,7 @@ import {
 import Layout from "@/components/Layout";
 import useSEO from "@/hooks/useSEO";
 import { allSubjects } from "@/data/chapters";
+import { generatePyqTest } from "@/lib/pyqTest";
 
 type HubTab = "ai" | "coaching";
 type Exam = "JEE Main" | "JEE Advanced";
@@ -97,12 +98,30 @@ const MockHubPage = () => {
 
   const recommendedCount = exam === "JEE Advanced" ? 60 : 75;
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!exam) return setResult({ type: "error", message: "Please select an exam: JEE Main or JEE Advanced." });
     if (totalChaptersSelected === 0) return setResult({ type: "error", message: "Please select at least one subject and chapter." });
     if (!questionCount) return setResult({ type: "error", message: "Please select the number of questions." });
     if (!timeMode) return setResult({ type: "error", message: "Please select a time mode." });
-    setResult({ type: "success", message: "Test configuration saved. Test generation will be added in the next step." });
+    setResult(null);
+    try {
+      const test = await generatePyqTest({
+        exam,
+        chapters: Array.from(selectedChapters).map((k) => {
+          const [subject, chapter] = k.split("::");
+          return { subject, chapter };
+        }),
+        questionCount,
+        timeMode,
+        durationMinutes: activeMinutes,
+      });
+      setResult({
+        type: "success",
+        message: `Test ready: ${test.questions.length} verified ${exam} PYQs selected. The test player will be added in the next step.`,
+      });
+    } catch (e) {
+      setResult({ type: "error", message: e instanceof Error ? e.message : "Could not generate the test." });
+    }
   };
 
   const hubTabs: { id: HubTab; label: string; icon: typeof Bot }[] = [
