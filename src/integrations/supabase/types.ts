@@ -482,6 +482,63 @@ export type Database = {
         }
         Relationships: []
       }
+      pyq_questions: {
+        Row: {
+          chapter: string
+          correct_answer: Json | null
+          created_at: string
+          exam: string
+          id: string
+          options: Json
+          question: string
+          question_type: string
+          session: string | null
+          shift: string | null
+          solution: string | null
+          source: string
+          subject: string
+          updated_at: string
+          verification_status: string
+          year: number
+        }
+        Insert: {
+          chapter: string
+          correct_answer?: Json | null
+          created_at?: string
+          exam: string
+          id?: string
+          options?: Json
+          question: string
+          question_type?: string
+          session?: string | null
+          shift?: string | null
+          solution?: string | null
+          source: string
+          subject: string
+          updated_at?: string
+          verification_status?: string
+          year: number
+        }
+        Update: {
+          chapter?: string
+          correct_answer?: Json | null
+          created_at?: string
+          exam?: string
+          id?: string
+          options?: Json
+          question?: string
+          question_type?: string
+          session?: string | null
+          shift?: string | null
+          solution?: string | null
+          source?: string
+          subject?: string
+          updated_at?: string
+          verification_status?: string
+          year?: number
+        }
+        Relationships: []
+      }
       site_visitors: {
         Row: {
           created_at: string
