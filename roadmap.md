@@ -1,0 +1,4 @@
+- [ ] Add admin-managed coaching test series and embedded tests, with database persistence.
+- [ ] Add Mathango 2027 QFT area and secure support for provided CBT HTML papers.
+- [ ] Build a customizable AI test generator and NTA-style CBT player with saved attempts and detailed results.
+- [ ] Address the surfaced giveaway-media storage exposure after the requested features.
