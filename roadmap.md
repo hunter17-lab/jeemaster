@@ -1,4 +1,4 @@
 - [ ] Add admin-managed coaching test series and embedded tests, with database persistence.
-- [ ] Add Mathango 2027 QFT area and secure support for provided CBT HTML papers.
+- [ ] Add Mathango 2027 QFT papers 1–2 now and release papers 3–8 on consecutive Sundays, beginning October 18, 2026.
 - [ ] Build a customizable AI test generator and NTA-style CBT player with saved attempts and detailed results.
 - [ ] Address the surfaced giveaway-media storage exposure after the requested features.
