@@ -169,6 +169,77 @@ export type Database = {
         }
         Relationships: []
       }
+      coaching_series_tests: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          series_id: string
+          sort_order: number
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          series_id: string
+          sort_order?: number
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          series_id?: string
+          sort_order?: number
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coaching_series_tests_series_id_fkey"
+            columns: ["series_id"]
+            isOneToOne: false
+            referencedRelation: "coaching_test_series"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coaching_test_series: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: string
+          logo_path: string | null
+          name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          logo_path?: string | null
+          name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          logo_path?: string | null
+          name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       content_items: {
         Row: {
           created_at: string
@@ -440,6 +511,57 @@ export type Database = {
           winner_count?: number
           winner_entry_id?: string | null
           winner_picked_at?: string | null
+        }
+        Relationships: []
+      }
+      mock_attempts: {
+        Row: {
+          config: Json
+          correct_count: number
+          created_at: string
+          duration_seconds: number
+          id: string
+          questions: Json
+          responses: Json
+          score: number
+          source: string
+          title: string
+          total_questions: number
+          unattempted_count: number
+          user_id: string
+          wrong_count: number
+        }
+        Insert: {
+          config?: Json
+          correct_count?: number
+          created_at?: string
+          duration_seconds?: number
+          id?: string
+          questions?: Json
+          responses?: Json
+          score?: number
+          source?: string
+          title: string
+          total_questions?: number
+          unattempted_count?: number
+          user_id: string
+          wrong_count?: number
+        }
+        Update: {
+          config?: Json
+          correct_count?: number
+          created_at?: string
+          duration_seconds?: number
+          id?: string
+          questions?: Json
+          responses?: Json
+          score?: number
+          source?: string
+          title?: string
+          total_questions?: number
+          unattempted_count?: number
+          user_id?: string
+          wrong_count?: number
         }
         Relationships: []
       }
