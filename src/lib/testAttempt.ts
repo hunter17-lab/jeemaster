@@ -36,6 +36,7 @@ export interface TestSession {
   createdAt: string;
   config: TestConfig | null;
   questions: TestQuestion[];
+  warning?: string;
 }
 
 /** Per-question response recorded in the player. */
