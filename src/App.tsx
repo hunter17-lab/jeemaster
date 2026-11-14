@@ -16,6 +16,10 @@ import BooksPage from "./pages/BooksPage";
 import JeeHubPage from "./pages/JeeHubPage";
 import JeeHubFramePage from "./pages/JeeHubFramePage";
 import MockHubPage from "./pages/MockHubPage";
+import TestPlayerPage from "./pages/TestPlayerPage";
+import MathangoFramePage from "./pages/MathangoFramePage";
+import CoachingSeriesPage from "./pages/CoachingSeriesPage";
+import CoachingSeriesFramePage from "./pages/CoachingSeriesFramePage";
 import GiveawaysPage from "./pages/GiveawaysPage";
 import GiveawayDetailPage from "./pages/GiveawayDetailPage";
 import BookSubjectPage from "./pages/BookSubjectPage";
@@ -61,6 +65,10 @@ const App = () => {
             <Route path="/hub" element={<JeeHubPage />} />
             <Route path="/hub/:slug" element={<JeeHubFramePage />} />
             <Route path="/mock-hub" element={<MockHubPage />} />
+            <Route path="/mock-hub/test" element={<TestPlayerPage />} />
+            <Route path="/mock-hub/mathango/:n" element={<MathangoFramePage />} />
+            <Route path="/coaching-series/:id" element={<CoachingSeriesPage />} />
+            <Route path="/coaching-series/:id/:testId" element={<CoachingSeriesFramePage />} />
             <Route path="/giveaways" element={<GiveawaysPage />} />
             <Route path="/giveaways/:id" element={<GiveawayDetailPage />} />
             <Route path="/coaching" element={<CoachingPage />} />

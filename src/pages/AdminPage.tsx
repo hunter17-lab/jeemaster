@@ -10,6 +10,7 @@ import AdminGiveaways from "@/components/AdminGiveaways";
 import AdminAnalytics from "@/components/AdminAnalytics";
 import AdminAITutor from "@/components/AdminAITutor";
 import AdminPyqImport from "@/components/AdminPyqImport";
+import AdminCoachingSeries from "@/components/AdminCoachingSeries";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { supabase } from "@/integrations/supabase/client";
@@ -38,7 +39,7 @@ const AdminPage = () => {
   const { isAdmin, loading: roleLoading } = useIsAdmin();
   const navigate = useNavigate();
 
-  const [tab, setTab] = useState<"content" | "analytics" | "giveaways" | "aitutor" | "pyqbank" | "users" | "bans">("content");
+  const [tab, setTab] = useState<"content" | "analytics" | "giveaways" | "aitutor" | "pyqbank" | "series" | "users" | "bans">("content");
   const [form, setForm] = useState({ type: "notes", subject: "Physics", section: "", title: "", link: "", description: "", pyqShift: "Shift 1", pyqMonth: "January", resourceType: "" });
   const [items, setItems] = useState<any[]>([]);
   const [users, setUsers] = useState<any[]>([]);
@@ -206,6 +207,7 @@ const AdminPage = () => {
             { k: "giveaways", label: "🎁 Giveaways", icon: Gift },
             { k: "aitutor", label: "🤖 AI Tutor", icon: Sparkles },
             { k: "pyqbank", label: "🧾 PYQ Question Bank", icon: FileText },
+            { k: "series", label: "🏫 Test Series", icon: FileText },
             { k: "users", label: "👥 Users", icon: Users },
             { k: "bans", label: "🚫 Bans", icon: Ban },
           ].map(({ k, label }) => (
@@ -360,6 +362,7 @@ const AdminPage = () => {
 
         {tab === "aitutor" && <AdminAITutor />}
         {tab === "pyqbank" && <AdminPyqImport />}
+        {tab === "series" && <AdminCoachingSeries />}
 
         {tab === "users" && (
           <div className="glass-card p-6">

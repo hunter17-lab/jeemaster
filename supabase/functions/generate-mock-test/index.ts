@@ -227,7 +227,7 @@ Deno.serve(async (req) => {
         "X-Lovable-AIG-SDK": "fetch",
       },
       body: JSON.stringify({
-        model: "openai/gpt-6-astra",
+        model: "google/gemini-3.7-flash",
         stream: true,
         store: false,
         reasoning: { effort: "medium" },

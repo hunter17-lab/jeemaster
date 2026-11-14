@@ -8,7 +8,9 @@ import {
 import Layout from "@/components/Layout";
 import useSEO from "@/hooks/useSEO";
 import { allSubjects } from "@/data/chapters";
-import { generatePyqTest } from "@/lib/pyqTest";
+import { generateAiTest } from "@/lib/aiTest";
+import { useNavigate } from "react-router-dom";
+import CoachingTabContent from "@/components/CoachingTabContent";
 
 type HubTab = "ai" | "coaching";
 type Exam = "JEE Main" | "JEE Advanced";
@@ -50,6 +52,13 @@ const MockHubPage = () => {
   const [questionCount, setQuestionCount] = useState<number>(30);
   const [timeMode, setTimeMode] = useState<TimeMode>("standard");
   const [result, setResult] = useState<{ type: "error" | "success"; message: string } | null>(null);
+  const [classScope, setClassScope] = useState<"11" | "12" | "full">("full");
+  const [difficulty, setDifficulty] = useState<"easy" | "moderate" | "hard" | "very_hard">("moderate");
+  const [qTypes, setQTypes] = useState<"mcq" | "integer" | "both">("mcq");
+  const [integerMode, setIntegerMode] = useState(false);
+  const [topics, setTopics] = useState("");
+  const [generating, setGenerating] = useState(false);
+  const navigate = useNavigate();
 
   const chapterKey = (subject: string, name: string) => `${subject}::${name}`;
 
@@ -104,25 +113,33 @@ const MockHubPage = () => {
     if (!questionCount) return setResult({ type: "error", message: "Please select the number of questions." });
     if (!timeMode) return setResult({ type: "error", message: "Please select a time mode." });
     setResult(null);
+    setGenerating(true);
     try {
-      const test = await generatePyqTest({
+      const topicList = topics.split(",").map((t) => t.trim()).filter(Boolean).slice(0, 20);
+      const test = await generateAiTest({
         exam,
+        classScope,
+        difficulty,
+        questionTypes: integerMode && qTypes === "mcq" ? "both" : qTypes,
+        integerMode,
         chapters: Array.from(selectedChapters).map((k) => {
           const [subject, chapter] = k.split("::");
-          return { subject, chapter };
+          return topicList.length ? { subject, chapter, topics: topicList } : { subject, chapter };
         }),
         questionCount,
         timeMode,
         durationMinutes: activeMinutes,
       });
-      setResult({
-        type: "success",
-        message: `Test ready: ${test.questions.length} verified ${exam} PYQs selected. The test player will be added in the next step.`,
-      });
+      navigate("/mock-hub/test", { state: { warning: test.warning } });
     } catch (e) {
       setResult({ type: "error", message: e instanceof Error ? e.message : "Could not generate the test." });
+    } finally {
+      setGenerating(false);
     }
   };
+
+  const visibleSection = (title: string) =>
+    classScope === "full" || !/^Class 1[12]$/.test(title) || title === `Class ${classScope}`;
 
   const hubTabs: { id: HubTab; label: string; icon: typeof Bot }[] = [
     { id: "ai", label: "AI Test Series", icon: Bot },
@@ -215,13 +232,9 @@ const MockHubPage = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
-              className="glass-card p-10 md:p-16 text-center max-w-2xl mx-auto"
+              className="max-w-5xl mx-auto"
             >
-              <div className="w-16 h-16 rounded-2xl gradient-primary flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary/25">
-                <School size={30} className="text-primary-foreground" />
-              </div>
-              <h2 className="text-2xl md:text-3xl font-display font-bold mb-3">🏫 Coaching Test Series</h2>
-              <p className="text-muted-foreground max-w-md mx-auto">Coaching test series will be available soon.</p>
+              <CoachingTabContent />
             </motion.div>
           ) : view === "menu" ? (
             <motion.div
@@ -404,7 +417,7 @@ const MockHubPage = () => {
                                   />
                                   Select All
                                 </label>
-                                {d.sections.map((sec) => (
+                                {d.sections.filter((sec) => visibleSection(sec.title)).map((sec) => (
                                   <div key={sec.title}>
                                     <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground px-2 pt-2 pb-1">{sec.title}</p>
                                     {sec.chapters.map((ch) => (
@@ -433,6 +446,48 @@ const MockHubPage = () => {
                 </div>
               </section>
 
+
+              {/* Syllabus, difficulty & question types */}
+              <section className="glass-card p-6 space-y-5">
+                <h3 className="font-display font-bold">Syllabus, Difficulty & Question Type</h3>
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground mb-2">Syllabus</p>
+                  <div className="flex gap-3 flex-wrap">
+                    {([["11", "Class 11"], ["12", "Class 12"], ["full", "Complete Syllabus"]] as const).map(([v, l]) => (
+                      <button key={v} onClick={() => setClassScope(v)} className={optionPill(classScope === v)}>{l}</button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground mb-2">Difficulty</p>
+                  <div className="flex gap-3 flex-wrap">
+                    {([["easy", "Easy"], ["moderate", "Moderate"], ["hard", "Hard"], ["very_hard", "Very Hard"]] as const).map(([v, l]) => (
+                      <button key={v} onClick={() => setDifficulty(v)} className={optionPill(difficulty === v)}>{l}</button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground mb-2">Question Type</p>
+                  <div className="flex gap-3 flex-wrap">
+                    {([["mcq", "MCQ only"], ["integer", "Integer only"], ["both", "MCQ + Integer"]] as const).map(([v, l]) => (
+                      <button key={v} onClick={() => setQTypes(v)} className={optionPill(qTypes === v)}>{l}</button>
+                    ))}
+                  </div>
+                </div>
+                {qTypes !== "integer" && (
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input type="checkbox" checked={integerMode} onChange={(e) => setIntegerMode(e.target.checked)} className="h-4 w-4 mt-0.5 accent-primary" />
+                    <span className="text-sm">
+                      <span className="font-semibold">Integer-Type mode</span>
+                      <span className="block text-xs text-muted-foreground">20% of questions from each chapter are integer-type (non-negative whole numbers; round decimals to the nearest integer).</span>
+                    </span>
+                  </label>
+                )}
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground mb-2">Specific topics (optional, comma separated)</p>
+                  <input value={topics} onChange={(e) => setTopics(e.target.value)} maxLength={400} placeholder="e.g. Projectile motion, Relative velocity" className="w-full px-3 py-2 rounded-lg bg-secondary border border-border text-sm" />
+                </div>
+              </section>
 
               {/* 5. Number of Questions */}
               <section className="glass-card p-6">
@@ -508,13 +563,14 @@ const MockHubPage = () => {
               {/* 8. Generate button */}
               <button
                 onClick={handleGenerate}
+                disabled={generating}
                 className="w-full rounded-2xl gradient-primary text-primary-foreground font-display font-bold text-lg py-4 shadow-lg shadow-primary/30 hover:opacity-90 transition-opacity active:scale-[0.99]"
               >
-                GENERATE MY TEST
+                {generating ? "GENERATING YOUR TEST… (up to a minute)" : "GENERATE MY TEST"}
               </button>
 
               <p className="text-[11px] text-muted-foreground text-center pb-6">
-                Future tests will use verified authentic JEE PYQs matched to your selected exam. AI-generated practice questions, if added later, will always be labeled “AI Generated Practice”.
+                Questions are AI Generated Practice modelled on the JEE pattern, with answers and solutions shown after you submit. Sign in required.
               </p>
             </motion.div>
           )}
