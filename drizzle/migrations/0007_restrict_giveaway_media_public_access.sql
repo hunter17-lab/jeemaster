@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "giveaway-media read public giveaway content" ON storage.objects;

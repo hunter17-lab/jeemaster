@@ -27,10 +27,16 @@ export async function uploadGiveawayMedia(
 export async function resolveMediaUrl(value: string | null | undefined): Promise<string | null> {
   if (!value) return null;
   if (/^https?:\/\//i.test(value)) return value;
-  // 1 year signed URL
-  const { data, error } = await supabase.storage.from(BUCKET).createSignedUrl(value, 60 * 60 * 24 * 365);
-  if (error) return null;
-  return data?.signedUrl || null;
+  // Public giveaway content is served through a short-lived URL only after the
+  // server confirms the file is an active prize image or visible approved proof.
+  const { data: publicMedia } = await supabase.functions.invoke("giveaway-media-url", {
+    body: { path: value },
+  });
+  if (publicMedia?.signedUrl) return publicMedia.signedUrl;
+
+  // Owners and admins may still view private/pending material through Storage RLS.
+  const { data: ownedMedia } = await supabase.storage.from(BUCKET).createSignedUrl(value, 60 * 60);
+  return ownedMedia?.signedUrl || null;
 }
 
 /** Delete a previously-uploaded storage object. Ignores http URLs. */

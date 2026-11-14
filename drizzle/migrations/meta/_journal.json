@@ -43,6 +43,20 @@
       "when": 1793806660162,
       "tag": "0005_coaching_media_public_read",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794632667280,
+      "tag": "0006_restrict_public_giveaway_read_rules",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794632813535,
+      "tag": "0007_restrict_giveaway_media_public_access",
+      "breakpoints": true
     }
   ]
 }
